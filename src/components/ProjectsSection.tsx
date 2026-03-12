@@ -227,12 +227,12 @@ export default function ProjectsSection() {
         
         ScrollTrigger.create({
           trigger: "#projects",
-          start: "top 20%",
-          end: "bottom 80%",
+          start: "top 10%",
+          end: "bottom 90%",
           onEnter: () => gsap.to(archiveButtonRef.current, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }),
-          onLeave: () => gsap.to(archiveButtonRef.current, { x: 100, opacity: 0, duration: 0.4, ease: "power3.in" }),
+          onLeave: () => gsap.to(archiveButtonRef.current, { x: 0, opacity: 0, duration: 0.4, ease: "power3.in" }),
           onEnterBack: () => gsap.to(archiveButtonRef.current, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }),
-          onLeaveBack: () => gsap.to(archiveButtonRef.current, { x: 100, opacity: 0, duration: 0.4, ease: "power3.in" }),
+          onLeaveBack: () => gsap.to(archiveButtonRef.current, { x: 0, opacity: 0, duration: 0.4, ease: "power3.in" }),
         });
       }
     });
@@ -671,11 +671,11 @@ export default function ProjectsSection() {
       {/* Static Archive Button - Cinematic Side Tab */}
       <div 
         ref={archiveButtonRef}
-        className="fixed bottom-24 right-0 z-50 opacity-0 transition-opacity duration-700 ease-[0.16,1,0.3,1]"
+        className="fixed top-1/2 right-0 -translate-y-1/2 z-50 opacity-0 pointer-events-none transition-opacity duration-700 ease-[0.16,1,0.3,1]"
       >
         <button 
           onClick={() => setShowArchive(true)}
-          className="group flex items-center gap-6 px-10 py-5 bg-[#1C1C1C] text-[#F6F3EE] shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:bg-[#B45309] transition-all duration-500 rounded-l-full -rotate-90 origin-center whitespace-nowrap border-l border-white/10"
+          className="group pointer-events-auto flex items-center gap-6 px-10 py-5 bg-[#1C1C1C] text-[#F6F3EE] shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:bg-[#B45309] transition-all duration-500 rounded-l-full -rotate-90 translate-x-[40%] origin-center whitespace-nowrap border-l border-white/10"
         >
           <span className="font-bold tracking-[0.3em] uppercase text-xs">View Project Archive</span>
           <ArrowRight className="w-5 h-5 -rotate-90 group-hover:translate-y-2 transition-transform duration-500" />

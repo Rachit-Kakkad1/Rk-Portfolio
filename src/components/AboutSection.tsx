@@ -121,8 +121,8 @@ export default function AboutSection() {
       tl.to(bioRef.current, { opacity: 0, x: -100, duration: 1, ease: "power3.in" }, "+=1")
         .to(eduRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5");
 
-      // Final: Background fade
-      tl.to(bgTextRef.current, { opacity: 0.03, duration: 1 });
+      // Final: Background stays prominent
+      tl.to(bgTextRef.current, { opacity: 0.1, duration: 1 });
 
     }, sectionRef);
 
@@ -136,8 +136,10 @@ export default function AboutSection() {
       
       {/* Background Typography */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <h1 ref={bgTextRef} className="text-[120px] md:text-[220px] font-black leading-none text-black select-none text-center tracking-tighter uppercase">
-          WHO IS<br />RACHIT
+        <h1 ref={bgTextRef} className="text-[120px] md:text-[180px] font-black leading-[0.85] text-black select-none text-center tracking-tighter uppercase">
+          WHO<br />
+          <span className="md:ml-24">IS</span><br />
+          RACHIT
         </h1>
       </div>
 
@@ -216,13 +218,20 @@ export default function AboutSection() {
         <div ref={bioRef} className="absolute inset-0 flex items-center justify-center mt-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center px-12">
             <motion.div 
-              className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black/5 group cursor-crosshair"
+              className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black/5 group cursor-crosshair isolate"
               onMouseMove={handleMouseMove}
-              onMouseEnter={() => maskRadius.set(200)}
+              onMouseEnter={() => maskRadius.set(250)}
               onMouseLeave={() => maskRadius.set(0)}
             >
               <img src="/ai_made_image.png" alt="AI Context" className="absolute inset-0 w-full h-full object-cover" />
-              <motion.div className="absolute inset-0 w-full h-full" style={{ WebkitMaskImage: maskImage, maskImage: maskImage }}>
+              <motion.div 
+                className="absolute inset-0 w-full h-full pointer-events-none" 
+                style={{ 
+                  WebkitMaskImage: maskImage, 
+                  maskImage: maskImage,
+                  maskRepeat: 'no-repeat'
+                }}
+              >
                 <img src="/own_image.png" alt="Rachit" className="w-full h-full object-cover" />
               </motion.div>
             </motion.div>
