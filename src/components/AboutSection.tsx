@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
+import { 
+  motion, 
+  AnimatePresence, 
+  useMotionValue, 
+  useSpring, 
+  useMotionTemplate,
+  animate
+} from "framer-motion";
 import { GraduationCap, School, BookOpen, Sparkles, Terminal, Cpu, Layout, Code } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -60,6 +67,7 @@ export default function AboutSection() {
   const bioRef = useRef<HTMLDivElement>(null);
   const eduRef = useRef<HTMLDivElement>(null);
   const bgTextRef = useRef<HTMLHeadingElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const [activeTheme, setActiveTheme] = useState(0);
 
@@ -67,22 +75,22 @@ export default function AboutSection() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const maskRadius = useMotionValue(0);
-  const smoothX = useSpring(mouseX, { stiffness: 300, damping: 30 });
-  const smoothY = useSpring(mouseY, { stiffness: 300, damping: 30 });
-  const smoothRadius = useSpring(maskRadius, { stiffness: 300, damping: 30 });
-  const maskImage = useMotionTemplate`radial-gradient(circle ${smoothRadius}px at ${smoothX}px ${smoothY}px, black 100%, transparent 100%)`;
+  const maskPath = useMotionTemplate`circle(${maskRadius}px at ${mouseX}% ${mouseY}%)`;
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    mouseX.set(e.clientX - rect.left);
-    mouseY.set(e.clientY - rect.top);
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!imageContainerRef.current) return;
+    const rect = imageContainerRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    mouseX.set(x);
+    mouseY.set(y);
   };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       // 1. Initial Setup
       gsap.set([cardsRef.current, editorRef.current, bioRef.current, eduRef.current], { opacity: 0, y: 100 });
-      gsap.set(bgTextRef.current, { opacity: 0.05, scale: 0.9 });
+      gsap.set(bgTextRef.current, { opacity: 1, scale: 2.0, filter: "blur(0px)" });
 
       // 2. Multi-Stage Timeline
       const tl = gsap.timeline({
@@ -104,9 +112,10 @@ export default function AboutSection() {
         }
       });
 
-      // Stage 1: Entrance & Background
-      tl.to(bgTextRef.current, { opacity: 0.15, scale: 1, duration: 1 })
-        .to(cardsRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5");
+      // Stage 1: Entrance & Background (Maximum Cinematic Impact)
+      tl.to(bgTextRef.current, { opacity: 1, scale: 2.5, duration: 1.5, ease: "power2.out" })
+        .to(cardsRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=1")
+        .to(bgTextRef.current, { opacity: 0.15, filter: "blur(8px)", duration: 1, ease: "power2.inOut" }, "-=0.4");
 
       // Stage 2: 4 System Cards Exit & Editor Entrance
       tl.to(cardsRef.current, { opacity: 0, y: -50, duration: 1, ease: "power3.in" }, "+=1")
@@ -121,8 +130,8 @@ export default function AboutSection() {
       tl.to(bioRef.current, { opacity: 0, x: -100, duration: 1, ease: "power3.in" }, "+=1")
         .to(eduRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5");
 
-      // Final: Background stays prominent
-      tl.to(bgTextRef.current, { opacity: 0.1, duration: 1 });
+      // Final: Ensure background stays softly blurred
+      tl.to(bgTextRef.current, { opacity: 0.1, filter: "blur(10px)", duration: 1, ease: "sine.inOut" });
 
     }, sectionRef);
 
@@ -136,9 +145,13 @@ export default function AboutSection() {
       
       {/* Background Typography */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <h1 ref={bgTextRef} className="text-[120px] md:text-[180px] font-black leading-[0.85] text-black select-none text-center tracking-tighter uppercase">
+        <h1 
+          ref={bgTextRef} 
+          className="text-[120px] md:text-[100px] font-black leading-[0.85] text-black select-none text-center tracking-tighter uppercase will-change-[transform,opacity,filter]"
+          style={{ filter: "blur(1px)", opacity: 1 }}
+        >
           WHO<br />
-          <span className="md:ml-24">IS</span><br />
+          IS<br />
           RACHIT
         </h1>
       </div>
@@ -149,8 +162,8 @@ export default function AboutSection() {
         <div ref={cardsRef} className="absolute inset-0 flex items-center justify-center">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-12">
             {themes.map((theme, i) => (
-              <div key={i} className="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-black/5 flex flex-col gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center">
+              <div key={i} className="bg-white/40 backdrop-blur-[20px] p-8 rounded-[2.5rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] border border-white/40 flex flex-col gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center shadow-lg">
                   <theme.icon size={24} />
                 </div>
                 <h3 className="text-xl font-bold">{theme.name}</h3>
@@ -162,7 +175,7 @@ export default function AboutSection() {
 
         {/* Stage 2: The Interactive Editor */}
         <div ref={editorRef} className="absolute inset-0 flex items-center justify-center -translate-y-12">
-          <div className={`w-full max-w-4xl rounded-3xl shadow-2xl border border-black/10 overflow-hidden transition-colors duration-700 ${currentTheme.bg}`}>
+          <div className={`w-full max-w-4xl rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border border-white/40 overflow-hidden transition-all duration-700 backdrop-blur-[30px] ${currentTheme.name === "AI Mode" ? "bg-slate-900/40 text-slate-200" : "bg-white/40"}`}>
             <div className="flex items-center px-6 py-4 border-b border-black/10 text-sm font-mono opacity-40">
               <div className="flex gap-2 mr-6">
                 <div className="w-3 h-3 rounded-full bg-red-400"></div>
@@ -218,21 +231,21 @@ export default function AboutSection() {
         <div ref={bioRef} className="absolute inset-0 flex items-center justify-center mt-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center px-12">
             <motion.div 
-              className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black/5 group cursor-crosshair isolate"
+              ref={imageContainerRef}
+              className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black/5 group cursor-crosshair isolate pointer-events-auto"
               onMouseMove={handleMouseMove}
-              onMouseEnter={() => maskRadius.set(250)}
-              onMouseLeave={() => maskRadius.set(0)}
+              onMouseEnter={() => animate(maskRadius, 800, { duration: 0.6, ease: "easeOut" })}
+              onMouseLeave={() => animate(maskRadius, 0, { duration: 0.4, ease: "easeIn" })}
             >
-              <img src="/ai_made_image.png" alt="AI Context" className="absolute inset-0 w-full h-full object-cover" />
+              <img src="/ai_made_image.png" alt="AI Context" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
               <motion.div 
-                className="absolute inset-0 w-full h-full pointer-events-none" 
+                className="absolute inset-0 w-full h-full pointer-events-none isolate" 
                 style={{ 
-                  WebkitMaskImage: maskImage, 
-                  maskImage: maskImage,
-                  maskRepeat: 'no-repeat'
+                  clipPath: maskPath,
+                  WebkitClipPath: maskPath
                 }}
               >
-                <img src="/own_image.png" alt="Rachit" className="w-full h-full object-cover" />
+                <img src="/own_image.png" alt="Rachit" className="w-full h-full object-cover pointer-events-none" />
               </motion.div>
             </motion.div>
             <div className="flex flex-col gap-8">
@@ -257,8 +270,8 @@ export default function AboutSection() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {education.map((item, i) => (
-                <div key={i} className="group p-10 bg-white/80 backdrop-blur-md rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col gap-6 transition-transform hover:-translate-y-2">
-                  <div className="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center">
+                <div key={i} className="group p-10 bg-white/40 backdrop-blur-[20px] rounded-[3rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] border border-white/40 flex flex-col gap-6 transition-all duration-500 hover:shadow-2xl hover:bg-white/60">
+                  <div className="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center shadow-xl">
                     <item.icon size={30} />
                   </div>
                   <div className="flex flex-col gap-2">

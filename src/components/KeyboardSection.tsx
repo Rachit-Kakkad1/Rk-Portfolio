@@ -9,23 +9,37 @@ const Spline = React.lazy(() => import('@splinetool/react-spline'));
 gsap.registerPlugin(ScrollTrigger);
 
 const skills = [
+  // Row 1
   { id: 'js', title: "JavaScript", description: "The core engine of modern web logic and interactive experiences." },
   { id: 'ts', title: "TypeScript", description: "Bulletproof scalability with strict typing and advanced safety." },
-  { id: 'react', title: "React.js", description: "Modular component architecture for high-end cinematic interfaces." },
-  { id: 'node', title: "Node.js", description: "High-performance runtime for scalable backend infrastructure." },
-  { id: 'mongo', title: "MongoDB", description: "Agile NoSQL database for flexible and rapid data scaling." },
   { id: 'html', title: "HTML5", description: "The semantic foundation of the modern web ecosystem." },
   { id: 'css', title: "CSS3", description: "Advanced layouts and animations using modern grid and flex physics." },
-  { id: 'tailwind', title: "Tailwind CSS", description: "Rapid styling with a utility-first framework for pixel-perfect designs." },
-  { id: 'ex', title: "Express.js", description: "Minimalist and flexible web application framework for Node.js." },
-  { id: 'postgre', title: "PostgreSQL", description: "The world's most advanced open source relational database." },
-  { id: 'git', title: "Git", description: "Pro-level version control for streamlined team collaboration." },
-  { id: 'github', title: "GitHub", description: "The global command center for collaborative development and code hosting." },
-  { id: 'docker', title: "Docker", description: "Seamless containerization for consistent deployment across any environment." },
-  { id: 'aws', title: "AWS", description: "Enterprise-grade cloud infrastructure for global reach and reliability." },
+  { id: 'react', title: "React.js", description: "Modular component architecture for high-end cinematic interfaces." },
+  { id: 'vite', title: "Vite", description: "The next-generation frontend tool providing lightning-fast dev builds." },
+
+  // Row 2
   { id: 'next', title: "Next.js", description: "The React framework for production with SSR and edge-ready speed." },
-  { id: 'vim', title: "Vim", description: "High-velocity code editing for maximum efficiency and flow." },
-  { id: 'python', title: "Python / AI", description: "Machine learning and intelligent agent development for the future." }
+  { id: 'tailwind', title: "Tailwind CSS", description: "Utility-first framework for crafting pixel-perfect designs with velocity." },
+  { id: 'node', title: "Node.js", description: "High-performance runtime for scalable and robust backend systems." },
+  { id: 'express', title: "Express.js", description: "Minimalist and flexible web framework for building powerful APIs." },
+  { id: 'postgre', title: "PostgreSQL", description: "The world's most advanced open source relational database system." },
+  { id: 'mongo', title: "MongoDB", description: "Agile NoSQL database for flexible and rapid data scaling." },
+
+  // Row 3
+  { id: 'git', title: "Git", description: "Pro-level version control for streamlined and secure code management." },
+  { id: 'github', title: "GitHub", description: "The command center for collaborative development and global hosting." },
+  { id: 'prettier', title: "Prettier", description: "An opinionated code formatter that ensures consistent style across the codebase." },
+  { id: 'npm', title: "npm", description: "The vital nexus for over 2 million packages in the JS ecosystem." },
+  { id: 'firebase', title: "Firebase", description: "Google's mobile and web app development platform for rapid scaling." },
+  { id: 'wordpress', title: "WordPress", description: "The engine for over 40% of the web, powering enterprise content." },
+
+  // Row 4
+  { id: 'linux', title: "Linux", description: "The core OS architecture powering secure and robust server environments." },
+  { id: 'docker', title: "Docker", description: "Seamless containerization for consistent deployment across any cloud." },
+  { id: 'nginx', title: "Nginx", description: "High-performance web server and load balancer for secure traffic." },
+  { id: 'aws', title: "AWS", description: "Enterprise-grade cloud infrastructure for global reach and reliability." },
+  { id: 'vim', title: "Vim", description: "High-velocity code editing for maximum efficiency and developer flow." },
+  { id: 'vercel', title: "Vercel", description: "The premier platform for frontend deployment and edge-ready speed." }
 ];
 
 export default function KeyboardSection() {
@@ -56,10 +70,20 @@ export default function KeyboardSection() {
     });
 
     // Setup sounds
+    // Optimized sound pooling for rapid playback
+    const soundPool = {
+      press: new Audio(`/keycap-sounds/press.mp3`),
+      release: new Audio(`/keycap-sounds/release.mp3`)
+    };
+    
+    // Prerender sounds
+    soundPool.press.load();
+    soundPool.release.load();
+
     const playSound = (type: 'press' | 'release') => {
-      const audio = new Audio(`/keycap-sounds/${type}.mp3`);
-      audio.volume = 0.5;
-      audio.play().catch(e => console.log('Audio play failed:', e));
+      const sound = soundPool[type].cloneNode(true) as HTMLAudioElement;
+      sound.volume = 0.35;
+      sound.play().catch(() => {});
     };
 
     // Update side panel based on Hover
@@ -67,15 +91,25 @@ export default function KeyboardSection() {
       if (e.target && e.target.name) {
         const hoveredName = e.target.name.toLowerCase();
         
-        // Accurate matching: handle specific prefixes like 'keycap_js' or just 'js'
-        const foundSkill = skills.find(s => 
-          hoveredName === s.id || 
-          hoveredName === `keycap_${s.id}` ||
-          hoveredName.includes(`keycap-${s.id}`)
-        );
+        // High-precision matching: prioritize exact matches and handle 'js' vs 'nextjs' collisions
+        const foundSkill = skills.find(s => {
+          const sId = s.id.toLowerCase();
+          const cleanName = hoveredName.replace('keycap', '').replace(/[^a-z0-9]/g, '');
+          
+          // Exact match is king
+          if (cleanName === sId) return true;
+          
+          // Special handling for 'js' to avoid eating 'nextjs'
+          if (sId === 'js') {
+            return cleanName === 'js' || cleanName === 'javascript' || hoveredName.includes('javascript');
+          }
+          
+          return cleanName.includes(sId) || sId.includes(cleanName);
+        });
         
         if (foundSkill && activeSkillId !== foundSkill.id) {
           setActiveSkillId(foundSkill.id);
+          playSound('press'); // Sensory feedback on hover
         }
       }
     });
@@ -84,6 +118,23 @@ export default function KeyboardSection() {
     app.addEventListener("mouseDown", (e: any) => {
       if (e.target && e.target.name) {
         const clickedName = e.target.name.toLowerCase();
+
+        // Fuzzy matching for clicks
+        const foundSkill = skills.find(s => {
+          const sId = s.id.toLowerCase();
+          const cleanName = clickedName.replace('keycap', '').replace(/[^a-z0-9]/g, '');
+          
+          if (cleanName === sId) return true;
+          
+          if (sId === 'js') {
+            return cleanName === 'js' || cleanName === 'javascript' || clickedName.includes('javascript');
+          }
+          
+          return cleanName.includes(sId) || sId.includes(cleanName);
+        });
+        if (foundSkill && activeSkillId !== foundSkill.id) {
+          setActiveSkillId(foundSkill.id);
+        }
 
         // 3D Keyboard command integration
         if (clickedName.includes('react')) {
@@ -141,11 +192,23 @@ export default function KeyboardSection() {
   useEffect(() => {
     let isCancelled = false;
     
-    const typeText = async (text: string, setter: (val: string) => void, speed = 15) => {
+    const typeText = async (text: string, setter: (val: string) => void, speed = 5, playAudio = true) => {
       for (let i = 0; i <= text.length; i++) {
         if (isCancelled) break;
         setter(text.slice(0, i));
-        if (speed > 0) await new Promise(r => setTimeout(r, speed));
+        
+        if (playAudio && i > 0 && i % 3 === 0) {
+          const tick = new Audio('/keycap-sounds/press.mp3');
+          tick.volume = 0.1;
+          tick.play().catch(() => {});
+        }
+
+        if (speed > 0) {
+          await new Promise(r => setTimeout(r, speed));
+        } else {
+          // Force a tiny yield to keep UI responsive but move as fast as possible
+          if (i % 5 === 0) await new Promise(r => requestAnimationFrame(r));
+        }
       }
     };
 
@@ -160,14 +223,14 @@ export default function KeyboardSection() {
         phase: 'typing-title' 
       });
       
-      // Speed up typing significantly
-      await typeText(skill.title, (val) => setTerminalState(prev => ({ ...prev, title: val })), 15);
+      // Instant title display
+      await typeText(skill.title, (val) => setTerminalState(prev => ({ ...prev, title: val })), 0);
       if (isCancelled) return;
 
       setTerminalState(prev => ({ ...prev, phase: 'typing-desc' }));
 
-      // Fast description typing
-      await typeText(skill.description, (val) => setTerminalState(prev => ({ ...prev, description: val })), 8);
+      // Turbo-fast description
+      await typeText(skill.description, (val) => setTerminalState(prev => ({ ...prev, description: val })), 1);
       if (isCancelled) return;
 
       setTerminalState(prev => ({ ...prev, phase: 'done' }));
@@ -256,10 +319,10 @@ export default function KeyboardSection() {
         <AnimatePresence mode="wait">
           <motion.h2
             key={activeSkillId}
-            initial={{ opacity: 0, y: 50, filter: "blur(10px)", scale: 0.9 }}
-            animate={{ opacity: 0.04, y: 0, filter: "blur(0px)", scale: 1 }}
-            exit={{ opacity: 0, y: -50, filter: "blur(10px)", scale: 1.1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
+            animate={{ opacity: 0.04, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className="text-[120px] md:text-[220px] font-bold text-black whitespace-nowrap tracking-tighter"
           >
             {skills.find(s => s.id === activeSkillId)?.title.toUpperCase()}
