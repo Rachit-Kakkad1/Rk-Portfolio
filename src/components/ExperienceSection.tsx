@@ -4,31 +4,31 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 const experiences = [
   {
     id: 1,
-    date: "2020 — 2022",
-    title: "Computer Science Student",
-    description: "Built a strong foundation in software engineering principles, data structures, and algorithms. Participated in multiple hackathons and open-source projects.",
-    skills: ["C++", "Java", "Data Structures", "Algorithms"]
+    date: "2025",
+    title: "Entering Computer Science",
+    description: "Started my computer science journey focusing on programming fundamentals and algorithmic thinking.",
+    skills: ["C++", "Data Structures", "Algorithms"]
   },
   {
     id: 2,
-    date: "2022 — 2023",
-    title: "Frontend Developer Intern",
-    description: "Transitioned from theoretical computer science to practical web development. Built initial portfolio projects using vanilla JavaScript, HTML, and CSS before diving into React.",
-    skills: ["HTML/CSS", "JavaScript", "React", "Tailwind"]
+    date: "2025",
+    title: "Software Engineering Internship",
+    description: "Began professional development work building modern web interfaces and collaborating using Git workflows.",
+    skills: ["React", "JavaScript", "Tailwind", "Git"]
   },
   {
     id: 3,
-    date: "2023 — 2024",
-    title: "Full Stack Developer",
-    description: "Deepened expertise in the MERN stack. Architected and deployed full-stack applications with authentication, complex state management, and responsive designs.",
-    skills: ["Node.js", "Express", "MongoDB", "Redux"]
+    date: "2026",
+    title: "Building Real Systems",
+    description: "Developed full-stack applications including AgriCert and ThreatLens.",
+    skills: ["Node.js", "Express", "MongoDB", "REST APIs"]
   },
   {
     id: 4,
-    date: "2024 — Present",
-    title: "Freelance Software Engineer",
-    description: "Specializing in creating highly interactive, cinematic web experiences and integrating AI/ML models into web applications. Passionate about pushing boundaries.",
-    skills: ["Next.js", "TypeScript", "Framer Motion", "AI Integration"]
+    date: "2026 — Present",
+    title: "AI-Driven Engineering",
+    description: "Building AI-powered systems, portfolio assistants, and experimental cognitive software platforms.",
+    skills: ["Next.js", "TypeScript", "AI APIs", "System Design"]
   }
 ];
 

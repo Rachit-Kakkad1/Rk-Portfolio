@@ -1,0 +1,27 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1A1A" />
+      <stop offset="100%" stop-color="#050505" />
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="50%" stop-color="#D97706" />
+      <stop offset="100%" stop-color="#92400E" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" rx="220" fill="url(#bg)" />
+
+  <g transform="translate(-20, 0)">
+    <rect x="280" y="260" width="80" height="504" rx="40" fill="#FFFFFF" />
+    <path d="M 360 300 h 120 c 110 0, 140 40, 140 120 c 0 80, -30 120, -140 120 h -120" fill="none" stroke="#FFFFFF" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 450 540 l 110 224" fill="none" stroke="#FFFFFF" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" />
+
+    <path d="M 800 260 L 520 512 L 800 764" fill="none" stroke="url(#gold)" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+  </g>
+</svg>

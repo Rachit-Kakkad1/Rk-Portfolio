@@ -1,24 +1,31 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
+import type { Application } from '@splinetool/runtime';
+import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+const Spline = React.lazy(() => import('@splinetool/react-spline'));
+
 gsap.registerPlugin(ScrollTrigger);
 
-// Add TypeScript support for the custom spline-viewer element
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'spline-viewer': any;
-    }
-  }
-}
-
 const skills = [
-  { id: 'react', title: "React.js", description: "Building interactive user interfaces with component architecture." },
-  { id: 'node', title: "Node.js", description: "Backend services and scalable APIs." },
-  { id: 'mongo', title: "MongoDB", description: "Flexible NoSQL database for modern applications." },
-  { id: 'docker', title: "Docker", description: "Containerized deployment workflows." },
-  { id: 'python', title: "Python / AI", description: "Machine learning and intelligent system development." }
+  { id: 'js', title: "JavaScript", description: "The core engine of modern web logic and interactive experiences." },
+  { id: 'ts', title: "TypeScript", description: "Bulletproof scalability with strict typing and advanced safety." },
+  { id: 'react', title: "React.js", description: "Modular component architecture for high-end cinematic interfaces." },
+  { id: 'node', title: "Node.js", description: "High-performance runtime for scalable backend infrastructure." },
+  { id: 'mongo', title: "MongoDB", description: "Agile NoSQL database for flexible and rapid data scaling." },
+  { id: 'html', title: "HTML5", description: "The semantic foundation of the modern web ecosystem." },
+  { id: 'css', title: "CSS3", description: "Advanced layouts and animations using modern grid and flex physics." },
+  { id: 'tailwind', title: "Tailwind CSS", description: "Rapid styling with a utility-first framework for pixel-perfect designs." },
+  { id: 'ex', title: "Express.js", description: "Minimalist and flexible web application framework for Node.js." },
+  { id: 'postgre', title: "PostgreSQL", description: "The world's most advanced open source relational database." },
+  { id: 'git', title: "Git", description: "Pro-level version control for streamlined team collaboration." },
+  { id: 'github', title: "GitHub", description: "The global command center for collaborative development and code hosting." },
+  { id: 'docker', title: "Docker", description: "Seamless containerization for consistent deployment across any environment." },
+  { id: 'aws', title: "AWS", description: "Enterprise-grade cloud infrastructure for global reach and reliability." },
+  { id: 'next', title: "Next.js", description: "The React framework for production with SSR and edge-ready speed." },
+  { id: 'vim', title: "Vim", description: "High-velocity code editing for maximum efficiency and flow." },
+  { id: 'python', title: "Python / AI", description: "Machine learning and intelligent agent development for the future." }
 ];
 
 export default function KeyboardSection() {
@@ -27,7 +34,8 @@ export default function KeyboardSection() {
   const glowRef = useRef<HTMLDivElement>(null);
   const skillPanelRef = useRef<HTMLDivElement>(null);
 
-  const [activeSkillIndex, setActiveSkillIndex] = useState(0);
+  const [activeSkillId, setActiveSkillId] = useState('react');
+  const [splineApp, setSplineApp] = useState<Application>();
   const [terminalState, setTerminalState] = useState({
     prompt: '',
     title: '',
@@ -35,39 +43,131 @@ export default function KeyboardSection() {
     phase: 'idle'
   });
 
+  // Setup interactions once Spline loads
+  const handleSplineInteractions = (app: Application) => {
+    setSplineApp(app);
+    
+    // Ensure hidden keycaps are visible
+    const allObjects = app.getAllObjects();
+    allObjects.forEach((obj) => {
+      if (obj.name.includes("keycap") || obj.name.includes("text")) {
+        obj.visible = true;
+      }
+    });
+
+    // Setup sounds
+    const playSound = (type: 'press' | 'release') => {
+      const audio = new Audio(`/keycap-sounds/${type}.mp3`);
+      audio.volume = 0.5;
+      audio.play().catch(e => console.log('Audio play failed:', e));
+    };
+
+    // Update side panel based on Hover
+    app.addEventListener("mouseHover", (e: any) => {
+      if (e.target && e.target.name) {
+        const hoveredName = e.target.name.toLowerCase();
+        
+        // Accurate matching: handle specific prefixes like 'keycap_js' or just 'js'
+        const foundSkill = skills.find(s => 
+          hoveredName === s.id || 
+          hoveredName === `keycap_${s.id}` ||
+          hoveredName.includes(`keycap-${s.id}`)
+        );
+        
+        if (foundSkill && activeSkillId !== foundSkill.id) {
+          setActiveSkillId(foundSkill.id);
+        }
+      }
+    });
+
+    // Play sound and trigger AI/Navigation on Click
+    app.addEventListener("mouseDown", (e: any) => {
+      if (e.target && e.target.name) {
+        const clickedName = e.target.name.toLowerCase();
+
+        // 3D Keyboard command integration
+        if (clickedName.includes('react')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Briefly explain how React.js is used in this portfolio.' }));
+        } else if (clickedName.includes('js') || clickedName.includes('javascript')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'How does JavaScript power the interactions in this portfolio?' }));
+        } else if (clickedName.includes('ts') || clickedName.includes('typescript')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Why was TypeScript chosen for this project?' }));
+        } else if (clickedName.includes('tailwind') || clickedName.includes('css')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Explain the styling system using Tailwind CSS.' }));
+        } else if (clickedName.includes('node') || clickedName.includes('express')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Explain the backend architecture and Node.js usage.' }));
+        } else if (clickedName.includes('mongo') || clickedName.includes('postgre')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Explain the database design (MongoDB/PostgreSQL).' }));
+        } else if (clickedName.includes('docker') || clickedName.includes('aws')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Explain the deployment and cloud infrastructure (Docker/AWS).' }));
+        } else if (clickedName.includes('github') || clickedName.includes('git')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Explain your version control and GitHub workflow.' }));
+        } else if (clickedName.includes('next')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'How is Next.js used in your projects?' }));
+        } else if (clickedName.includes('vim')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Why do you use Vim for development?' }));
+        } else if (clickedName.includes('python') || clickedName.includes('ai') || clickedName.includes('machine')) {
+          window.dispatchEvent(new CustomEvent('ai-ask', { detail: 'Explain your Machine Learning and AI projects/experience.' }));
+        } else if (clickedName.includes('work') || clickedName.includes('project')) {
+          window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Projects', target: 'projects' } }));
+        } else if (clickedName.includes('about') || clickedName.includes('me')) {
+          window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'About', target: 'about' } }));
+        } else if (clickedName.includes('contact')) {
+          window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Contact', target: 'contact' } }));
+        }
+
+        if (clickedName.includes('keycap') || clickedName.includes('text')) {
+          playSound('press'); 
+          
+          // Add a subtle depress animation to the clicked keycap
+          if (e.target.position) {
+            gsap.to(e.target.position, {
+              y: e.target.position.y - 5,
+              duration: 0.1,
+              yoyo: true,
+              repeat: 1
+            });
+          }
+        }
+      }
+    });
+    
+    // Listen for physical typing if the spline scene supports it
+    app.addEventListener("keyDown", () => playSound('press'));
+    app.addEventListener("keyUp", () => playSound('release'));
+  };
+
+  // Terminal Typing Animation Effect - Optimized for Speed
   useEffect(() => {
     let isCancelled = false;
     
-    const typeText = async (text: string, setter: (val: string) => void, speed = 30) => {
+    const typeText = async (text: string, setter: (val: string) => void, speed = 15) => {
       for (let i = 0; i <= text.length; i++) {
         if (isCancelled) break;
         setter(text.slice(0, i));
-        await new Promise(r => setTimeout(r, speed));
+        if (speed > 0) await new Promise(r => setTimeout(r, speed));
       }
     };
 
     const runSequence = async () => {
-      const skill = skills[activeSkillIndex];
-      if (!skill) return;
+      const skill = skills.find(s => s.id === activeSkillId) || skills[0];
 
-      // Reset and show loading
-      setTerminalState({ prompt: '> loading skill...', title: '', description: '', phase: 'loading' });
+      // Reset and show initial prompt immediately
+      setTerminalState({ 
+        prompt: `> loading skill: ${skill.id}`, 
+        title: '', 
+        description: '', 
+        phase: 'typing-title' 
+      });
       
-      // Brief pause for cinematic effect
-      await new Promise(r => setTimeout(r, 250));
-      if (isCancelled) return;
-
-      // Update prompt
-      setTerminalState(prev => ({ ...prev, prompt: `> loading skill: ${skill.id}`, phase: 'typing-title' }));
-      
-      // Type title
-      await typeText(skill.title, (val) => setTerminalState(prev => ({ ...prev, title: val })), 40);
+      // Speed up typing significantly
+      await typeText(skill.title, (val) => setTerminalState(prev => ({ ...prev, title: val })), 15);
       if (isCancelled) return;
 
       setTerminalState(prev => ({ ...prev, phase: 'typing-desc' }));
 
-      // Type description
-      await typeText(skill.description, (val) => setTerminalState(prev => ({ ...prev, description: val })), 25);
+      // Fast description typing
+      await typeText(skill.description, (val) => setTerminalState(prev => ({ ...prev, description: val })), 8);
       if (isCancelled) return;
 
       setTerminalState(prev => ({ ...prev, phase: 'done' }));
@@ -78,94 +178,96 @@ export default function KeyboardSection() {
     return () => {
       isCancelled = true;
     };
-  }, [activeSkillIndex]);
+  }, [activeSkillId]);
 
+  // Handle Fade animations 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Scroll-triggered emergence animation
+      // Setup simple scroll emergence fade
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=400vh", // Extended pin duration for scrolling through skills
-          scrub: 1.2,
+          end: "+=150vh", // Shorter pin purely for a clean fade sequence
+          scrub: 1,
           pin: true,
-          onUpdate: (self) => {
-            // 0 to 0.1 is emergence, 0.1 to 1.0 is scrolling through skills
-            if (self.progress > 0.1) {
-              const skillProgress = (self.progress - 0.1) / 0.9;
-              const index = Math.min(
-                Math.floor(skillProgress * skills.length),
-                skills.length - 1
-              );
-              setActiveSkillIndex(index);
-            } else {
-              setActiveSkillIndex(0);
-            }
-          }
         }
       });
 
-      // Initial state
-      gsap.set(keyboardWorldRef.current, {
-        y: 300,
-        rotationX: 55,
-        scale: 0.7,
-        opacity: 0
-      });
-      
+      gsap.set(keyboardWorldRef.current, { opacity: 0 });
       gsap.set(glowRef.current, { opacity: 0 });
-      gsap.set(skillPanelRef.current, { opacity: 0, y: 60 });
+      gsap.set(skillPanelRef.current, { opacity: 0, y: 30 });
 
-      // 0% to 10%: Keyboard rises & terminal appears
+      // Fade in smoothly over scroll
       tl.to(keyboardWorldRef.current, {
-        y: 0,
-        rotationX: 0,
-        scale: 1,
         opacity: 1,
-        duration: 0.1,
+        duration: 0.2,
         ease: "power2.out"
       }, 0);
 
       tl.to(glowRef.current, {
         opacity: 1,
-        duration: 0.1,
+        duration: 0.2,
         ease: "power2.out"
       }, 0);
 
       tl.to(skillPanelRef.current, {
         opacity: 1,
         y: 0,
-        duration: 0.1,
+        duration: 0.2,
         ease: "power3.out"
       }, 0);
 
-      // 10% to 100%: Empty space in timeline to allow scrolling through skills
-      tl.to({}, { duration: 0.9 });
-
-      // 2. Micro-interaction: Breathing animation
-      gsap.to(keyboardWorldRef.current, {
-        y: "+=12",
-        duration: 6,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.5
-      });
-
+      tl.to({}, { duration: 0.8 }); // Let it rest on screen
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
+  // Set the Spline native scale exactly once when it loads
+  useEffect(() => {
+    if (!splineApp) return;
+    const kbd = splineApp.findObjectByName("keyboard");
+    if (!kbd) return;
+
+    // Perfect middle ground size to fit inside container without clipping
+    gsap.set(kbd.position, { y: 0 }); // Perfectly centered vertically
+    gsap.set(kbd.rotation, { x: Math.PI / 8 }); // ~22.5 deg
+    gsap.set(kbd.scale, { x: 0.28, y: 0.28, z: 0.28 }); 
+
+    // Gentle floating breathing animation (static visually, just hovering slightly)
+    gsap.to(kbd.position, {
+      y: 15, // float range within safe bounds
+      duration: 4,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    });
+  }, [splineApp]);
+
   return (
-    <section 
+    <div 
       id="keyboardScene" 
       ref={sectionRef}
-      className="relative w-full h-screen bg-[#F6F3EE] text-[#1C1C1C] overflow-hidden flex items-center justify-center font-sans"
-      style={{ perspective: "1000px" }}
+      className="relative w-full min-h-screen py-24 md:py-0 md:h-screen bg-[#F6F3EE] text-[#1C1C1C] overflow-hidden flex items-center justify-center font-sans smooth-gpu"
     >
-      <div className="keyboard-stage w-full max-w-7xl mx-auto px-6 h-full flex flex-col md:flex-row items-center justify-between">
+      {/* Dynamic Cinematic Background Typography */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.h2
+            key={activeSkillId}
+            initial={{ opacity: 0, y: 50, filter: "blur(10px)", scale: 0.9 }}
+            animate={{ opacity: 0.04, y: 0, filter: "blur(0px)", scale: 1 }}
+            exit={{ opacity: 0, y: -50, filter: "blur(10px)", scale: 1.1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-[120px] md:text-[220px] font-bold text-black whitespace-nowrap tracking-tighter"
+          >
+            {skills.find(s => s.id === activeSkillId)?.title.toUpperCase()}
+          </motion.h2>
+        </AnimatePresence>
+      </div>
+
+      <div className="keyboard-stage w-full max-w-7xl mx-auto px-6 h-full flex flex-col md:flex-row items-center justify-between relative z-10">
         
         {/* Keyboard Area (60%) */}
         <div className="relative w-full md:w-[60%] h-[50vh] md:h-[80vh] flex items-center justify-center">
@@ -183,12 +285,18 @@ export default function KeyboardSection() {
           <div 
             ref={keyboardWorldRef}
             className="keyboard-world w-full h-full relative z-10"
-            style={{ transformStyle: 'preserve-3d' }}
           >
-            <spline-viewer 
-              url="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"
-              class="w-full h-full"
-            ></spline-viewer>
+            <Suspense fallback={
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="animate-spin w-8 h-8 border-2 border-black/20 border-t-black rounded-full"></div>
+              </div>
+            }>
+              <Spline
+                className="w-full h-full"
+                scene="/skills-keyboard.splinecode"
+                onLoad={handleSplineInteractions}
+              />
+            </Suspense>
           </div>
         </div>
 
@@ -223,6 +331,6 @@ export default function KeyboardSection() {
         </div>
 
       </div>
-    </section>
+    </div>
   );
 }

@@ -14,7 +14,13 @@ const NAV_ITEMS = [
   { label: 'Contact', media: 'https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=2000&auto=format&fit=crop' },
 ];
 
-const SOCIAL_LINKS = ['Leetcode', 'YouTube', 'Github', 'Twitter', 'LinkedIn'];
+const SOCIAL_LINKS = [
+  { name: 'Leetcode', url: 'https://leetcode.com/u/kUyAWXHOC5/' },
+  { name: 'YouTube', url: 'https://www.youtube.com/@RachitKakkad' },
+  { name: 'Github', url: 'https://github.com/Rachit-Kakkad1' },
+  { name: 'Twitter', url: 'https://x.com/rachit_kakk2957' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/rachit-kakkad-r29052007k' }
+];
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -132,6 +138,20 @@ export default function Navigation() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
+        onMouseEnter={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          gsap.to(e.currentTarget, {
+            x: (e.clientX - centerX) * 0.3,
+            y: (e.clientY - centerY) * 0.3,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        }}
+        onMouseLeave={(e) => {
+          gsap.to(e.currentTarget, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+        }}
         className="fixed top-8 right-8 z-[100] w-[60px] h-[60px] md:w-[70px] md:h-[70px] rounded-full bg-[#0E0F14] text-[#F6F3EE] flex items-center justify-center shadow-[0_0_30px_rgba(180,83,9,0.3)] hover:shadow-[0_0_40px_rgba(180,83,9,0.5)] transition-shadow duration-300 scale-0"
         style={{ transformOrigin: 'center' }}
       >
@@ -195,13 +215,15 @@ export default function Navigation() {
         >
           <div className="w-[1px] h-8 md:h-12 bg-[#F6F3EE]/30 origin-bottom" />
           {SOCIAL_LINKS.map(link => (
-            <div key={link} className="py-1">
+            <div key={link.name} className="py-1">
               <a 
-                href="#" 
+                href={link.url} 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block hover:opacity-100 hover:text-[#B45309] transition-all duration-300 hover:-translate-y-1"
                 style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
               >
-                {link}
+                {link.name}
               </a>
             </div>
           ))}

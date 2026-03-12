@@ -1,232 +1,270 @@
-import React, { useState, useRef } from 'react';
-import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
+import { GraduationCap, School, BookOpen, Sparkles, Terminal, Cpu, Layout, Code } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const education = [
+  {
+    type: "B.Tech in Computer Engineering",
+    institution: "Swaminarayan University — Kalol, Gujarat",
+    details: "1st Year (Pursuing) | CGPA: 9.3",
+    period: "2025 – 2029",
+    icon: GraduationCap,
+    color: "from-blue-500/20 to-cyan-500/20"
+  },
+  {
+    type: "Higher Secondary Education (12th)",
+    institution: "Shakti Higher Secondary School — Rajkot",
+    details: "Gujarat Board | Science Stream",
+    period: "Completed in 2025",
+    icon: School,
+    color: "from-amber-500/20 to-orange-500/20"
+  },
+  {
+    type: "Secondary Education (10th)",
+    institution: "SMT J.V. GEMS — Porbandar",
+    details: "Gujarat Board",
+    period: "Completed in 2023",
+    icon: BookOpen,
+    color: "from-emerald-500/20 to-teal-500/20"
+  }
+];
+
+const themes = [
+  { 
+    name: "Developer", icon: Terminal, keyword: "text-green-600", string: "text-orange-500", property: "text-blue-600", number: "text-blue-600", bg: "bg-white/80",
+    role: "Full Stack Dev", stack: ["React", "Node", "MongoDB", "Python"]
+  },
+  { 
+    name: "Engineer", icon: Cpu, keyword: "text-amber-700", string: "text-amber-500", property: "text-stone-700", number: "text-stone-700", bg: "bg-stone-50/80",
+    role: "Software Engineer", stack: ["TypeScript", "C++", "Docker", "AWS"]
+  },
+  { 
+    name: "AI Mode", icon: Sparkles, keyword: "text-violet-600", string: "text-cyan-500", property: "text-fuchsia-500", number: "text-blue-500", bg: "bg-slate-900/90 text-slate-200",
+    role: "ML Engineer", stack: ["PyTorch", "TensorFlow", "OpenAI", "RAG"]
+  },
+  { 
+    name: "Minimal", icon: Layout, keyword: "text-neutral-800", string: "text-neutral-500", property: "text-neutral-800", number: "text-neutral-500", bg: "bg-neutral-100/80",
+    role: "Creative Dev", stack: ["Three.js", "Framer", "GSAP", "WebGL"]
+  }
+];
 
 export default function AboutSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const bioRef = useRef<HTMLDivElement>(null);
+  const eduRef = useRef<HTMLDivElement>(null);
+  const bgTextRef = useRef<HTMLHeadingElement>(null);
 
-  const [codeLines, setCodeLines] = useState(0);
-  const [theme, setTheme] = useState(0);
-  const [hoveredLine, setHoveredLine] = useState<number | null>(null);
-  const [showCompiled, setShowCompiled] = useState(false);
+  const [activeTheme, setActiveTheme] = useState(0);
 
-  // Scroll mapping
-  // 0 - 0.2: Entry & Typing
-  // 0.2 - 0.6: Theme transitions
-  // 0.6 - 0.8: Exit
-  
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Typing
-    if (latest < 0.05) setCodeLines(0);
-    else if (latest < 0.2) {
-      const progress = (latest - 0.05) / 0.15;
-      setCodeLines(Math.floor(progress * 8));
-    } else {
-      setCodeLines(8);
-    }
+  // Portrait Mask Effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const maskRadius = useMotionValue(0);
+  const smoothX = useSpring(mouseX, { stiffness: 300, damping: 30 });
+  const smoothY = useSpring(mouseY, { stiffness: 300, damping: 30 });
+  const smoothRadius = useSpring(maskRadius, { stiffness: 300, damping: 30 });
+  const maskImage = useMotionTemplate`radial-gradient(circle ${smoothRadius}px at ${smoothX}px ${smoothY}px, black 100%, transparent 100%)`;
 
-    // Themes
-    if (latest < 0.3) setTheme(0); // Developer
-    else if (latest < 0.4) setTheme(1); // Engineer
-    else if (latest < 0.5) setTheme(2); // AI Mode
-    else setTheme(3); // Minimal Creator
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  };
 
-    // Compiled message
-    if (latest > 0.55 && latest < 0.8) {
-      setShowCompiled(true);
-    } else {
-      setShowCompiled(false);
-    }
-  });
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 1. Initial Setup
+      gsap.set([cardsRef.current, editorRef.current, bioRef.current, eduRef.current], { opacity: 0, y: 100 });
+      gsap.set(bgTextRef.current, { opacity: 0.05, scale: 0.9 });
 
-  const editorOpacity = useTransform(scrollYProgress, [0, 0.05, 0.7, 0.8], [0, 1, 1, 0]);
-  const particlesOpacity = useTransform(scrollYProgress, [0.75, 0.85], [0, 1]);
+      // 2. Multi-Stage Timeline
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=500%", // 5 Viewports of pinning
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            // Theme cycling based on scroll progress in the editor stage (0.2 to 0.5)
+            if (self.progress > 0.2 && self.progress < 0.5) {
+              const themeProgress = (self.progress - 0.2) / 0.3;
+              const index = Math.min(Math.floor(themeProgress * themes.length), themes.length - 1);
+              setActiveTheme(index);
+            }
+          }
+        }
+      });
 
-  const themes = [
-    { name: "Developer", keyword: "text-green-600", string: "text-orange-500", property: "text-blue-600", number: "text-blue-600", bg: "bg-white/80" },
-    { name: "Engineer", keyword: "text-amber-700", string: "text-amber-500", property: "text-stone-700", number: "text-stone-700", bg: "bg-stone-50/80" },
-    { name: "AI Mode", keyword: "text-violet-600", string: "text-cyan-500", property: "text-fuchsia-500", number: "text-blue-500", bg: "bg-slate-900/90 text-slate-200" },
-    { name: "Minimal", keyword: "text-neutral-800", string: "text-neutral-500", property: "text-neutral-800", number: "text-neutral-500", bg: "bg-neutral-100/80" }
-  ];
+      // Stage 1: Entrance & Background
+      tl.to(bgTextRef.current, { opacity: 0.15, scale: 1, duration: 1 })
+        .to(cardsRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5");
 
-  const currentTheme = themes[theme];
+      // Stage 2: 4 System Cards Exit & Editor Entrance
+      tl.to(cardsRef.current, { opacity: 0, y: -50, duration: 1, ease: "power3.in" }, "+=1")
+        .to(editorRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.2");
 
-  const fragments = ["AI", "SYSTEMS", "DATA", "LOGIC", "API", "MODEL", "INTERFACE"];
+      // Stage 3: Editor Stays, Theme Cycles (handled by onUpdate), then Editor Exits & Bio Enters
+      tl.to({}, { duration: 2 }) // Empty space for theme cycling
+        .to(editorRef.current, { opacity: 0, scale: 0.95, duration: 1, ease: "power3.in" })
+        .to(bioRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.3");
+
+      // Stage 4: Bio Exits & Education Enters
+      tl.to(bioRef.current, { opacity: 0, x: -100, duration: 1, ease: "power3.in" }, "+=1")
+        .to(eduRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5");
+
+      // Final: Background fade
+      tl.to(bgTextRef.current, { opacity: 0.03, duration: 1 });
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  const currentTheme = themes[activeTheme];
 
   return (
-    <div ref={containerRef} className="relative w-full h-[2400px]" style={{ background: 'radial-gradient(circle at center, #F6F3EE 0%, #ECE7DF 80%)' }}>
-      <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center">
+    <section ref={sectionRef} className="relative w-full h-screen bg-[#F6F3EE] overflow-hidden flex flex-col items-center justify-center">
+      
+      {/* Background Typography */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <h1 ref={bgTextRef} className="text-[120px] md:text-[220px] font-black leading-none text-black select-none text-center tracking-tighter uppercase">
+          WHO IS<br />RACHIT
+        </h1>
+      </div>
+
+      <div ref={containerRef} className="relative z-10 w-full max-w-7xl mx-auto px-6 h-full flex items-center justify-center">
         
-        {/* Layer 2: Giant Typography */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-          <h1 className="text-[150px] md:text-[260px] font-bold opacity-[0.04] tracking-[-0.03em] leading-[0.85] text-center text-black">
-            WHO<br/>IS<br/>RACHIT
-          </h1>
+        {/* Stage 1: The 4 Cards */}
+        <div ref={cardsRef} className="absolute inset-0 flex items-center justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-12">
+            {themes.map((theme, i) => (
+              <div key={i} className="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-black/5 flex flex-col gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center">
+                  <theme.icon size={24} />
+                </div>
+                <h3 className="text-xl font-bold">{theme.name}</h3>
+                <p className="text-sm text-black/60 font-medium">Expertise in {theme.stack.join(", ")}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Layer 3: System Grid & Fragments */}
-        <div className="absolute inset-0 z-0 pointer-events-none opacity-5" style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '100px 100px' }}></div>
-        
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          {fragments.map((frag, i) => (
-            <motion.div
-              key={frag}
-              className="absolute text-xs font-mono tracking-widest opacity-20 text-black"
-              style={{
-                top: `${20 + (i * 15)}%`,
-                left: `${10 + (i * 12)}%`,
-              }}
-              animate={{ y: [-10, 10, -10] }}
-              transition={{ duration: 10 + i, repeat: Infinity, ease: "easeInOut" }}
+        {/* Stage 2: The Interactive Editor */}
+        <div ref={editorRef} className="absolute inset-0 flex items-center justify-center -translate-y-12">
+          <div className={`w-full max-w-4xl rounded-3xl shadow-2xl border border-black/10 overflow-hidden transition-colors duration-700 ${currentTheme.bg}`}>
+            <div className="flex items-center px-6 py-4 border-b border-black/10 text-sm font-mono opacity-40">
+              <div className="flex gap-2 mr-6">
+                <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                <div className="w-3 h-3 rounded-full bg-green-400"></div>
+              </div>
+              rachit_profile.ts
+              <div className="ml-auto flex items-center gap-2">
+                <currentTheme.icon size={14} />
+                {currentTheme.name} MODE
+              </div>
+            </div>
+            <div className="p-10 font-mono text-base md:text-lg leading-relaxed relative">
+              <div className="flex">
+                <div className="pr-8 border-r border-black/10 mr-8 text-black/20 select-none text-right">
+                  {Array.from({length: 8}).map((_, i) => <div key={i}>{i+1}</div>)}
+                </div>
+                <div>
+                  <div className="flex gap-2">
+                    <span className={currentTheme.keyword}>const</span> 
+                    <span className={currentTheme.property}>Rachit</span> 
+                    <span className="text-black/40">=</span> 
+                    <span className="text-black/40">{'{'}</span>
+                  </div>
+                  <div className="pl-6">
+                    <span className={currentTheme.property}>role</span>: <span className={currentTheme.string}>"{currentTheme.role}"</span>,
+                  </div>
+                  <div className="pl-6">
+                    <span className={currentTheme.property}>focus</span>: <span className={currentTheme.string}>"{currentTheme.name === "Minimal" ? "Interactive Web" : "Scalable Architecture"}"</span>,
+                  </div>
+                  <div className="pl-6">
+                    <span className={currentTheme.property}>stack</span>: [<br />
+                    <div className="pl-6">
+                      {currentTheme.stack.map((item, idx) => (
+                        <span key={idx} className={currentTheme.string}>"{item}"{idx < currentTheme.stack.length - 1 ? "," : ""} </span>
+                      ))}
+                    </div>
+                    ]
+                  </div>
+                  <div className="text-black/40">{'}'}</div>
+                  <div className="mt-4 flex gap-2">
+                    <span className={currentTheme.keyword}>export default</span> 
+                    <span className={currentTheme.property}>Rachit</span>
+                    <motion.div animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-2 h-6 bg-black/40" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stage 3: Biography */}
+        <div ref={bioRef} className="absolute inset-0 flex items-center justify-center mt-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center px-12">
+            <motion.div 
+              className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black/5 group cursor-crosshair"
+              onMouseMove={handleMouseMove}
+              onMouseEnter={() => maskRadius.set(200)}
+              onMouseLeave={() => maskRadius.set(0)}
             >
-              {frag}
+              <img src="/ai_made_image.png" alt="AI Context" className="absolute inset-0 w-full h-full object-cover" />
+              <motion.div className="absolute inset-0 w-full h-full" style={{ WebkitMaskImage: maskImage, maskImage: maskImage }}>
+                <img src="/own_image.png" alt="Rachit" className="w-full h-full object-cover" />
+              </motion.div>
             </motion.div>
-          ))}
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-4">
+                <span className="text-[#B45309] font-mono tracking-widest uppercase text-xs font-bold">The Narrative</span>
+                <h2 className="text-5xl md:text-7xl font-black tracking-tight leading-none">BEYOND<br /><span className="text-[#B45309]">THE CODE</span></h2>
+              </div>
+              <div className="flex flex-col gap-6 text-black/70 font-medium text-lg leading-relaxed">
+                <p>I am Rachit Kakkad, a passionate Full Stack Developer driven by the intersection of intelligent systems and cinematic user experiences.</p>
+                <p>Full-stack development is more than just connecting a frontend to a database; it's about architecting seamless, end-to-end digital ecosystems. By mastering both visual precision and server-side logic, I bridge the gap between user intent and technical execution.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Layer 4: Interactive Code Editor */}
-        <motion.div 
-          className={`relative z-10 w-[90vw] max-w-2xl rounded-xl border border-black/10 shadow-2xl backdrop-blur-md transition-colors duration-700 overflow-hidden ${currentTheme.bg}`}
-          style={{ opacity: editorOpacity }}
-        >
-          {/* Editor Header */}
-          <div className="flex items-center px-4 py-3 border-b border-black/10 text-xs font-mono text-black/40">
-            <div className="flex gap-1.5 mr-4">
-              <div className="w-2.5 h-2.5 rounded-full bg-black/20"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-black/20"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-black/20"></div>
+        {/* Stage 4: Education */}
+        <div ref={eduRef} className="absolute inset-0 flex items-center justify-center">
+          <div className="flex flex-col gap-12 w-full px-12">
+            <div className="flex flex-col items-center text-center gap-4">
+              <span className="text-[#B45309] font-mono tracking-[0.4em] uppercase text-xs font-bold">Academic Journey</span>
+              <h3 className="text-4xl md:text-6xl font-bold tracking-tight">Foundation Of Excellence</h3>
             </div>
-            developer.js
-            <div className="ml-auto opacity-50 transition-opacity duration-500">{currentTheme.name} Theme</div>
-          </div>
-
-          {/* Editor Body */}
-          <div className="p-6 font-mono text-sm md:text-base leading-relaxed relative">
-            
-            {/* Hover Panels */}
-            <AnimatePresence>
-              {hoveredLine === 2 && (
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="absolute right-6 top-12 w-48 p-4 bg-black text-white text-xs rounded-lg shadow-xl z-20">
-                  Full stack developer focused on modern web architecture and intelligent systems.
-                </motion.div>
-              )}
-              {hoveredLine === 4 && (
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="absolute right-6 top-24 w-48 p-4 bg-black text-white text-xs rounded-lg shadow-xl z-20 flex flex-wrap gap-2">
-                  {["React", "Node", "MongoDB", "Express", "Python", "TensorFlow"].map(tech => (
-                    <span key={tech} className="px-2 py-1 bg-white/20 rounded">{tech}</span>
-                  ))}
-                </motion.div>
-              )}
-              {hoveredLine === 5 && (
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="absolute right-6 top-32 w-48 p-4 bg-black text-white text-xs rounded-lg shadow-xl z-20">
-                  Interfaces where design meets engineering.
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="flex">
-              {/* Line Numbers */}
-              <div className="flex flex-col text-black/20 select-none pr-4 text-right border-r border-black/10 mr-4">
-                {[1,2,3,4,5,6,7,8].map(n => (
-                  <div key={n} className={n <= codeLines ? "opacity-100" : "opacity-0"}>{n}</div>
-                ))}
-              </div>
-
-              {/* Code Content */}
-              <div className="flex flex-col w-full">
-                {codeLines >= 1 && (
-                  <div className="hover:bg-black/5 -mx-2 px-2 rounded transition-colors cursor-default">
-                    <span className={currentTheme.keyword}>const</span> <span className={currentTheme.property}>developer</span> = {'{'}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {education.map((item, i) => (
+                <div key={i} className="group p-10 bg-white/80 backdrop-blur-md rounded-[2.5rem] shadow-xl border border-black/5 flex flex-col gap-6 transition-transform hover:-translate-y-2">
+                  <div className="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center">
+                    <item.icon size={30} />
                   </div>
-                )}
-                {codeLines >= 2 && (
-                  <div className="hover:bg-black/5 -mx-2 px-2 rounded transition-colors cursor-default" onMouseEnter={() => setHoveredLine(2)} onMouseLeave={() => setHoveredLine(null)}>
-                    &nbsp;&nbsp;<span className={currentTheme.property}>name</span>: <span className={currentTheme.string}>"Rachit Kakkad"</span>,
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[#B45309] font-mono text-[10px] uppercase tracking-widest font-bold">{item.period}</span>
+                    <h4 className="text-xl font-black text-black leading-tight">{item.type}</h4>
+                    <p className="text-sm font-bold text-black/60">{item.institution}</p>
+                    <p className="text-xs text-black/40 font-medium mt-2">{item.details}</p>
                   </div>
-                )}
-                {codeLines >= 3 && (
-                  <div className="hover:bg-black/5 -mx-2 px-2 rounded transition-colors cursor-default">
-                    &nbsp;&nbsp;<span className={currentTheme.property}>role</span>: <span className={currentTheme.string}>"Full Stack Dev"</span>,
-                  </div>
-                )}
-                {codeLines >= 4 && (
-                  <div className="hover:bg-black/5 -mx-2 px-2 rounded transition-colors cursor-default" onMouseEnter={() => setHoveredLine(4)} onMouseLeave={() => setHoveredLine(null)}>
-                    &nbsp;&nbsp;<span className={currentTheme.property}>stack</span>: [<span className={currentTheme.string}>"MERN"</span>, <span className={currentTheme.string}>"AI"</span>],
-                  </div>
-                )}
-                {codeLines >= 5 && (
-                  <div className="hover:bg-black/5 -mx-2 px-2 rounded transition-colors cursor-default" onMouseEnter={() => setHoveredLine(5)} onMouseLeave={() => setHoveredLine(null)}>
-                    &nbsp;&nbsp;<span className={currentTheme.property}>focus</span>: <span className={currentTheme.string}>"Interactive"</span>,
-                  </div>
-                )}
-                {codeLines >= 6 && (
-                  <div className="hover:bg-black/5 -mx-2 px-2 rounded transition-colors cursor-default">
-                    &nbsp;&nbsp;<span className={currentTheme.property}>goal</span>: <span className={currentTheme.string}>"Intelligent UI"</span>
-                  </div>
-                )}
-                {codeLines >= 7 && (
-                  <div className="hover:bg-black/5 -mx-2 px-2 rounded transition-colors cursor-default">
-                    {'}'}
-                  </div>
-                )}
-                {codeLines >= 8 && (
-                  <div className="hover:bg-black/5 -mx-2 px-2 rounded transition-colors cursor-default mt-2">
-                    <span className={currentTheme.keyword}>export default</span> <span className={currentTheme.property}>developer</span>
-                    <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }}>_</motion.span>
-                  </div>
-                )}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-          
-          {/* Final Code Event */}
-          <AnimatePresence>
-            {showCompiled && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="bg-black/90 text-green-400 text-xs font-mono p-3 border-t border-white/10"
-              >
-                {'>'} identity compiled successfully
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Transition to Skills Section (Particles) */}
-        <motion.div 
-          className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center"
-          style={{ opacity: particlesOpacity }}
-        >
-          {/* We can simulate the dissolve effect with some falling elements */}
-          <div className="relative w-full h-full">
-             {Array.from({ length: 50 }).map((_, i) => (
-               <motion.div
-                 key={i}
-                 className="absolute w-1 h-1 bg-black/40 rounded-full"
-                 style={{
-                   left: `${Math.random() * 100}%`,
-                   top: `${Math.random() * 100}%`,
-                 }}
-                 animate={{
-                   y: [0, Math.random() * 500 + 200],
-                   opacity: [1, 0]
-                 }}
-                 transition={{
-                   duration: Math.random() * 2 + 1,
-                   repeat: Infinity,
-                   ease: "linear"
-                 }}
-               />
-             ))}
-          </div>
-        </motion.div>
+        </div>
 
       </div>
-    </div>
+    </section>
   );
 }

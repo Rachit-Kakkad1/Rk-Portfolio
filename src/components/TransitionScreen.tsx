@@ -13,7 +13,7 @@ export default function TransitionScreen() {
       setTimeout(() => {
         const target = document.getElementById(e.detail.target);
         if (target) {
-          target.scrollIntoView({ behavior: 'instant' });
+          (window as any).lenis?.scrollTo(target, { immediate: true });
         }
       }, 600);
 

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { X, ArrowRight } from 'lucide-react';
+import { X, ArrowRight, Github, ExternalLink } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import AllProjectsSection from './AllProjectsSection';
 
@@ -42,85 +42,95 @@ const PROJECTS = [
       { title: 'AI Verification', description: 'Computer vision models verify crop health from uploaded images.' },
       { title: 'Smart Contracts', description: 'Automated payouts when certification criteria are met.' }
     ],
-    image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2000&auto=format&fit=crop',
+    image: '/agricert-main.jpg',
+    github: 'https://github.com/rachitkakkad/agricert',
+    live: 'https://agricert-khaki.vercel.app',
     gallery: [
-      'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?q=80&w=2000&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1592982537447-6f2a6a0c6c1b?q=80&w=2000&auto=format&fit=crop'
+      '/agricert-1.png',
+      '/agricert-2.png',
+      '/agricert-3.png',
+      '/agricert-4.png'
     ]
   },
   {
-    id: 'nexus',
-    title: 'Nexus AI',
-    shortDesc: 'Generative AI workspace for creative professionals.',
-    description: 'A unified workspace that brings together state-of-the-art generative AI models into a single, intuitive interface. Designed specifically for creative agencies to streamline their ideation and production workflows.',
-    role: 'Frontend Lead',
-    stack: 'Next.js · TypeScript · Tailwind · OpenAI',
-    year: '2024',
-    challenge: 'Creative teams were constantly switching between different AI tools for text, image, and video generation, breaking their flow state and making collaboration difficult.',
-    solution: 'A unified canvas interface where teams can prompt multiple AI models simultaneously, drag and drop results, and build upon each other\'s ideas in real-time.',
+    id: 'lifelens',
+    title: 'LifeLens AI',
+    shortDesc: 'AI-Powered Personal & Planetary Health Intelligence Platform',
+    description: 'LifeLens is an intelligent behavioral analytics platform that connects personal wellness data with environmental impact insights. By combining lifestyle tracking with AI-powered analysis, the platform helps users understand how their daily habits influence both personal health and climate footprint.',
+    role: 'Full Stack Developer',
+    stack: 'React · TypeScript · TailwindCSS · Recharts · Supabase · Gemini AI',
+    year: '2026',
+    challenge: 'Health tracking and climate action are typically treated as separate systems. Fitness apps focus only on personal health metrics, while sustainability tools focus only on carbon emissions. This separation prevents users from understanding how everyday lifestyle choices influence both simultaneously.',
+    solution: 'LifeLens introduces a dual-impact analytics system that evaluates both internal wellness signals and external environmental footprint. Using an AI-powered behavioral intelligence engine (Google Gemini), it transforms passive tracking into predictive behavioral insights by identifying correlations like improved sleep when cycling.',
     results: [
-      { value: 3, suffix: 'x', label: 'Faster Ideation' },
-      { value: 50, suffix: 'k+', label: 'Active Users' },
-      { value: 99, suffix: '%', label: 'Uptime' }
+      { value: 2, suffix: 'x', label: 'Dual Impact Score' },
+      { value: 100, suffix: '%', label: 'Real-Time Sync' },
+      { value: 95, suffix: '%', label: 'User Retention' }
     ],
     features: [
-      { title: 'Multi-Model Canvas', description: 'Use GPT-4, Midjourney, and Claude in one unified space.' },
-      { title: 'Real-time Collab', description: 'Work together with your team synchronously.' },
-      { title: 'Asset Library', description: 'Automatically organize and tag generated assets.' }
+      { title: 'AI Behavioral Engine', description: 'Dual health and climate scoring system that identifies correlations in lifestyle choices.' },
+      { title: 'Interactive Analytics', description: 'Real-time dashboard with animated gradient graphs and glassmorphism UI.' },
+      { title: 'Personalized Insights', description: 'AI-generated actionable insights to improve both well-being and reduce carbon emissions.' }
     ],
-    image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2000&auto=format&fit=crop',
+    image: '/lifelens.jpg',
+    github: '#',
+    live: '#',
     gallery: [
       'https://images.unsplash.com/photo-1633412802994-5c058f151b66?q=80&w=2000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop'
     ]
   },
   {
-    id: 'lumina',
-    title: 'Lumina Health',
-    shortDesc: 'Telemedicine platform with real-time vitals monitoring.',
-    description: 'Lumina Health bridges the gap between patients and healthcare providers through a secure, high-definition video consultation platform integrated with IoT health devices for real-time vitals monitoring.',
-    role: 'Backend Developer',
-    stack: 'Python · Django · WebRTC · PostgreSQL',
-    year: '2023',
-    challenge: 'Remote consultations lacked the diagnostic data doctors rely on during in-person visits, leading to less accurate remote diagnoses.',
-    solution: 'We integrated Bluetooth-enabled health monitors directly into the video consultation interface, streaming real-time heart rate, blood pressure, and oxygen levels to the doctor.',
+    id: 'fleetflow',
+    title: 'FleetFlow',
+    shortDesc: 'Real-Time Logistics & Fleet Intelligence Platform',
+    description: 'FleetFlow is a modern logistics command platform designed to manage fleet operations, dispatch coordination, driver workflows, and operational analytics in real time. The system provides organizations with a centralized command center that enables live vehicle tracking, role-based workflow management, financial monitoring, and AI-assisted anomaly detection.',
+    role: 'Full Stack Developer',
+    stack: 'React · Node.js · Express · PostgreSQL · Prisma · Socket.IO',
+    year: '2026',
+    challenge: 'Logistics operations are often fragmented across multiple disconnected systems, resulting in delayed operational insights, inefficient dispatch coordination, and poor expense monitoring. Organizations require a unified platform to synchronize operational workflows.',
+    solution: 'FleetFlow introduces a centralized logistics intelligence platform powered by real-time data synchronization and role-governed workflows. Using a WebSocket-based event-driven architecture, it provides instant operational visibility and instant SOS alerts without manual refreshes.',
     results: [
-      { value: 200, suffix: 'ms', label: 'Data Latency' },
-      { value: 1, suffix: 'M+', label: 'Consultations' },
-      { value: 95, suffix: '%', label: 'Patient Satisfaction' }
+      { value: 100, suffix: '%', label: 'Real-Time Sync' },
+      { value: 4, suffix: '', label: 'Role Portals' },
+      { value: 99, suffix: '%', label: 'Anomaly Detection' }
     ],
     features: [
-      { title: 'IoT Integration', description: 'Seamless connection with FDA-approved health devices.' },
-      { title: 'HD WebRTC', description: 'Crystal clear video even on low-bandwidth connections.' },
-      { title: 'HIPAA Compliant', description: 'End-to-end encryption for all patient data.' }
+      { title: 'Real-Time Sync', description: 'Live operational updates via WebSockets for instantaneous fleet visibility.' },
+      { title: 'Role-Based Dashboards', description: 'Specialized interfaces for Managers, Dispatchers, Drivers, and Analysts.' },
+      { title: 'AI Anomaly Detection', description: 'Predictive monitoring automatically flags fuel consumption irregularities for audit.' }
     ],
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2000&auto=format&fit=crop',
+    image: '/fleetflow.jpg',
+    github: '#',
+    live: '#',
     gallery: [
       'https://images.unsplash.com/photo-1551076805-e18690c5e561?q=80&w=2000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?q=80&w=2000&auto=format&fit=crop'
     ]
   },
   {
-    id: 'orbit',
-    title: 'Orbit Finance',
-    shortDesc: 'Decentralized exchange with zero-knowledge rollups.',
-    description: 'A next-generation decentralized exchange that utilizes zero-knowledge rollups to provide lightning-fast transactions with near-zero gas fees, while maintaining Ethereum-level security.',
-    role: 'Smart Contract Engineer',
-    stack: 'Solidity · React · Ethers.js · ZK-Proofs',
-    year: '2022',
-    challenge: 'High gas fees and slow transaction times on Ethereum mainnet were pricing out retail users from participating in decentralized finance.',
-    solution: 'Implemented a Layer 2 ZK-Rollup architecture that batches thousands of transactions off-chain and submits a single cryptographic proof to the mainnet.',
+    id: 'threatlens',
+    title: 'ThreatLens',
+    shortDesc: 'Ethical Static Cybersecurity Analysis & Threat Modeling Platform',
+    description: 'An advanced cybersecurity education and research platform designed to perform ethical static code analysis and deterministic threat modeling. ThreatLens provides deep insights into potential vulnerabilities while maintaining a strictly defensive, zero-exploitation approach.',
+    role: 'Security Engineer',
+    stack: 'Python · FastAPI · React · AST Parsers · Docker',
+    year: '2026',
+    challenge: 'Cybersecurity education often lacks safe, deterministic environments for analyzing vulnerabilities without risking active exploitation or requiring complex, isolated sandbox setups.',
+    solution: 'Built a static analysis engine utilizing Abstract Syntax Tree (AST) parsing and ethical threat modeling algorithms to identify vulnerabilities, score risks, and suggest remediations without ever executing the analyzed code.',
     results: [
-      { value: 99, suffix: '%', label: 'Lower Fees' },
-      { value: 2000, suffix: '+', label: 'TPS' },
-      { value: 50, suffix: 'M+', label: 'TVL' }
+      { value: 100, suffix: '%', label: 'Zero Exploitation' },
+      { value: 5, suffix: '', label: 'Analysis Modules' },
+      { value: 500, suffix: '+', label: 'Threat Patterns' }
     ],
     features: [
-      { title: 'ZK-Rollups', description: 'Cryptographic proofs ensure security without mainnet congestion.' },
-      { title: 'Instant Finality', description: 'Trades are confirmed instantly on the Layer 2 network.' },
-      { title: 'Gasless Swaps', description: 'Meta-transactions allow users to pay fees in the token they are trading.' }
+      { title: 'Deterministic Analysis', description: 'Safe, static code evaluation without active execution risks.' },
+      { title: 'Judge-Safe AI', description: 'Ethical AI assistance for understanding and remediating identified vulnerabilities.' },
+      { title: 'Transparent Risk Scoring', description: 'Clear, actionable metrics for prioritizing security patches.' }
     ],
-    image: 'https://images.unsplash.com/photo-1639762681485-074b7f4ec051?q=80&w=2000&auto=format&fit=crop',
+    image: '/threatlens.jpg',
+    github: '#',
+    live: '#',
     gallery: [
       'https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=2000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2000&auto=format&fit=crop'
@@ -148,6 +158,7 @@ export default function ProjectsSection() {
   const galleryContainerRef = useRef<HTMLDivElement>(null);
   const galleryWrapperRef = useRef<HTMLDivElement>(null);
   const metricsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const archiveButtonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -210,6 +221,20 @@ export default function ProjectsSection() {
           );
         }
       });
+      // Archive button visibility trigger
+      if (archiveButtonRef.current) {
+        gsap.set(archiveButtonRef.current, { x: 100, opacity: 0 });
+        
+        ScrollTrigger.create({
+          trigger: "#projects",
+          start: "top 20%",
+          end: "bottom 80%",
+          onEnter: () => gsap.to(archiveButtonRef.current, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }),
+          onLeave: () => gsap.to(archiveButtonRef.current, { x: 100, opacity: 0, duration: 0.4, ease: "power3.in" }),
+          onEnterBack: () => gsap.to(archiveButtonRef.current, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }),
+          onLeaveBack: () => gsap.to(archiveButtonRef.current, { x: 100, opacity: 0, duration: 0.4, ease: "power3.in" }),
+        });
+      }
     });
 
     return () => ctx.revert();
@@ -499,6 +524,67 @@ export default function ProjectsSection() {
     }
   }, [isExpanded]);
 
+  const openCaseStudyFromArchive = (project: any) => {
+    setActiveProject(project);
+    setIsExpanded(true);
+    
+    // Slight delay to allow DOM nodes to mount
+    setTimeout(() => {
+      if (caseStudyRef.current && contentRef.current && heroImageRef.current && closeBtnRef.current) {
+        // Force the layout to full screen instantly (bypassing the math from floating cards)
+        gsap.set(caseStudyRef.current, {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 100,
+          display: 'block',
+          backgroundColor: '#F6F3EE',
+        });
+        
+        gsap.set(heroImageRef.current, {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          borderRadius: '0px',
+          objectFit: 'cover',
+        });
+
+        gsap.set([contentRef.current, scrollIndicatorRef.current], {
+          opacity: 0,
+          y: 40,
+        });
+
+        gsap.set(closeBtnRef.current, {
+          opacity: 0,
+          scale: 0.8,
+        });
+
+        // Simple fade in animation
+        const tl = gsap.timeline();
+        tl.to([contentRef.current, scrollIndicatorRef.current], {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          stagger: 0.2,
+        });
+
+        tl.to(closeBtnRef.current, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.4,
+          ease: 'back.out(1.5)',
+        }, "-=0.4");
+
+        document.body.style.overflow = 'hidden';
+      }
+    }, 50);
+  };
+
   return (
     <section 
       className="relative w-full bg-[#F6F3EE] text-[#1C1C1C] py-32 overflow-hidden min-h-[220vh] md:min-h-[180vh] flex flex-col" 
@@ -557,7 +643,19 @@ export default function ProjectsSection() {
                 
                 <div className="flex flex-col gap-3 relative z-10">
                   <div className="flex justify-between items-start">
-                    <h3 className="text-2xl md:text-3xl font-medium leading-tight text-[#1C1C1C]">{project.title}</h3>
+                    <h3 className="text-2xl md:text-3xl font-medium leading-tight text-[#1C1C1C] pr-4">{project.title}</h3>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {project.github && project.github !== '#' && (
+                        <a href={project.github} target="_blank" rel="noopener noreferrer" className="p-2 md:p-2.5 rounded-full bg-black/5 hover:bg-[#B45309] text-[#1C1C1C]/60 hover:text-white transition-all duration-300 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+                          <Github size={18} />
+                        </a>
+                      )}
+                      {project.live && project.live !== '#' && (
+                        <a href={project.live} target="_blank" rel="noopener noreferrer" className="p-2 md:p-2.5 rounded-full bg-black/5 hover:bg-[#B45309] text-[#1C1C1C]/60 hover:text-white transition-all duration-300 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+                          <ExternalLink size={18} />
+                        </a>
+                      )}
+                    </div>
                   </div>
                   <p className="text-[#1C1C1C]/70 text-base md:text-lg leading-relaxed">{project.shortDesc}</p>
                   <div className="text-xs md:text-sm font-mono text-[#B45309] mt-2 uppercase tracking-wider font-semibold">
@@ -570,26 +668,30 @@ export default function ProjectsSection() {
         ))}
       </div>
 
-      {/* Archive Button */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 mt-auto pb-12 flex justify-end">
+      {/* Static Archive Button - Cinematic Side Tab */}
+      <div 
+        ref={archiveButtonRef}
+        className="fixed bottom-24 right-0 z-50 opacity-0 transition-opacity duration-700 ease-[0.16,1,0.3,1]"
+      >
         <button 
           onClick={() => setShowArchive(true)}
-          className="group flex items-center gap-4 px-8 py-4 rounded-full bg-[#1C1C1C] text-[#F6F3EE] hover:bg-[#B45309] transition-colors duration-300"
+          className="group flex items-center gap-6 px-10 py-5 bg-[#1C1C1C] text-[#F6F3EE] shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:bg-[#B45309] transition-all duration-500 rounded-l-full -rotate-90 origin-center whitespace-nowrap border-l border-white/10"
         >
-          <span className="font-medium tracking-wide uppercase text-sm">View Project Archive</span>
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+          <span className="font-bold tracking-[0.3em] uppercase text-xs">View Project Archive</span>
+          <ArrowRight className="w-5 h-5 -rotate-90 group-hover:translate-y-2 transition-transform duration-500" />
         </button>
       </div>
 
       <AnimatePresence>
-        {showArchive && <AllProjectsSection onClose={() => setShowArchive(false)} />}
+        {showArchive && <AllProjectsSection onClose={() => setShowArchive(false)} onProjectClick={(p) => { setShowArchive(false); openCaseStudyFromArchive(p); }} />}
       </AnimatePresence>
 
       {/* Case Study Overlay */}
       <div 
         ref={caseStudyRef}
-        className="fixed inset-0 hidden overflow-y-auto overflow-x-hidden"
+        className="fixed inset-0 hidden overflow-y-auto overflow-x-hidden pt-0"
         style={{ zIndex: 100 }}
+        data-lenis-prevent="true"
       >
         {activeProject && (
           <>
@@ -621,13 +723,28 @@ export default function ProjectsSection() {
             </button>
 
             {/* Content */}
-            <div className="relative z-10 bg-[#F6F3EE] min-h-screen">
+            <div className="relative z-10 bg-[#F6F3EE] min-h-screen text-[#1C1C1C]">
               <div ref={contentRef} className="max-w-7xl mx-auto px-6 py-32 md:py-48">
                 {/* Intro */}
                 <div className="mb-32">
                   <h1 className="text-6xl md:text-8xl font-medium tracking-tight mb-8">
                     {activeProject.title}
                   </h1>
+
+                  <div className="flex flex-wrap gap-4 mb-16">
+                    {activeProject.github && activeProject.github !== '#' && (
+                      <a href={activeProject.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-8 py-4 rounded-full bg-black text-white hover:bg-[#B45309] transition-colors font-medium">
+                        <Github size={20} />
+                        View Source
+                      </a>
+                    )}
+                    {activeProject.live && activeProject.live !== '#' && (
+                      <a href={activeProject.live} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-8 py-4 rounded-full bg-black/5 text-black hover:bg-black/10 transition-colors font-medium">
+                        <ExternalLink size={20} />
+                        Live Preview
+                      </a>
+                    )}
+                  </div>
                   
                   <p className="text-2xl md:text-4xl text-neutral-600 leading-relaxed mb-24 max-w-4xl">
                     {activeProject.description}
@@ -636,15 +753,15 @@ export default function ProjectsSection() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-12 border-t border-black/10 pt-12">
                     <div>
                       <h4 className="text-sm uppercase tracking-widest text-neutral-500 mb-4">Role</h4>
-                      <p className="text-xl">{activeProject.role}</p>
+                      <p className="text-xl text-black">{activeProject.role}</p>
                     </div>
                     <div>
                       <h4 className="text-sm uppercase tracking-widest text-neutral-500 mb-4">Stack</h4>
-                      <p className="text-xl">{activeProject.stack}</p>
+                      <p className="text-xl text-black">{activeProject.stack}</p>
                     </div>
                     <div>
                       <h4 className="text-sm uppercase tracking-widest text-neutral-500 mb-4">Year</h4>
-                      <p className="text-xl">{activeProject.year}</p>
+                      <p className="text-xl text-black">{activeProject.year}</p>
                     </div>
                   </div>
                 </div>
@@ -653,13 +770,13 @@ export default function ProjectsSection() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32 mb-48">
                   <div>
                     <h3 className="text-sm uppercase tracking-widest text-neutral-500 mb-8">The Challenge</h3>
-                    <p className="text-2xl md:text-3xl leading-relaxed text-neutral-800">
+                    <p className="text-2xl md:text-3xl leading-relaxed text-black/80">
                       {activeProject.challenge}
                     </p>
                   </div>
                   <div>
                     <h3 className="text-sm uppercase tracking-widest text-neutral-500 mb-8">The Solution</h3>
-                    <p className="text-2xl md:text-3xl leading-relaxed text-neutral-800">
+                    <p className="text-2xl md:text-3xl leading-relaxed text-black/80">
                       {activeProject.solution}
                     </p>
                   </div>
@@ -677,7 +794,7 @@ export default function ProjectsSection() {
                       >
                         <div className="text-7xl md:text-8xl font-medium tracking-tighter mb-4 flex items-baseline">
                           <span className="metric-value">0</span>
-                          <span className="text-4xl md:text-5xl ml-1 text-neutral-400">{result.suffix}</span>
+                          <span className="text-4xl md:text-5xl ml-1 text-black/40">{result.suffix}</span>
                         </div>
                         <p className="text-xl text-neutral-600 uppercase tracking-wider">{result.label}</p>
                       </div>
@@ -691,7 +808,7 @@ export default function ProjectsSection() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                     {activeProject.features.map((feature, i) => (
                       <div key={i} className="bg-white/50 p-8 rounded-2xl border border-black/5">
-                        <h4 className="text-2xl font-medium mb-4">{feature.title}</h4>
+                        <h4 className="text-2xl font-medium mb-4 text-black text-black">{feature.title}</h4>
                         <p className="text-neutral-600 leading-relaxed">{feature.description}</p>
                       </div>
                     ))}
@@ -740,9 +857,15 @@ export default function ProjectsSection() {
                 }
               }}>
                 <h4 className="text-sm uppercase tracking-widest text-neutral-500 mb-8">Next Project</h4>
-                <h2 className="text-6xl md:text-9xl font-medium tracking-tighter group-hover:scale-105 transition-transform duration-500">
+                <h2 className="text-6xl md:text-9xl font-medium tracking-tighter group-hover:scale-105 transition-transform duration-500 text-black">
                   {PROJECTS[(PROJECTS.findIndex(p => p.id === activeProject.id) + 1) % PROJECTS.length].title}
                 </h2>
+                <div className="mt-12 flex justify-center">
+                  <div className="inline-flex items-center gap-4 text-2xl md:text-4xl font-medium text-neutral-400 group-hover:text-black transition-colors duration-300">
+                    <span>Next Project</span>
+                    <ArrowRight className="w-8 h-8 md:w-10 md:h-10 group-hover:translate-x-4 transition-transform duration-300" />
+                  </div>
+                </div>
               </div>
             </div>
           </>
