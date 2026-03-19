@@ -1,0 +1,64 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0;
+  /* Smooth fade-in and scale transitions */
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Fallback defaults in case JS is slow */
+  --x: 50%;
+  --y: 50%;
+  --radius: 120px;
+  
+  /* Inherit border radius from parent for easy embedding in cards/containers */
+  border-radius: inherit;
+}
+
+.container.visible {
+  opacity: 1;
+}
+
+.container.hovered {
+  /* Subtle scale up on hover for depth */
+  transform: scale(1.02);
+}
+
+.baseImage, .revealImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.baseImage {
+  position: relative;
+  z-index: 1;
+}
+
+.revealWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  
+  /* The core soft-edge mask logic using robust syntax */
+  -webkit-mask-image: radial-gradient(circle at var(--x) var(--y), black 0%, black 60%, transparent var(--radius));
+  mask-image: radial-gradient(circle at var(--x) var(--y), black 0%, black 60%, transparent var(--radius));
+  
+  /* Start hidden, fade in on hover (provides cleaner entry/exit than a static mask) */
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+/* Show the X-ray mask when cursor is hovering the container */
+.container.hovered .revealWrapper {
+  opacity: 1;
+}

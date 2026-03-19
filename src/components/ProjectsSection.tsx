@@ -43,7 +43,7 @@ const PROJECTS = [
       { title: 'Smart Contracts', description: 'Automated payouts when certification criteria are met.' }
     ],
     image: '/agricert-main.jpg',
-    github: 'https://github.com/rachitkakkad/agricert',
+    github: 'https://github.com/Rachit-Kakkad1/agricert-platform',
     live: 'https://agricert-khaki.vercel.app',
     gallery: [
       '/agricert-1.png',
@@ -73,8 +73,8 @@ const PROJECTS = [
       { title: 'Personalized Insights', description: 'AI-generated actionable insights to improve both well-being and reduce carbon emissions.' }
     ],
     image: '/lifelens.jpg',
-    github: '#',
-    live: '#',
+    github: 'https://github.com/Rachit-Kakkad1/lifelens-ai-dashboard',
+    live: 'https://lifelens-ai-dashboard.vercel.app/',
     gallery: [
       'https://images.unsplash.com/photo-1633412802994-5c058f151b66?q=80&w=2000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop'
@@ -101,8 +101,8 @@ const PROJECTS = [
       { title: 'AI Anomaly Detection', description: 'Predictive monitoring automatically flags fuel consumption irregularities for audit.' }
     ],
     image: '/fleetflow.jpg',
-    github: '#',
-    live: '#',
+    github: 'https://github.com/Rachit-Kakkad1/FleetFlow',
+    live: 'https://fleet-flow-smoky-eta.vercel.app/',
     gallery: [
       'https://images.unsplash.com/photo-1551076805-e18690c5e561?q=80&w=2000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?q=80&w=2000&auto=format&fit=crop'
@@ -129,8 +129,8 @@ const PROJECTS = [
       { title: 'Transparent Risk Scoring', description: 'Clear, actionable metrics for prioritizing security patches.' }
     ],
     image: '/threatlens.jpg',
-    github: '#',
-    live: '#',
+    github: 'https://github.com/Rachit-Kakkad1/ThreatLens',
+    live: 'https://threatlens-topaz.vercel.app',
     gallery: [
       'https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=2000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2000&auto=format&fit=crop'
@@ -611,7 +611,7 @@ export default function ProjectsSection() {
         {PROJECTS.map((project, index) => (
           <div 
             key={project.id}
-            ref={el => cardsRef.current[index] = el}
+            ref={el => { cardsRef.current[index] = el; }}
             className="absolute cursor-pointer will-change-transform opacity-0"
             style={{
               top: isMobile ? MOBILE_POSITIONS[index].top : DESKTOP_POSITIONS[index].top,
@@ -671,14 +671,24 @@ export default function ProjectsSection() {
       {/* Static Archive Button - Cinematic Side Tab */}
       <div 
         ref={archiveButtonRef}
-        className="fixed top-1/2 right-0 -translate-y-1/2 z-50 opacity-0 pointer-events-none transition-opacity duration-700 ease-[0.16,1,0.3,1]"
+        className="fixed bottom-8 right-6 md:bottom-auto md:top-1/2 md:right-0 md:-translate-y-1/2 z-50 opacity-0 pointer-events-none transition-opacity duration-700 ease-[0.16,1,0.3,1]"
       >
+        {/* Desktop Side Tab */}
         <button 
           onClick={() => setShowArchive(true)}
-          className="group pointer-events-auto flex items-center gap-6 px-10 py-5 bg-[#1C1C1C] text-[#F6F3EE] shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:bg-[#B45309] transition-all duration-500 rounded-l-full -rotate-90 translate-x-[40%] origin-center whitespace-nowrap border-l border-white/10"
+          className="hidden md:flex group pointer-events-auto items-center gap-6 px-10 py-5 bg-[#1C1C1C] text-[#F6F3EE] shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:bg-[#B45309] transition-all duration-500 rounded-l-full -rotate-90 translate-x-[40%] origin-center whitespace-nowrap border-l border-white/10"
         >
           <span className="font-bold tracking-[0.3em] uppercase text-xs">View Project Archive</span>
           <ArrowRight className="w-5 h-5 -rotate-90 group-hover:translate-y-2 transition-transform duration-500" />
+        </button>
+        
+        {/* Mobile floating pill */}
+        <button 
+          onClick={() => setShowArchive(true)}
+          className="flex md:hidden group pointer-events-auto items-center gap-3 px-6 py-4 bg-[#1C1C1C] text-[#F6F3EE] shadow-[0_20px_40px_rgba(0,0,0,0.4)] hover:bg-[#B45309] transition-all duration-500 rounded-full whitespace-nowrap border border-white/10"
+        >
+          <span className="font-bold tracking-[0.15em] uppercase text-[10px]">Project Archive</span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-500" />
         </button>
       </div>
 
@@ -788,7 +798,7 @@ export default function ProjectsSection() {
                     {activeProject.results.map((result, i) => (
                       <div 
                         key={i} 
-                        ref={el => metricsRef.current[i] = el}
+                        ref={el => { metricsRef.current[i] = el; }}
                         data-value={result.value}
                         className="opacity-0 translate-y-8"
                       >

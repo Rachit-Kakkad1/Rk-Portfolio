@@ -43,7 +43,7 @@ const skills = [
 ];
 
 export default function KeyboardSection() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const keyboardWorldRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const skillPanelRef = useRef<HTMLDivElement>(null);
@@ -293,14 +293,19 @@ export default function KeyboardSection() {
     const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
 
+    // Dynamically adjust scale based on device width to prevent mobile clipping
+    const isMobile = window.innerWidth < 768;
+    const baseScale = isMobile ? 0.15 : 0.28;
+    const baseY = isMobile ? -10 : 0;
+
     // Perfect middle ground size to fit inside container without clipping
-    gsap.set(kbd.position, { y: 0 }); // Perfectly centered vertically
+    gsap.set(kbd.position, { y: baseY, x: 0 }); // Centered, slightly lifted on mobile
     gsap.set(kbd.rotation, { x: Math.PI / 8 }); // ~22.5 deg
-    gsap.set(kbd.scale, { x: 0.28, y: 0.28, z: 0.28 }); 
+    gsap.set(kbd.scale, { x: baseScale, y: baseScale, z: baseScale }); 
 
     // Gentle floating breathing animation (static visually, just hovering slightly)
     gsap.to(kbd.position, {
-      y: 15, // float range within safe bounds
+      y: baseY + 15, // float range within safe bounds
       duration: 4,
       repeat: -1,
       yoyo: true,

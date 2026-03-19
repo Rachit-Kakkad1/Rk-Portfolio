@@ -1,15 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   motion, 
-  AnimatePresence, 
-  useMotionValue, 
-  useSpring, 
-  useMotionTemplate,
-  animate
+  AnimatePresence
 } from "framer-motion";
 import { GraduationCap, School, BookOpen, Sparkles, Terminal, Cpu, Layout, Code } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { CursorRevealImage } from './CursorRevealImage';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -70,22 +67,6 @@ export default function AboutSection() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const [activeTheme, setActiveTheme] = useState(0);
-
-  // Portrait Mask Effect
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const maskRadius = useMotionValue(0);
-  const maskPath = useMotionTemplate`circle(${maskRadius}px at ${mouseX}% ${mouseY}%)`;
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!imageContainerRef.current) return;
-    const rect = imageContainerRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
   useEffect(() => {
     const ctx = gsap.context(() => {
       // 1. Initial Setup
@@ -230,24 +211,15 @@ export default function AboutSection() {
         {/* Stage 3: Biography */}
         <div ref={bioRef} className="absolute inset-0 flex items-center justify-center mt-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center px-12">
-            <motion.div 
-              ref={imageContainerRef}
-              className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black/5 group cursor-crosshair isolate pointer-events-auto"
-              onMouseMove={handleMouseMove}
-              onMouseEnter={() => animate(maskRadius, 800, { duration: 0.6, ease: "easeOut" })}
-              onMouseLeave={() => animate(maskRadius, 0, { duration: 0.4, ease: "easeIn" })}
-            >
-              <img src="/ai_made_image.png" alt="AI Context" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
-              <motion.div 
-                className="absolute inset-0 w-full h-full pointer-events-none isolate" 
-                style={{ 
-                  clipPath: maskPath,
-                  WebkitClipPath: maskPath
-                }}
-              >
-                <img src="/own_image.png" alt="Rachit" className="w-full h-full object-cover pointer-events-none" />
-              </motion.div>
-            </motion.div>
+            <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black/5 cursor-crosshair isolate pointer-events-auto">
+              <CursorRevealImage
+                base="/ai_made_image.png"
+                reveal="/own_image.png"
+                alt="Rachit Context"
+                radius={120}
+                hoverRadius={160}
+              />
+            </div>
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-4">
                 <span className="text-[#B45309] font-mono tracking-widest uppercase text-xs font-bold">The Narrative</span>
@@ -263,22 +235,23 @@ export default function AboutSection() {
 
         {/* Stage 4: Education */}
         <div ref={eduRef} className="absolute inset-0 flex items-center justify-center">
-          <div className="flex flex-col gap-12 w-full px-12">
-            <div className="flex flex-col items-center text-center gap-4">
-              <span className="text-[#B45309] font-mono tracking-[0.4em] uppercase text-xs font-bold">Academic Journey</span>
-              <h3 className="text-4xl md:text-6xl font-bold tracking-tight">Foundation Of Excellence</h3>
+          {/* Added max-h-screen, overflow-y-auto, and responsive adjustments so mobile doesn't cut off */}
+          <div className="flex flex-col gap-6 md:gap-12 w-full px-4 md:px-12 max-h-[100dvh] overflow-y-auto pt-24 pb-32 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="flex flex-col items-center text-center gap-2 md:gap-4 shrink-0">
+              <span className="text-[#B45309] font-mono tracking-[0.4em] uppercase text-[10px] md:text-xs font-bold">Academic Journey</span>
+              <h3 className="text-3xl md:text-6xl font-bold tracking-tight">Foundation Of Excellence</h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
               {education.map((item, i) => (
-                <div key={i} className="group p-10 bg-white/40 backdrop-blur-[20px] rounded-[3rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] border border-white/40 flex flex-col gap-6 transition-all duration-500 hover:shadow-2xl hover:bg-white/60">
-                  <div className="w-16 h-16 rounded-2xl bg-black text-white flex items-center justify-center shadow-xl">
-                    <item.icon size={30} />
+                <div key={i} className="group p-6 md:p-10 bg-white/40 backdrop-blur-[20px] rounded-[2rem] md:rounded-[3rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] border border-white/40 flex flex-col gap-4 md:gap-6 transition-all duration-500 hover:shadow-2xl hover:bg-white/60">
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-black text-white flex items-center justify-center shadow-xl shrink-0">
+                    <item.icon className="w-5 h-5 md:w-[30px] md:h-[30px]" />
                   </div>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-1 md:gap-2">
                     <span className="text-[#B45309] font-mono text-[10px] uppercase tracking-widest font-bold">{item.period}</span>
-                    <h4 className="text-xl font-black text-black leading-tight">{item.type}</h4>
-                    <p className="text-sm font-bold text-black/60">{item.institution}</p>
-                    <p className="text-xs text-black/40 font-medium mt-2">{item.details}</p>
+                    <h4 className="text-lg md:text-xl font-black text-black leading-tight">{item.type}</h4>
+                    <p className="text-xs md:text-sm font-bold text-black/60">{item.institution}</p>
+                    <p className="text-[10px] md:text-xs text-black/40 font-medium mt-1 md:mt-2">{item.details}</p>
                   </div>
                 </div>
               ))}

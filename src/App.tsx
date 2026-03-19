@@ -17,6 +17,9 @@ import AIAssistant from './components/AIAssistant';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Prevent stuttering caused by the mobile browser address bar hiding/showing on scroll
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 function RotatingGlobe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -139,15 +142,17 @@ export default function App() {
   // Initialize Global Smooth Scrolling
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.5,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.1,
-      touchMultiplier: 1.5,
-      lerp: 0.08, // Subtle lerp for butter-smooth stops
-      syncTouch: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+      lerp: 0.1, 
+      // syncTouch: true causes extreme lag on mobile by hijacking native touch scroll.
+      // Keeping it false allows pure hardware-accelerated scroll on touch devices.
+      syncTouch: false,
     });
 
     (window as any).lenis = lenis;
