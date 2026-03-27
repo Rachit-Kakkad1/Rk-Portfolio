@@ -123,7 +123,7 @@ export default function ExperienceSection() {
                 }}
               >
                 {/* Paper Texture Overlay */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply rounded-2xl" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/paper-fibers.png")' }}></div>
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none rounded-2xl" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/paper-fibers.png")' }}></div>
 
                 <div className="relative z-10">
                   <div className="text-sm font-mono text-[#B45309] mb-6 tracking-wider border-b border-black/10 pb-4">

@@ -12,7 +12,7 @@ const CERTIFICATES = [
     issuer: 'IIT Madras',
     credentialId: 'IITM-MOSIP-2024',
     link: '/certificates/hackathons/MOSIP ( IIT MADRAS ).jpg',
-    skills: ['Digitial ID', 'Security'],
+    skills: ['Digital ID', 'Security'],
     category: 'hackathons'
   },
   {
@@ -60,6 +60,17 @@ const CERTIFICATES = [
     category: 'hackathons'
   },
   {
+    id: 'hackathon-odoo-gv',
+    year: '2026',
+    title: "Odoo X Gujarat Vidyapith Hackathon '26",
+    description: 'Developed a full-stack Product Lifecycle Management (PLM) system with dual-database failover.',
+    issuer: 'Odoo',
+    credentialId: 'ODOO-GV-2026',
+    link: '/certificates/hackathons/Odoo_X_Gujarat_Vidyapith_Hackathon_26.png',
+    skills: ['Node.js', 'PostgreSQL', 'SLA Tracking'],
+    category: 'hackathons'
+  },
+  {
     id: 'hackathon-codesummit',
     year: '2023',
     title: 'CodeSummit Competitive Coding',
@@ -95,12 +106,12 @@ const CERTIFICATES = [
   {
     id: 'hackathon-electrosphere',
     year: '2026',
-    title: 'ElectroSphere 2K26',
-    description: 'Emerging tech hackathon exploring hardware-software integrations.',
-    issuer: 'ElectroSphere',
-    credentialId: 'ES-2026-XP',
+    title: 'ElectroSphere 2K26 — 2nd Place Winner',
+    description: 'Awarded 2nd Place for ThreatLens, an ethical cybersecurity analysis platform using deterministic static analysis.',
+    issuer: 'Swaminarayan University, Kalol',
+    credentialId: 'ES-2026-WINNER',
     link: '/certificates/hackathons/ElectroSphere_2K26.jpg',
-    skills: ['Hardware', 'Embedded'],
+    skills: ['Cybersecurity', 'Static Analysis', 'React', 'Node.js'],
     category: 'hackathons'
   },
   {
@@ -205,83 +216,6 @@ const CERTIFICATES = [
   }
 ];
 
-function CertificateEntry({ cert, index, scrollYProgress, hoveredId, setHoveredId }: any) {
-  const start = 0.1 + (index * 0.15);
-  const appear = start + 0.05;
-  const stamp = appear + 0.05;
-
-  const entryOpacity = useTransform(scrollYProgress, [start, appear], [0, 1]);
-  const entryY = useTransform(scrollYProgress, [start, appear], [20, 0]);
-  
-  const stampScale = useTransform(scrollYProgress, [appear, stamp], [1.5, 1]);
-  const stampOpacity = useTransform(scrollYProgress, [appear, stamp], [0, 1]);
-
-  return (
-    <motion.div 
-      className="mb-8 md:mb-12 relative group cursor-pointer"
-      style={{ opacity: entryOpacity, y: entryY }}
-      onMouseEnter={() => setHoveredId(cert.id)}
-      onMouseLeave={() => setHoveredId(null)}
-    >
-      <div className="flex flex-col md:flex-row gap-4 md:gap-12">
-        <div className="text-neutral-500 w-24 shrink-0 pt-1">{cert.year}</div>
-        <div className="flex-1">
-          <h3 className="text-xl md:text-2xl font-bold mb-2">{cert.title}</h3>
-          <p className="text-neutral-600 mb-4">{cert.description}</p>
-          <div className="flex items-center gap-4 text-sm font-bold">
-            <span className="text-neutral-500">STATUS:</span>
-            <span className="text-[#B45309]">VERIFIED ✓</span>
-          </div>
-
-          {/* Expandable Details */}
-          <AnimatePresence>
-            {hoveredId === cert.id && (
-              <motion.div 
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="overflow-hidden"
-              >
-                <div className="mt-6 p-6 bg-white/50 border border-black/10 rounded-lg flex flex-col gap-3">
-                  <div className="flex justify-between">
-                    <span className="text-neutral-500">Issued by</span>
-                    <span className="font-medium">{cert.issuer}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-500">Credential ID</span>
-                    <span className="font-medium">{cert.credentialId}</span>
-                  </div>
-                  <a 
-                    href={cert.link}
-                    className="mt-2 inline-flex items-center gap-2 text-[#B45309] hover:text-black transition-colors"
-                  >
-                    <span>View Certificate</span>
-                    <ExternalLink size={16} />
-                  </a>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {/* Verification Stamp */}
-      <motion.div 
-        className="absolute right-0 top-0 pointer-events-none hidden md:flex items-center justify-center w-24 h-24 border-4 border-[#B45309] text-[#B45309] rounded-full opacity-80 rotate-[-15deg]"
-        style={{ 
-          scale: stampScale, 
-          opacity: stampOpacity,
-          mixBlendMode: 'multiply'
-        }}
-      >
-        <div className="text-center">
-          <div className="text-lg font-bold tracking-widest uppercase">Verified</div>
-          <div className="text-[8px] tracking-widest border-t border-[#B45309] mt-1 pt-1">{cert.year}</div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 export default function CertificateSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -296,26 +230,41 @@ export default function CertificateSection() {
 
   const headerOpacity = useTransform(scrollYProgress, [0, 0.05], [0, 1]);
   const exitOpacity = useTransform(scrollYProgress, [0.95, 1], [1, 0]);
+  
+  // High-End Vertical Parallax for the Ledger
+  // We offset the list based on its height to ensure it fits the scroll-progress
+  const ledgerY = useTransform(scrollYProgress, [0.1, 0.9], ["0%", "-65%"]);
 
   const filteredCerts = CERTIFICATES.filter(c => c.category === activeCategory);
 
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full h-[250vh] bg-[#F6F3EE] text-[#1C1C1C]"
+      className="relative w-full h-[500vh] bg-[#F6F3EE] text-[#1C1C1C]"
     >
       <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col pt-24 md:pt-32">
+        {/* Section Header */}
+        <div className="relative z-30 max-w-4xl mx-auto px-6 w-full mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-[#B45309] font-mono tracking-[0.3em] uppercase text-xs font-bold mb-2 block">Professional Credentials</span>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-black">Certifications & Awards</h2>
+          </motion.div>
+        </div>
         
-        {/* Cinematic Background Typography */}
+        {/* Cinematic Background Typography - Opacity Adjusted for Perceptual Speed */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div 
               key={activeCategory}
-              initial={{ opacity: 0, scale: 0.9, filter: 'blur(20px)' }}
-              animate={{ opacity: 0.05, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 1.1, filter: 'blur(20px)' }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[20vw] font-bold tracking-tighter text-black whitespace-nowrap select-none"
+              initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
+              animate={{ opacity: 0.03, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="text-[20vw] font-bold tracking-tighter text-black whitespace-nowrap select-none will-change-transform"
             >
               {activeCategory.toUpperCase()}
             </motion.div>
@@ -324,7 +273,7 @@ export default function CertificateSection() {
         
         {/* Category Explorer Toggle */}
         <div className="relative z-30 max-w-4xl mx-auto px-6 w-full mb-12">
-          <div className="flex bg-black/5 p-1.5 rounded-2xl backdrop-blur-xl border border-black/5 w-fit mx-auto overflow-hidden">
+          <div className="flex bg-[#E8E8E8] p-1.5 rounded-2xl border border-black/5 w-fit mx-auto overflow-hidden">
             {(['hackathons', 'skills'] as const).map((cat) => (
               <button
                 key={cat}
@@ -346,15 +295,17 @@ export default function CertificateSection() {
           </div>
         </div>
 
-        {/* Dynamic Ledger Content */}
-        <motion.div 
-          className="relative z-10 w-full max-w-4xl mx-auto px-6 font-mono h-[60vh] overflow-y-auto no-scrollbar scroll-smooth"
-          style={{ opacity: exitOpacity }}
-          data-lenis-prevent="true"
+        {/* Dynamic Ledger Content - Optimized Parallax Ledger */}
+        <div 
+          className="relative z-10 w-full max-w-4xl mx-auto px-6 font-mono h-[70vh] overflow-hidden will-change-transform"
         >
+          {/* Bottom Gradient Mask to prevent "crashing" into the verification badge */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F6F3EE] to-transparent z-20 pointer-events-none" />
+          
           <AnimatePresence mode="wait">
             <motion.div
               key={activeCategory}
+              style={{ y: ledgerY, opacity: exitOpacity }}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -364,10 +315,10 @@ export default function CertificateSection() {
                 {filteredCerts.map((cert, index) => (
                   <motion.div
                     key={cert.id}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="group relative bg-white/40 border border-black/5 p-8 rounded-3xl backdrop-blur-md hover:bg-white/80 transition-all duration-500 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1"
+                    transition={{ delay: index * 0.05, ease: "easeOut" }}
+                    className="group relative bg-[#F5F2ED] border border-black/5 p-8 rounded-3xl hover:bg-white/80 transition-all duration-300 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl will-change-transform"
                     onMouseEnter={() => setHoveredId(cert.id)}
                     onMouseLeave={() => setHoveredId(null)}
                     onClick={() => setSelectedCert(cert)}
@@ -379,7 +330,7 @@ export default function CertificateSection() {
                               <span className="text-[10px] font-bold text-[#B45309] uppercase tracking-widest">{cert.issuer}</span>
                            </div>
                            <h3 className="text-2xl font-medium tracking-tight mt-2">{cert.title}</h3>
-                           <p className="text-neutral-500 text-sm max-w-lg leading-relaxed">{cert.description}</p>
+                           <span className="text-xs font-semibold text-black/70 leading-relaxed line-clamp-2">{cert.description}</span>
                         </div>
                         
                         <div className="flex flex-col items-end justify-between">
@@ -401,12 +352,29 @@ export default function CertificateSection() {
               </div>
             </motion.div>
           </AnimatePresence>
-        </motion.div>
+        </div>
 
-        {/* Global Verification Badge */}
-        <div className="mt-12 flex justify-center pb-8">
+        {/* Ledger Progress Indicator */}
+        <div className="absolute top-[20%] right-8 md:right-12 h-[60vh] w-[1px] bg-black/5 flex flex-col items-center z-40 hidden md:flex">
+            <div className="text-[10px] font-bold text-black/20 uppercase tracking-widest rotate-90 mb-8 whitespace-nowrap">Ledger Progress</div>
+            <div className="flex-1 w-px bg-black/5 relative">
+                <motion.div 
+                    className="absolute top-0 left-0 w-full bg-[#B45309]"
+                    style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
+                />
+            </div>
+            <div className="mt-8">
+                <motion.div 
+                   className="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+                />
+            </div>
+        </div>
+
+
+        {/* Global Verification Badge - Moved outside sticky for better breathing room */}
+        <div className="flex justify-center pb-12 relative z-50 mt-auto">
             <motion.div 
-               className="px-6 py-3 border-2 border-black/10 rounded-full flex items-center gap-3 bg-white/20 backdrop-blur-md shadow-lg"
+               className="px-6 py-3 border border-black/10 rounded-full flex items-center gap-3 bg-white/80 backdrop-blur-md shadow-xl"
                animate={{ 
                   borderColor: ["rgba(0,0,0,0.1)", "rgba(180,83,9,0.3)", "rgba(0,0,0,0.1)"] 
                }}
@@ -426,7 +394,7 @@ export default function CertificateSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[500] flex items-center justify-center p-6 md:p-12 bg-black/90 backdrop-blur-2xl cursor-zoom-out"
+            className="fixed inset-0 z-[500] flex items-center justify-center p-6 md:p-12 bg-[#1C1C1CB3] cursor-zoom-out"
             onClick={() => setSelectedCert(null)}
           >
             <motion.div
@@ -447,7 +415,7 @@ export default function CertificateSection() {
                 {/* Modal Close Hint */}
                 <button 
                   onClick={() => setSelectedCert(null)}
-                  className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 border border-white/20"
+                  className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-[background,color] duration-300 border border-white/20"
                 >
                   <ExternalLink size={20} className="rotate-45" />
                 </button>

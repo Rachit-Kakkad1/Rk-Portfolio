@@ -1,111 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, X } from 'lucide-react';
+import { ArrowUpRight, X, Github, Globe, FileText } from 'lucide-react';
 
-const ARCHIVE_PROJECTS = [
-  {
-    id: "lifelens",
-    title: "LifeLens AI",
-    category: "AI-Powered Personal & Planetary Health Intelligence Platform",
-    year: "2026",
-    role: "Full Stack Developer",
-    stack: "React · TypeScript · TailwindCSS · Recharts · Supabase · Gemini AI",
-    challenge: "Health tracking and climate action are typically treated as separate systems. Fitness apps focus only on personal health metrics, while sustainability tools focus only on carbon emissions.",
-    solution: "LifeLens introduces a dual-impact analytics system that evaluates both internal wellness signals and external environmental footprint using Gemini AI.",
-    description: "LifeLens is an intelligent behavioral analytics platform that connects personal wellness data with environmental impact insights. By combining lifestyle tracking with AI-powered analysis, the platform helps users understand how their daily habits influence both personal health and climate footprint.",
-    results: [
-      { value: 2, suffix: "x", label: "Dual Impact Score" },
-      { value: 100, suffix: "%", label: "Real-Time Sync" },
-      { value: 95, suffix: "%", label: "User Retention" }
-    ],
-    features: [
-      { title: "AI Behavioral Engine", description: "Dual health and climate scoring system that identifies correlations in lifestyle choices." },
-      { title: "Personalized Insights", description: "AI-generated actionable insights to improve both well-being and reduce carbon emissions." }
-    ],
-    image: "/lifelens.jpg",
-    github: 'https://github.com/Rachit-Kakkad1/lifelens-ai-dashboard',
-    live: 'https://lifelens-ai-dashboard.vercel.app/',
-    gallery: ["https://images.unsplash.com/photo-1633412802994-5c058f151b66?q=80&w=2000&auto=format&fit=crop"]
-  },
-  {
-    id: "agricert",
-    title: "AgriCert",
-    category: "Blockchain Platform",
-    year: "2023",
-    role: "Full Stack Developer",
-    stack: "React · Node · MongoDB · Blockchain",
-    challenge: "The agricultural supply chain suffers from a lack of transparency, leading to counterfeit certifications.",
-    solution: "We developed a decentralized application (dApp) that tokenizes crop certifications as NFTs on a low-cost blockchain.",
-    description: "AgriCert revolutionizes the agricultural supply chain by providing a transparent, immutable ledger for crop certification. By leveraging blockchain technology and AI-driven image analysis, it ensures authenticity from farm to table.",
-    results: [
-      { value: 100, suffix: "%", label: "Traceability" },
-      { value: 40, suffix: "%", label: "Faster Certification" },
-      { value: 15, suffix: "k+", label: "Farmers Onboarded" }
-    ],
-    features: [
-      { title: "Immutable Ledger", description: "All certifications are permanently stored on the blockchain." },
-      { title: "AI Verification", description: "Computer vision models verify crop health from uploaded images." },
-      { title: "Smart Contracts", description: "Automated payouts when certification criteria are met." }
-    ],
-    image: "/agricert-main.jpg",
-    github: 'https://github.com/Rachit-Kakkad1/agricert-platform',
-    live: 'https://agricert-khaki.vercel.app',
-    gallery: [
-      "/agricert-1.png",
-      "/agricert-2.png",
-      "/agricert-3.png",
-      "/agricert-4.png"
-    ]
-  },
-  {
-    id: "fleetflow",
-    title: "FleetFlow",
-    category: "Real-Time Logistics & Fleet Intelligence Platform",
-    year: "2026",
-    role: "Full Stack Developer",
-    stack: "React · Node.js · Express · PostgreSQL · Prisma · Socket.IO",
-    challenge: "Logistics operations are fragmented across disconnected systems, resulting in delayed operational insights and inefficient dispatch coordination.",
-    solution: "A centralized logistics intelligence platform powered by real-time data synchronization and role-governed workflows.",
-    description: "FleetFlow is a modern logistics command platform designed to manage fleet operations, dispatch coordination, driver workflows, and operational analytics in real time.",
-    results: [
-      { value: 100, suffix: "%", label: "Real-Time Sync" },
-      { value: 4, suffix: "", label: "Role Portals" },
-      { value: 99, suffix: "%", label: "Anomaly Detection" }
-    ],
-    features: [
-      { title: "Real-Time Sync", description: "Live operational updates via WebSockets for instantaneous fleet visibility." },
-      { title: "AI Anomaly Detection", description: "Predictive monitoring flags fuel consumption irregularities for audit." }
-    ],
-    image: "/fleetflow.jpg",
-    github: 'https://github.com/Rachit-Kakkad1/FleetFlow',
-    live: 'https://fleet-flow-smoky-eta.vercel.app/',
-    gallery: ["https://images.unsplash.com/photo-1551076805-e18690c5e561?q=80&w=2000&auto=format&fit=crop"]
-  },
-  {
-    id: "threatlens",
-    title: "ThreatLens",
-    category: "Ethical Static Cybersecurity Analysis & Threat Modeling Platform",
-    year: "2026",
-    role: "Security Engineer",
-    stack: "Python · FastAPI · React · AST Parsers · Docker",
-    challenge: "Cybersecurity education lacks safe environments for analyzing vulnerabilities without risking active exploitation.",
-    solution: "Built a static analysis engine utilizing AST parsing and ethical threat modeling algorithms to identify risks safely.",
-    description: "An advanced cybersecurity education and research platform designed to perform ethical static code analysis and deterministic threat modeling.",
-    results: [
-      { value: 100, suffix: "%", label: "Zero Exploitation" },
-      { value: 5, suffix: "", label: "Analysis Modules" },
-      { value: 500, suffix: "+", label: "Threat Patterns" }
-    ],
-    features: [
-      { title: "Deterministic Analysis", description: "Safe, static code evaluation without active execution risks." },
-      { title: "Transparent Risk Scoring", description: "Clear, actionable metrics for prioritizing security patches." }
-    ],
-    image: "/threatlens.jpg",
-    github: 'https://github.com/Rachit-Kakkad1/ThreatLens',
-    live: 'https://threatlens-topaz.vercel.app',
-    gallery: ["https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=2000&auto=format&fit=crop"]
-  }
-];
+import { ARCHIVE_PROJECTS } from '../data/projects';
 
 export default function AllProjectsSection({ onClose, onProjectClick }: { onClose: () => void, onProjectClick: (project: any) => void }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -133,7 +30,7 @@ export default function AllProjectsSection({ onClose, onProjectClick }: { onClos
       >
         <button 
           onClick={onClose}
-          className="fixed top-8 right-8 z-[210] w-14 h-14 rounded-full bg-black/5 backdrop-blur-md border border-black/10 text-black flex items-center justify-center hover:bg-black hover:text-white transition-colors duration-300"
+          className="fixed top-8 right-8 z-[210] w-14 h-14 rounded-full bg-black/10 border border-black/10 text-black flex items-center justify-center hover:bg-black hover:text-white transition-colors duration-300"
         >
           <X size={24} />
         </button>
@@ -206,10 +103,51 @@ export default function AllProjectsSection({ onClose, onProjectClick }: { onClos
                 </AnimatePresence>
                 
                 {/* Year & Action Section */}
-                <div className="flex-shrink-0 flex items-center gap-12 mt-8 md:mt-0 z-20">
+                <div className="flex-shrink-0 flex items-center gap-6 md:gap-12 mt-8 md:mt-0 z-20">
                   <span className="text-neutral-500 font-mono text-sm hidden md:block group-hover:text-[#B45309] transition-colors duration-300">
                     {project.year}
                   </span>
+                  
+                  {/* Quick Link Icons */}
+                  <div className="flex items-center gap-2 md:gap-4">
+                    {project.github && (
+                      <a 
+                        href={project.github} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-2 rounded-full hover:bg-black hover:text-white transition-all duration-300 text-neutral-400 group-hover:text-black/40 hover:!text-white"
+                        title="GitHub Repository"
+                      >
+                        <Github size={18} />
+                      </a>
+                    )}
+                    {project.live && (
+                      <a 
+                        href={project.live} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-2 rounded-full hover:bg-black hover:text-white transition-all duration-300 text-neutral-400 group-hover:text-black/40 hover:!text-white"
+                        title="Live Site"
+                      >
+                        <Globe size={18} />
+                      </a>
+                    )}
+                    {project.docs && (
+                      <a 
+                        href={project.docs} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-2 rounded-full hover:bg-black hover:text-white transition-all duration-300 text-neutral-400 group-hover:text-black/40 hover:!text-white"
+                        title="Documentation"
+                      >
+                        <FileText size={18} />
+                      </a>
+                    )}
+                  </div>
+
                   <div className="w-14 h-14 rounded-full border border-black/10 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-300 shadow-sm">
                     <ArrowUpRight className="w-6 h-6" />
                   </div>

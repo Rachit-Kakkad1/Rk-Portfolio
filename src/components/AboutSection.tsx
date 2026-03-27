@@ -1,265 +1,159 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { 
-  motion, 
-  AnimatePresence
-} from "framer-motion";
-import { GraduationCap, School, BookOpen, Sparkles, Terminal, Cpu, Layout, Code } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { CursorRevealImage } from './CursorRevealImage';
+import { motion, AnimatePresence } from 'framer-motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const education = [
-  {
-    type: "B.Tech in Computer Engineering",
-    institution: "Swaminarayan University — Kalol, Gujarat",
-    details: "1st Year (Pursuing) | CGPA: 9.3",
-    period: "2025 – 2029",
-    icon: GraduationCap,
-    color: "from-blue-500/20 to-cyan-500/20"
-  },
-  {
-    type: "Higher Secondary Education (12th)",
-    institution: "Shakti Higher Secondary School — Rajkot",
-    details: "Gujarat Board | Science Stream",
-    period: "Completed in 2025",
-    icon: School,
-    color: "from-amber-500/20 to-orange-500/20"
-  },
-  {
-    type: "Secondary Education (10th)",
-    institution: "SMT J.V. GEMS — Porbandar",
-    details: "Gujarat Board",
-    period: "Completed in 2023",
-    icon: BookOpen,
-    color: "from-emerald-500/20 to-teal-500/20"
-  }
-];
-
-const themes = [
-  { 
-    name: "Developer", icon: Terminal, keyword: "text-green-600", string: "text-orange-500", property: "text-blue-600", number: "text-blue-600", bg: "bg-white/80",
-    role: "Full Stack Dev", stack: ["React", "Node", "MongoDB", "Python"]
-  },
-  { 
-    name: "Engineer", icon: Cpu, keyword: "text-amber-700", string: "text-amber-500", property: "text-stone-700", number: "text-stone-700", bg: "bg-stone-50/80",
-    role: "Software Engineer", stack: ["TypeScript", "C++", "Docker", "AWS"]
-  },
-  { 
-    name: "AI Mode", icon: Sparkles, keyword: "text-violet-600", string: "text-cyan-500", property: "text-fuchsia-500", number: "text-blue-500", bg: "bg-slate-900/90 text-slate-200",
-    role: "ML Engineer", stack: ["PyTorch", "TensorFlow", "OpenAI", "RAG"]
-  },
-  { 
-    name: "Minimal", icon: Layout, keyword: "text-neutral-800", string: "text-neutral-500", property: "text-neutral-800", number: "text-neutral-500", bg: "bg-neutral-100/80",
-    role: "Creative Dev", stack: ["Three.js", "Framer", "GSAP", "WebGL"]
-  }
-];
-
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-  const editorRef = useRef<HTMLDivElement>(null);
-  const bioRef = useRef<HTMLDivElement>(null);
-  const eduRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const bgTextRef = useRef<HTMLHeadingElement>(null);
-  const imageContainerRef = useRef<HTMLDivElement>(null);
 
-  const [activeTheme, setActiveTheme] = useState(0);
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Initial Setup
-      gsap.set([cardsRef.current, editorRef.current, bioRef.current, eduRef.current], { opacity: 0, y: 100 });
-      gsap.set(bgTextRef.current, { opacity: 1, scale: 2.0, filter: "blur(0px)" });
+      gsap.set(contentRef.current, { opacity: 0, y: 30 });
+      gsap.set(bgTextRef.current, { opacity: 0 });
 
-      // 2. Multi-Stage Timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "+=500%", // 5 Viewports of pinning
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            // Theme cycling based on scroll progress in the editor stage (0.2 to 0.5)
-            if (self.progress > 0.2 && self.progress < 0.5) {
-              const themeProgress = (self.progress - 0.2) / 0.3;
-              const index = Math.min(Math.floor(themeProgress * themes.length), themes.length - 1);
-              setActiveTheme(index);
-            }
-          }
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 70%",
+        onEnter: () => {
+          gsap.to(bgTextRef.current, { opacity: 0.03, scale: 1, duration: 1.5, ease: "power2.out" });
+          gsap.to(contentRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
         }
       });
-
-      // Stage 1: Entrance & Background (Maximum Cinematic Impact)
-      tl.to(bgTextRef.current, { opacity: 1, scale: 2.5, duration: 1.5, ease: "power2.out" })
-        .to(cardsRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=1")
-        .to(bgTextRef.current, { opacity: 0.15, filter: "blur(8px)", duration: 1, ease: "power2.inOut" }, "-=0.4");
-
-      // Stage 2: 4 System Cards Exit & Editor Entrance
-      tl.to(cardsRef.current, { opacity: 0, y: -50, duration: 1, ease: "power3.in" }, "+=1")
-        .to(editorRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.2");
-
-      // Stage 3: Editor Stays, Theme Cycles (handled by onUpdate), then Editor Exits & Bio Enters
-      tl.to({}, { duration: 2 }) // Empty space for theme cycling
-        .to(editorRef.current, { opacity: 0, scale: 0.95, duration: 1, ease: "power3.in" })
-        .to(bioRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.3");
-
-      // Stage 4: Bio Exits & Education Enters
-      tl.to(bioRef.current, { opacity: 0, x: -100, duration: 1, ease: "power3.in" }, "+=1")
-        .to(eduRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5");
-
-      // Final: Ensure background stays softly blurred
-      tl.to(bgTextRef.current, { opacity: 0.1, filter: "blur(10px)", duration: 1, ease: "sine.inOut" });
-
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const currentTheme = themes[activeTheme];
-
   return (
-    <section ref={sectionRef} className="relative w-full h-screen bg-[#F6F3EE] overflow-hidden flex flex-col items-center justify-center">
-      
+    <section ref={sectionRef} className="relative w-full min-h-screen py-24 bg-[#F6F3EE] overflow-hidden flex items-center justify-center">
+
       {/* Background Typography */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <h1 
-          ref={bgTextRef} 
-          className="text-[120px] md:text-[100px] font-black leading-[0.85] text-black select-none text-center tracking-tighter uppercase will-change-[transform,opacity,filter]"
-          style={{ filter: "blur(1px)", opacity: 1 }}
+        <h2
+          ref={bgTextRef}
+          className="text-[80px] md:text-[120px] font-black leading-[0.85] text-black select-none text-center tracking-tighter uppercase"
         >
-          WHO<br />
-          IS<br />
-          RACHIT
-        </h1>
+          ABOUT<br />ME
+        </h2>
       </div>
 
-      <div ref={containerRef} className="relative z-10 w-full max-w-7xl mx-auto px-6 h-full flex items-center justify-center">
-        
-        {/* Stage 1: The 4 Cards */}
-        <div ref={cardsRef} className="absolute inset-0 flex items-center justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-12">
-            {themes.map((theme, i) => (
-              <div key={i} className="bg-white/40 backdrop-blur-[20px] p-8 rounded-[2.5rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] border border-white/40 flex flex-col gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center shadow-lg">
-                  <theme.icon size={24} />
-                </div>
-                <h3 className="text-xl font-bold">{theme.name}</h3>
-                <p className="text-sm text-black/60 font-medium">Expertise in {theme.stack.join(", ")}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* Main Content */}
+      <div ref={contentRef} className="relative z-10 w-full max-w-6xl mx-auto px-6 h-full flex items-center justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
 
-        {/* Stage 2: The Interactive Editor */}
-        <div ref={editorRef} className="absolute inset-0 flex items-center justify-center -translate-y-12">
-          <div className={`w-full max-w-4xl rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] border border-white/40 overflow-hidden transition-all duration-700 backdrop-blur-[30px] ${currentTheme.name === "AI Mode" ? "bg-slate-900/40 text-slate-200" : "bg-white/40"}`}>
-            <div className="flex items-center px-6 py-4 border-b border-black/10 text-sm font-mono opacity-40">
-              <div className="flex gap-2 mr-6">
-                <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                <div className="w-3 h-3 rounded-full bg-green-400"></div>
-              </div>
-              rachit_profile.ts
-              <div className="ml-auto flex items-center gap-2">
-                <currentTheme.icon size={14} />
-                {currentTheme.name} MODE
-              </div>
+          {/* Portrait with Stacked Image Gallery */}
+          <div className="relative aspect-[4/5] h-full max-h-[60vh] isolate pointer-events-auto">
+            <StackedImageGallery />
+          </div>
+
+          {/* Bio + Highlights */}
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-3">
+              <span className="text-[#B45309] font-mono tracking-[0.3em] uppercase text-xs font-bold">Who I Am</span>
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+                BEYOND<br /><span className="text-[#B45309]">THE CODE</span>
+              </h2>
             </div>
-            <div className="p-10 font-mono text-base md:text-lg leading-relaxed relative">
-              <div className="flex">
-                <div className="pr-8 border-r border-black/10 mr-8 text-black/20 select-none text-right">
-                  {Array.from({length: 8}).map((_, i) => <div key={i}>{i+1}</div>)}
-                </div>
-                <div>
-                  <div className="flex gap-2">
-                    <span className={currentTheme.keyword}>const</span> 
-                    <span className={currentTheme.property}>Rachit</span> 
-                    <span className="text-black/40">=</span> 
-                    <span className="text-black/40">{'{'}</span>
-                  </div>
-                  <div className="pl-6">
-                    <span className={currentTheme.property}>role</span>: <span className={currentTheme.string}>"{currentTheme.role}"</span>,
-                  </div>
-                  <div className="pl-6">
-                    <span className={currentTheme.property}>focus</span>: <span className={currentTheme.string}>"{currentTheme.name === "Minimal" ? "Interactive Web" : "Scalable Architecture"}"</span>,
-                  </div>
-                  <div className="pl-6">
-                    <span className={currentTheme.property}>stack</span>: [<br />
-                    <div className="pl-6">
-                      {currentTheme.stack.map((item, idx) => (
-                        <span key={idx} className={currentTheme.string}>"{item}"{idx < currentTheme.stack.length - 1 ? "," : ""} </span>
-                      ))}
-                    </div>
-                    ]
-                  </div>
-                  <div className="text-black/40">{'}'}</div>
-                  <div className="mt-4 flex gap-2">
-                    <span className={currentTheme.keyword}>export default</span> 
-                    <span className={currentTheme.property}>Rachit</span>
-                    <motion.div animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-2 h-6 bg-black/40" />
-                  </div>
-                </div>
+
+            <div className="flex flex-col gap-4 text-black/70 font-medium text-sm md:text-base leading-relaxed">
+              <p>
+                I'm Rachit Kakkad — a full-stack developer and AI engineer based in Gandhinagar, India. I've built 25+ applications and shipped 10+ production-ready systems using React, Node.js, and Python — from blockchain certification platforms to AI-powered analytics engines.
+              </p>
+              <p>
+                Currently pursuing B.Tech in Computer Engineering (CGPA: 9.3) while shipping real products. I focus on building systems that are both technically sound and visually exceptional.
+              </p>
+            </div>
+
+            {/* Key Highlights */}
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <div className="bg-white/60 border border-black/5 rounded-xl p-4">
+                <div className="text-2xl font-black text-[#B45309]">25+</div>
+                <div className="text-xs font-medium text-black/50 mt-1">Projects Built</div>
+              </div>
+              <div className="bg-white/60 border border-black/5 rounded-xl p-4">
+                <div className="text-2xl font-black text-[#B45309]">10+</div>
+                <div className="text-xs font-medium text-black/50 mt-1">Projects Shipped</div>
+              </div>
+              <div className="bg-white/60 border border-black/5 rounded-xl p-4">
+                <div className="text-2xl font-black text-[#B45309]">6</div>
+                <div className="text-xs font-medium text-black/50 mt-1">IIT Hackathons</div>
+              </div>
+              <div className="bg-white/60 border border-black/5 rounded-xl p-4">
+                <div className="text-2xl font-black text-[#B45309]">9.3</div>
+                <div className="text-xs font-medium text-black/50 mt-1">CGPA (B.Tech)</div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Stage 3: Biography */}
-        <div ref={bioRef} className="absolute inset-0 flex items-center justify-center mt-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center px-12">
-            <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl bg-black/5 cursor-crosshair isolate pointer-events-auto">
-              <CursorRevealImage
-                base="/ai_made_image.png"
-                reveal="/own_image.png"
-                alt="Rachit Context"
-                radius={120}
-                hoverRadius={160}
-              />
-            </div>
-            <div className="flex flex-col gap-8">
-              <div className="flex flex-col gap-4">
-                <span className="text-[#B45309] font-mono tracking-widest uppercase text-xs font-bold">The Narrative</span>
-                <h2 className="text-5xl md:text-7xl font-black tracking-tight leading-none">BEYOND<br /><span className="text-[#B45309]">THE CODE</span></h2>
-              </div>
-              <div className="flex flex-col gap-6 text-black/70 font-medium text-lg leading-relaxed">
-                <p>I am Rachit Kakkad, a passionate Full Stack Developer driven by the intersection of intelligent systems and cinematic user experiences.</p>
-                <p>Full-stack development is more than just connecting a frontend to a database; it's about architecting seamless, end-to-end digital ecosystems. By mastering both visual precision and server-side logic, I bridge the gap between user intent and technical execution.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Stage 4: Education */}
-        <div ref={eduRef} className="absolute inset-0 flex items-center justify-center">
-          {/* Added max-h-screen, overflow-y-auto, and responsive adjustments so mobile doesn't cut off */}
-          <div className="flex flex-col gap-6 md:gap-12 w-full px-4 md:px-12 max-h-[100dvh] overflow-y-auto pt-24 pb-32 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div className="flex flex-col items-center text-center gap-2 md:gap-4 shrink-0">
-              <span className="text-[#B45309] font-mono tracking-[0.4em] uppercase text-[10px] md:text-xs font-bold">Academic Journey</span>
-              <h3 className="text-3xl md:text-6xl font-bold tracking-tight">Foundation Of Excellence</h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
-              {education.map((item, i) => (
-                <div key={i} className="group p-6 md:p-10 bg-white/40 backdrop-blur-[20px] rounded-[2rem] md:rounded-[3rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.05)] border border-white/40 flex flex-col gap-4 md:gap-6 transition-all duration-500 hover:shadow-2xl hover:bg-white/60">
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-black text-white flex items-center justify-center shadow-xl shrink-0">
-                    <item.icon className="w-5 h-5 md:w-[30px] md:h-[30px]" />
-                  </div>
-                  <div className="flex flex-col gap-1 md:gap-2">
-                    <span className="text-[#B45309] font-mono text-[10px] uppercase tracking-widest font-bold">{item.period}</span>
-                    <h4 className="text-lg md:text-xl font-black text-black leading-tight">{item.type}</h4>
-                    <p className="text-xs md:text-sm font-bold text-black/60">{item.institution}</p>
-                    <p className="text-[10px] md:text-xs text-black/40 font-medium mt-1 md:mt-2">{item.details}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
+  );
+}
+
+// =====================================
+// STACKED IMAGE GALLERY COMPONENT
+// =====================================
+
+const GALLERY_IMAGES = [
+  "/about/rachit-1.jpg",
+  "/about/rachit-2.jpg",
+  "/about/rachit-3.jpg",
+];
+
+function StackedImageGallery() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % GALLERY_IMAGES.length);
+    }, 3500); // 3.5 seconds auto-rotate
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center">
+      <AnimatePresence>
+        {GALLERY_IMAGES.map((src, i) => {
+          // Calculate relative position: 0 is front, 1 is next layer down, 2 is behind that, etc.
+          const offset = (i - currentIndex + GALLERY_IMAGES.length) % GALLERY_IMAGES.length;
+          const isFront = offset === 0;
+          
+          // Define card stacking metrics based on offset
+          let y = offset * 25; // Stack downwards by 25px per layer
+          let scale = 1 - offset * 0.06; // Shrink layers by 6% sequentially
+          let zIndex = GALLERY_IMAGES.length - offset;
+          let opacity = offset > 2 ? 0 : 1 - offset * 0.15; // Fade out layers further back
+          
+          // Adding a very subtle scattered rotation
+          let rotateZ = offset === 0 ? 0 : offset === 1 ? -3 : offset === 2 ? 3 : 0;
+
+          return (
+            <motion.div
+              key={src}
+              className="absolute w-full h-full rounded-[2rem] overflow-hidden shadow-2xl bg-black flex items-center justify-center"
+              initial={false}
+              animate={{
+                y,
+                scale,
+                zIndex,
+                opacity,
+                rotateZ,
+              }}
+              transition={{ duration: 0.85, ease: [0.165, 0.84, 0.44, 1] }}
+              style={{ top: 0, left: 0 }}
+            >
+              <img src={src} alt={`Gallery image ${i + 1}`} className="w-full h-full object-cover" />
+              
+              {/* Overlay for depth perception on background cards */}
+              {!isFront && <div className="absolute inset-0 bg-[#F6F3EE]/30 backdrop-blur-[2px]" />}
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
+    </div>
   );
 }

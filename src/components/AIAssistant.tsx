@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, X, Sparkles, Send, Loader2 } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
 import gsap from 'gsap';
 
 const SYSTEM_PROMPT = `You are "Rachit's AI Guide," an intelligent assistant embedded inside the portfolio of Rachit Kakkad.
-Rachit is a Full Stack & AI Developer specializing in building cinematic, highly interactive web applications using the MERN stack, GSAP, Framer Motion, and integrating Machine Learning models.
-Your ONLY purpose is to proudly explain Rachit's portfolio, projects, skills, and experience to visitors.
+Rachit is a Full Stack Developer & AI Engineer based in Gandhinagar, India. He specializes in building production-grade applications using React, Node.js, Python, and AI/ML technologies.
+Your ONLY purpose is to explain Rachit's portfolio, projects, skills, and experience to visitors.
 - DO NOT answer questions unrelated to Rachit, his portfolio, software development, or his stack.
 - If the user asks a random question, politely pivot back to his skills or projects.
 - Keep your answers concise, professional, and slightly enthusiastic. Format with short paragraphs. Do not use overly formal robot language.
-- Known Projects to reference: "AgriCert" (React/Node/Blockchain for agriculture), "Nexus AI" (Next.js/OpenAI generative workspace), "Lumina Health" (Python/WebRTC telemedicine), "Orbit Finance" (Solidity ZK-Rollup DEX).
-- Current App context: This portfolio features a completely custom, interactive 3D Spline keyboard where keys can be pressed to command you, god-level smooth scrolling powered by Lenis, and cinematic GSAP animations.`;
+- Known Projects to reference: "AgriCert" (React/Node/Blockchain for agricultural certification), "LifeLens AI" (Python/React/FastAPI connecting wellness to climate impact via Gemini AI), "ThreatLens" (Next.js/Python/GraphQL cybersecurity platform), "FleetFlow" (Vue.js/Node.js/PostgreSQL logistics dashboard), "COS" (Python/FastAPI/React cognitive operating system with 8 local AI models), "PLM Flow" (React/Supabase/MongoDB enterprise PLM), "Arovia" (React/Node.js workflow automation), "Attendify" (React/Firebase student analytics), "CodingGita Auction" (React 18/TypeScript real-time auction).
+- Hackathons: MOSIP (IIT Madras), Convolve 4.0 (IIT Guwahati), Changethon (IIT Roorkee), Appian (IIT Madras).
+- Current App context: This portfolio features a custom interactive 3D Spline keyboard, smooth scrolling via Lenis, cinematic GSAP animations, and a newspaper-style project grid.`;
 
 interface Message {
   role: 'user' | 'ai';
@@ -63,38 +63,51 @@ export default function AIAssistant() {
     setIsTyping(true);
 
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
+      const apiKey = import.meta.env.VITE_XAI_API_KEY;
       if (!apiKey) {
-         throw new Error("Missing API Key. Please add GEMINI_API_KEY to your .env file.");
+         throw new Error("Missing API Key. Please add VITE_XAI_API_KEY to your .env file.");
       }
 
-      const ai = new GoogleGenAI({ apiKey: apiKey });
-
-      // Format previous history for Gemini
-      const contents = [
-        { role: 'user', parts: [{ text: SYSTEM_PROMPT }] },
-        { role: 'model', parts: [{ text: "Understood. I will act exclusively as Rachit's Portfolio AI Guide." }] },
+      // Format previous history for xAI (OpenAI compatible)
+      const chatMessages = [
+        { role: 'system', content: SYSTEM_PROMPT },
         ...messages.map(m => ({ 
-          role: m.role === 'ai' ? 'model' : 'user', 
-          parts: [{ text: m.content }] 
+          role: m.role === 'ai' ? 'assistant' : 'user', 
+          content: m.content 
         })),
-        { role: 'user', parts: [{ text: textToSend.trim() }]}
+        { role: 'user', content: textToSend.trim() }
       ];
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents: contents,
+      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'grok-beta',
+          messages: chatMessages,
+          stream: false,
+          temperature: 0.7,
+        })
       });
 
-      const responseText = response.text || "I'm sorry, my systems are currently rebooting. Please try again later.";
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.error?.message || `API Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const responseText = data.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response. Please try again.";
       
       setMessages(prev => [...prev, { role: 'ai', content: responseText }]);
       
     } catch (error: any) {
       console.error('AI Error:', error);
       let errorMsg = "I'm currently unable to connect to my neural network. Please try manually exploring the sections!";
-      if (error?.message?.includes('API key not valid')) errorMsg = "The Google Gemini API key provided is invalid.";
-      if (error?.message?.includes('404')) errorMsg = "Model not found. Please ensure the API key has the correct model permissions.";
+      if (error?.message?.includes('API key not valid') || error?.message?.includes('401')) {
+        errorMsg = "The xAI (Grok) API key provided is invalid or expired.";
+      }
       
       setMessages(prev => [...prev, { role: 'ai', content: errorMsg }]);
     } finally {
@@ -125,7 +138,7 @@ export default function AIAssistant() {
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95, transition: { duration: 0.2 } }}
-            className="w-[90vw] md:w-[400px] h-[500px] max-h-[70vh] mb-6 rounded-2xl bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden transform-gpu"
+            className="w-[calc(100vw-3rem)] sm:w-[400px] h-[500px] max-h-[70vh] mb-6 rounded-2xl bg-[#111111] border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden transform-gpu"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#151515]/50 shrink-0">
@@ -366,7 +379,7 @@ export default function AIAssistant() {
         <div className={`absolute inset-4 rounded-full blur-2xl group-hover:opacity-60 transition-all duration-500 pointer-events-none ${isOpen ? 'bg-[#B45309]/40 opacity-40' : 'bg-white/20 opacity-20'}`} />
         
         {!isOpen && (
-          <div className="absolute -top-12 right-0 whitespace-nowrap px-4 py-2 rounded-xl bg-black border border-white/10 text-[11px] font-mono tracking-[0.2em] uppercase text-[#B45309] opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-500 pointer-events-none shadow-2xl backdrop-blur-md">
+          <div className="absolute -top-12 right-0 whitespace-nowrap px-4 py-2 rounded-xl bg-[#111111] border border-white/10 text-[11px] font-mono tracking-[0.2em] uppercase text-[#B45309] opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 transition-[opacity,transform] duration-500 pointer-events-none shadow-2xl" >
             Execute Assistant phase
           </div>
         )}

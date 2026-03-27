@@ -33,7 +33,7 @@ export const CursorRevealImage: React.FC<CursorRevealImageProps> = ({
   
   // Ref to hold the dynamically updated radius for smooth transition
   const currentRadius = useRef(radius);
-  const requestRef = useRef<number>();
+  const requestRef = useRef<number>(0);
 
   useEffect(() => {
     // Trigger fade-in on mount
@@ -52,19 +52,28 @@ export const CursorRevealImage: React.FC<CursorRevealImageProps> = ({
         containerRef.current.style.setProperty('--radius', `${radius}px`);
     }
 
-    const animate = () => {
-      // Linear interpolation (lerp) for smooth cursor following
-      currentX.current += (targetX.current - currentX.current) * 0.15;
-      currentY.current += (targetY.current - currentY.current) * 0.15;
-      
-      // Lerp for smooth radius change on hover
-      const targetRadius = isHovered ? hoverRadius : radius;
-      currentRadius.current += (targetRadius - currentRadius.current) * 0.1;
+    let isOnScreen = true;
+    const observer = new IntersectionObserver(
+      ([entry]) => { isOnScreen = entry.isIntersecting; },
+      { threshold: 0.1 }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
 
-      if (containerRef.current) {
-        containerRef.current.style.setProperty('--x', `${currentX.current}px`);
-        containerRef.current.style.setProperty('--y', `${currentY.current}px`);
-        containerRef.current.style.setProperty('--radius', `${currentRadius.current}px`);
+    const animate = () => {
+      if (isOnScreen) {
+        // Linear interpolation (lerp) for smooth cursor following
+        currentX.current += (targetX.current - currentX.current) * 0.15;
+        currentY.current += (targetY.current - currentY.current) * 0.15;
+        
+        // Lerp for smooth radius change on hover
+        const targetRadius = isHovered ? hoverRadius : radius;
+        currentRadius.current += (targetRadius - currentRadius.current) * 0.1;
+
+        if (containerRef.current) {
+          containerRef.current.style.setProperty('--x', `${currentX.current}px`);
+          containerRef.current.style.setProperty('--y', `${currentY.current}px`);
+          containerRef.current.style.setProperty('--radius', `${currentRadius.current}px`);
+        }
       }
 
       requestRef.current = requestAnimationFrame(animate);
@@ -76,6 +85,7 @@ export const CursorRevealImage: React.FC<CursorRevealImageProps> = ({
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
+      observer.disconnect();
     };
   }, [isHovered, radius, hoverRadius]);
 

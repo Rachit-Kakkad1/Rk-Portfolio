@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowDownRight } from 'lucide-react';
+import { ArrowDownRight, Github, Linkedin, Youtube } from 'lucide-react';
+import { LeetCode } from './components/Icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import createGlobe from 'cobe';
 import gsap from 'gsap';
@@ -9,7 +10,9 @@ import AboutSection from './components/AboutSection';
 import KeyboardSection from './components/KeyboardSection';
 import ProjectsSection from './components/ProjectsSection';
 import CertificateSection from './components/CertificateSection';
-import ExperienceSection from './components/ExperienceSection';
+import HackathonExperience from './components/HackathonExperience';
+import FreelanceExperience from './components/FreelanceExperience';
+import EducationSection from './components/EducationSection';
 import ContactSection from './components/ContactSection';
 import Navigation from './components/Navigation';
 import TransitionScreen from './components/TransitionScreen';
@@ -26,14 +29,14 @@ function RotatingGlobe() {
   useEffect(() => {
     let phi = 0;
     const globe = createGlobe(canvasRef.current!, {
-      devicePixelRatio: 2,
-      width: 128,
-      height: 128,
+      devicePixelRatio: 1,
+      width: 64,
+      height: 64,
       phi: 0,
       theta: 0.2,
       dark: 1,
       diffuse: 1.2,
-      mapSamples: 16000,
+      mapSamples: 4000,
       mapBrightness: 6,
       baseColor: [0.604, 0.604, 0.604],
       markerColor: [1, 1, 1],
@@ -43,7 +46,7 @@ function RotatingGlobe() {
       ],
       onRender: (state) => {
         state.phi = phi;
-        phi += 0.01;
+        phi += 0.005;
       }
     });
 
@@ -64,70 +67,52 @@ function RotatingGlobe() {
 function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const followerRef = useRef<HTMLDivElement>(null);
+  const mouseX = useRef(0);
+  const mouseY = useRef(0);
+  const followerX = useRef(0);
+  const followerY = useRef(0);
 
   useEffect(() => {
+    // Skip on mobile/touch
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    
     const cursor = cursorRef.current;
     const follower = followerRef.current;
     if (!cursor || !follower) return;
 
+    let rafId: number;
+
+    // Direct CSS transform — no GSAP overhead per frame
+    const tick = () => {
+      // Cursor follows instantly
+      cursor.style.transform = `translate(${mouseX.current}px, ${mouseY.current}px) translate(-50%, -50%)`;
+      
+      // Follower lerps smoothly (0.12 = ~8 frames to catch up)
+      followerX.current += (mouseX.current - followerX.current) * 0.12;
+      followerY.current += (mouseY.current - followerY.current) * 0.12;
+      follower.style.transform = `translate(${followerX.current}px, ${followerY.current}px) translate(-50%, -50%)`;
+      
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+
     const onMouseMove = (e: MouseEvent) => {
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1,
-        ease: "power2.out"
-      });
-      gsap.to(follower, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.3,
-        ease: "power2.out"
-      });
+      mouseX.current = e.clientX;
+      mouseY.current = e.clientY;
     };
 
-    const onMouseDown = () => {
-      gsap.to([cursor, follower], { scale: 0.8, duration: 0.2 });
-    };
-
-    const onMouseUp = () => {
-      gsap.to([cursor, follower], { scale: 1, duration: 0.2 });
-    };
-
-    const onHover = () => {
-      gsap.to(cursor, { scale: 0, duration: 0.2 });
-      gsap.to(follower, { scale: 2.5, backgroundColor: "rgba(255,255,255,0.2)", duration: 0.3 });
-    };
-
-    const onLeave = () => {
-      gsap.to(cursor, { scale: 1, duration: 0.2 });
-      gsap.to(follower, { scale: 1, backgroundColor: "transparent", duration: 0.3 });
-    };
-
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mouseup', onMouseUp);
-
-    const interactiveElements = document.querySelectorAll('button, a, .cursor-pointer');
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', onHover);
-      el.addEventListener('mouseleave', onLeave);
-    });
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mouseup', onMouseUp);
-      interactiveElements.forEach(el => {
-        el.removeEventListener('mouseenter', onHover);
-        el.removeEventListener('mouseleave', onLeave);
-      });
+      cancelAnimationFrame(rafId);
     };
   }, []);
 
   return (
     <>
-      <div ref={cursorRef} className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 mix-blend-difference hidden md:block" />
-      <div ref={followerRef} className="fixed top-0 left-0 w-10 h-10 border border-white/30 rounded-full pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 hidden md:block" />
+      <div ref={cursorRef} className="fixed top-0 left-0 w-2 h-2 bg-black rounded-full pointer-events-none z-[9999] hidden lg:block shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ willChange: 'transform' }} />
+      <div ref={followerRef} className="fixed top-0 left-0 w-10 h-10 border border-white/30 rounded-full pointer-events-none z-[9998] hidden lg:block" style={{ willChange: 'transform' }} />
     </>
   );
 }
@@ -136,7 +121,6 @@ export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const portraitRef = useRef<HTMLImageElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
-  const navbarRef = useRef<HTMLElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Initialize Global Smooth Scrolling
@@ -147,17 +131,19 @@ export default function App() {
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-      lerp: 0.1, 
-      // syncTouch: true causes extreme lag on mobile by hijacking native touch scroll.
-      // Keeping it false allows pure hardware-accelerated scroll on touch devices.
-      syncTouch: false,
+      wheelMultiplier: 1.1,
+      touchMultiplier: 1.5,
+      lerp: 0.1,
     });
 
     (window as any).lenis = lenis;
 
-    lenis.on('scroll', ScrollTrigger.update);
+    // Debounced ScrollTrigger update to reduce scroll-driven recalc
+    let scrollRafId: number;
+    lenis.on('scroll', () => {
+      cancelAnimationFrame(scrollRafId);
+      scrollRafId = requestAnimationFrame(() => ScrollTrigger.update());
+    });
 
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
@@ -204,33 +190,29 @@ export default function App() {
       //   }
       // });
 
-      // Continuous marquee that changes direction on scroll
+      // Continuous marquee that never stops
       const marquee = gsap.to(headlineRef.current, {
         xPercent: -50,
         repeat: -1,
-        duration: 20,
+        duration: 25,
         ease: "none",
       });
 
-      // Navbar fade out on scroll
-      gsap.to(navbarRef.current, {
-        y: -50,
-        opacity: 0,
-        ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=500",
-          scrub: true,
-        }
-      });
-
+      // Throttled ScrollTrigger update for marquee speed
+      let lastVelocity = 0;
       ScrollTrigger.create({
         onUpdate: (self) => {
+          const currentVelocity = self.getVelocity() / 300;
+          if (Math.abs(currentVelocity - lastVelocity) < 0.1) return; // Ignore micro-adjustments
+          
+          lastVelocity = currentVelocity;
+          const targetScale = self.direction !== 0 ? (self.direction + currentVelocity) : 1;
+          
           gsap.to(marquee, {
-            timeScale: self.direction,
-            duration: 0.3,
-            overwrite: true
+            timeScale: targetScale,
+            duration: 0.4,
+            overwrite: "auto",
+            ease: "power1.out"
           });
         }
       });
@@ -245,21 +227,9 @@ export default function App() {
       
       <div ref={containerRef} className="relative w-full h-[200vh] bg-[#9a9a9a] font-sans selection:bg-white selection:text-black">
         <div className="sticky top-0 w-full h-screen overflow-hidden">
-          {/* Navbar */}
-          <nav ref={navbarRef} className="absolute top-0 left-0 w-full px-12 py-10 flex justify-between items-center text-white z-30">
-            <div className="relative group cursor-pointer text-[18px] font-medium tracking-wide">
-              <span className="block transition-all duration-300 ease-in-out transform group-hover:-translate-y-2 group-hover:opacity-0">© RK</span>
-              <span className="absolute top-0 left-0 block transition-all duration-300 ease-in-out transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 whitespace-nowrap">Rachit Kakkad</span>
-            </div>
-            <div className="hidden md:flex gap-8 text-[18px] font-medium">
-              <a href="#about" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'About', target: 'about' } })); }} className="hover:opacity-70 transition-opacity">About</a>
-              <a href="#skills" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Skills', target: 'skills' } })); }} className="hover:opacity-70 transition-opacity">Skills</a>
-              <a href="#projects" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Projects', target: 'projects' } })); }} className="hover:opacity-70 transition-opacity">Projects</a>
-              <a href="#education" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Education', target: 'certificates' } })); }} className="hover:opacity-70 transition-opacity">Education</a>
-              <a href="#experience" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Experience', target: 'experience' } })); }} className="hover:opacity-70 transition-opacity">Experience</a>
-              <a href="#contact" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Contact', target: 'contact' } })); }} className="hover:opacity-70 transition-opacity">Contact</a>
-            </div>
-          </nav>
+          <div className="absolute top-0 left-0 w-full px-6 md:px-12 py-6 md:py-10 flex justify-between items-center text-white z-30 pointer-events-none opacity-0">
+            {/* Legacy navbar removed to prevent overlap with new premium Navigation system */}
+          </div>
 
           {/* Left Pill */}
           <div className="absolute left-0 top-[30%] md:top-1/2 -translate-y-1/2 bg-[#1a1a1a] text-white rounded-r-full flex items-center py-2 pr-2 pl-4 md:pl-8 z-30 shadow-2xl">
@@ -272,10 +242,27 @@ export default function App() {
           </div>
 
           {/* Right Text */}
-          <div className="absolute right-4 md:right-12 top-[65%] md:top-[45%] -translate-y-1/2 text-white z-30 flex flex-col gap-4 md:gap-6 items-start">
-            <ArrowDownRight className="w-8 h-8 md:w-10 md:h-10" strokeWidth={1.5} />
-            <div className="text-[28px] md:text-[44px] leading-[1.15] font-medium tracking-tight text-left">
-              Freelance &<br />Full Stack Developer
+          <div className="absolute right-4 md:right-12 top-[55%] md:top-[42%] -translate-y-1/2 text-white z-30 flex flex-col gap-3 md:gap-5 items-start max-w-[55%] md:max-w-none">
+            {/* Available badge */}
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1F1F1F] border border-white/20 rounded-full">
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-[10px] md:text-xs font-medium tracking-wider uppercase">Available for Work</span>
+            </div>
+            <h1 className="text-[24px] md:text-[48px] leading-[1.1] font-bold tracking-tight text-left">
+              Rachit Kakkad
+            </h1>
+            <div className="text-[16px] md:text-[22px] leading-[1.3] font-medium tracking-tight text-white/80 text-left">
+              Full Stack Developer & AI Engineer
+            </div>
+            <p className="text-[12px] md:text-[14px] text-white/60 leading-relaxed max-w-md hidden md:block">
+              Building production-grade AI systems, blockchain platforms & cinematic web experiences with React, Node.js & Python.
+            </p>
+            {/* Social Links */}
+            <div className="flex items-center gap-3 mt-1">
+              <a href="https://github.com/Rachit-Kakkad1" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="GitHub"><Github size={18} /></a>
+              <a href="https://www.linkedin.com/in/rachit-kakkad-r29052007k" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="LinkedIn"><Linkedin size={18} /></a>
+              <a href="https://www.youtube.com/@RachitKakkad" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="YouTube"><Youtube size={18} /></a>
+              <a href="https://leetcode.com/u/kUyAWXHOC5" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="LeetCode"><LeetCode size={18} /></a>
             </div>
             
             {/* Hero Action Buttons */}
@@ -323,7 +310,7 @@ export default function App() {
                   onMouseLeave={(e) => {
                     gsap.to(e.currentTarget, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
                   }}
-                  className={`px-6 py-3 md:px-8 md:py-3.5 ${isDownloading ? 'bg-[#B45309]' : 'bg-black/40'} text-white font-medium text-xs md:text-sm tracking-wide rounded-full border border-white/20 backdrop-blur-md hover:bg-white/10 hover:scale-105 transition-all duration-500 flex items-center justify-center relative overflow-hidden`}
+                  className={`px-6 py-3 md:px-8 md:py-3.5 ${isDownloading ? 'bg-[#B45309]' : 'bg-[#1F1F1F]'} text-white font-medium text-xs md:text-sm tracking-wide rounded-full border border-white/20 hover:bg-[#2A2A2A] hover:scale-105 transition-[background-color,transform] duration-500 flex items-center justify-center relative overflow-hidden`}
                 >
                   <AnimatePresence mode="wait">
                     {isDownloading ? (
@@ -367,13 +354,13 @@ export default function App() {
             <img 
               ref={portraitRef}
               src="/profile.png" 
-              alt="Rachit" 
+              alt="Portrait of Rachit Kakkad, Full Stack Developer & AI Engineer" 
               className="h-full w-auto max-w-none object-cover object-bottom"
             />
           </div>
 
           {/* Huge Text */}
-          <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[22vw] md:text-[14vw] leading-none text-white font-medium z-20 pointer-events-none flex items-end overflow-hidden" style={{ letterSpacing: '-0.06em' }}>
+          <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[22vw] md:text-[14vw] leading-none text-white font-medium z-20 pointer-events-none flex items-end overflow-hidden" style={{ letterSpacing: '-0.06em', willChange: 'transform' }}>
             <div ref={headlineRef} className="flex w-max">
               <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
               <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
@@ -382,12 +369,40 @@ export default function App() {
         </div>
       </div>
       <Navigation />
-      <div id="about"><AboutSection /></div>
-      <div id="skills"><KeyboardSection /></div>
-      <div id="projects"><ProjectsSection /></div>
-      <div id="certificates"><CertificateSection /></div>
-      <div id="experience"><ExperienceSection /></div>
-      <div id="contact"><ContactSection /></div>
+      <section id="about" aria-label="About"><AboutSection /></section>
+      <section id="skills" aria-label="Skills">
+        <KeyboardSection />
+      </section>
+      <div id="work">
+        <section id="hackathon" aria-label="Hackathon Experience"><HackathonExperience /></section>
+        <section id="projects" aria-label="Projects"><ProjectsSection /></section>
+      </div>
+      
+      <section id="uses" className="py-32 bg-[#F6F3EE] border-t border-black/5">
+        <div className="max-w-[1400px] mx-auto px-12">
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B45309] mb-4">Hardware & Software</p>
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-[#0E0F14] mb-12">Uses</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
+              <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">Development</h3>
+              <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">VS Code / WSL2 / Docker / Git / Postman / Oh My Zsh</p>
+            </div>
+            <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
+              <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">Design</h3>
+              <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Figma / Canva / Adobe Suite</p>
+            </div>
+            <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
+              <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">System</h3>
+              <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Windows 11 / ProArt Studiobook / mechanical keyboards</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section id="certificates" aria-label="Certificates"><CertificateSection /></section>
+      <section id="freelance" aria-label="Freelance Experience"><FreelanceExperience /></section>
+      <section id="education" aria-label="Education"><EducationSection /></section>
+      <section id="contact" aria-label="Contact"><ContactSection /></section>
       
       <CustomCursor />
       <AIAssistant />

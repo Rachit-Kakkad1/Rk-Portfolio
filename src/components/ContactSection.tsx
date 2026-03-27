@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, Check } from 'lucide-react';
+import { ArrowUpRight, Check, Calendar } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import gsap from 'gsap';
+import BookingModal from './BookingModal';
 
 export default function ContactSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -11,6 +12,7 @@ export default function ContactSection() {
 
   const [isHovered, setIsHovered] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -60,7 +62,7 @@ export default function ContactSection() {
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [isFormVisible]);
 
@@ -123,6 +125,8 @@ export default function ContactSection() {
       className="relative w-full min-h-screen overflow-hidden text-white"
       style={{ backgroundColor: bgDarken }}
     >
+      <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
+
       {/* Ambient Motion Background */}
       <div className="absolute inset-0 pointer-events-none opacity-5">
         <motion.div
@@ -151,7 +155,7 @@ export default function ContactSection() {
         className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
         style={{ opacity: textOpacity, y: textY }}
       >
-        <h1 className="text-[20vw] md:text-[15vw] font-bold leading-[0.8] tracking-[-0.03em] text-center whitespace-nowrap">
+        <h1 className="text-[20vw] md:text-[15vw] font-bold leading-[0.8] tracking-[-0.03em] text-center whitespace-nowrap will-change-transform">
           LET'S BUILD<br />SOMETHING<br />TOGETHER
         </h1>
       </motion.div>
@@ -161,9 +165,35 @@ export default function ContactSection() {
 
           {/* Left Side: CTA */}
           <div className="flex flex-col items-start relative">
-            <h2 className="text-5xl md:text-7xl font-medium tracking-tight mb-16 leading-tight">
+            <h2 className="text-5xl md:text-7xl font-medium tracking-tight mb-12 leading-tight">
               LET'S START<br />A PROJECT<br />TOGETHER
             </h2>
+
+            {/* Book a Call Premium CTA */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex flex-col gap-6 mb-16"
+            >
+              <button
+                onClick={() => setIsBookingOpen(true)}
+                className="group relative px-8 py-5 bg-[#4A63F3] rounded-full flex items-center gap-4 shadow-[0_0_30px_rgba(74,99,243,0.3)] hover:shadow-[0_0_50px_rgba(74,99,243,0.5)] transition-all duration-500 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <Calendar size={22} className="group-hover:rotate-12 transition-transform" />
+                <div className="flex flex-col items-start">
+                  <span className="text-sm font-bold tracking-widest uppercase">Book a Call</span>
+                  <span className="text-[10px] text-white/60 font-medium uppercase tracking-widest mt-0.5">30-min intro call</span>
+                </div>
+                <ArrowUpRight size={18} className="text-white/40 group-hover:text-white transition-colors" />
+              </button>
+              
+              <div className="flex items-center gap-3 px-2">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse ring-4 ring-green-500/20" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Available for freelance & collaborations</span>
+              </div>
+            </motion.div>
 
             {/* Floating Profile Element */}
             <motion.div
@@ -173,7 +203,7 @@ export default function ContactSection() {
               <img src="/profile.png" alt="Rachit Profile" className="w-full h-full object-cover object-top" />
             </motion.div>
 
-            {/* Giant CTA Button */}
+            {/* Giant CTA Button (Get in touch) */}
             <div className="relative w-[200px] h-[200px] flex items-center justify-center">
               <AnimatePresence>
                 {!isFormVisible && (
@@ -182,12 +212,12 @@ export default function ContactSection() {
                     onClick={handleGetInTouch}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
-                    className="absolute w-[180px] h-[180px] rounded-full bg-[#4A63F3] text-white font-medium text-lg flex items-center justify-center shadow-[0_0_40px_rgba(74,99,243,0.3)] z-20"
+                    className="absolute w-[180px] h-[180px] rounded-full bg-white/5 border border-white/10 text-white font-medium text-lg flex items-center justify-center backdrop-blur-sm z-20 group hover:bg-white/10 transition-colors"
                     animate={{
                       x: isTransitioning ? 0 : buttonPos.x,
                       y: isTransitioning ? 0 : buttonPos.y,
-                      scale: isTransitioning ? 50 : isHovered ? 1.1 : 1,
-                      backgroundColor: isTransitioning ? "#0a0a0a" : "#4A63F3",
+                      scale: isTransitioning ? 50 : isHovered ? 1.05 : 1,
+                      backgroundColor: isTransitioning ? "#0a0a0a" : undefined,
                     }}
                     transition={{
                       type: isTransitioning ? "tween" : "spring",
@@ -197,13 +227,15 @@ export default function ContactSection() {
                       duration: isTransitioning ? 0.8 : undefined,
                       ease: isTransitioning ? "easeInOut" : undefined
                     }}
+                    style={{ willChange: 'transform' }}
                   >
-                    <motion.span
-                      animate={{ x: isHovered ? 5 : 0, opacity: isTransitioning ? 0 : 1 }}
-                      className="flex items-center gap-2"
+                    <motion.div
+                      animate={{ opacity: isTransitioning ? 0 : 1 }}
+                      className="flex flex-col items-center gap-1"
                     >
-                      Get in touch <ArrowUpRight size={20} />
-                    </motion.span>
+                      <ArrowUpRight size={32} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform mb-2" />
+                      <span className="text-xs uppercase tracking-[0.2em] font-bold text-white/40 group-hover:text-white transition-colors">Or Fill Form</span>
+                    </motion.div>
                   </motion.button>
                 )}
               </AnimatePresence>
@@ -222,12 +254,12 @@ export default function ContactSection() {
                 >
                   <form onSubmit={handleSubmit} className="flex flex-col gap-8">
                     {[
-                      { id: 'name', label: "01 What's your name?", type: 'text' },
-                      { id: 'email', label: "02 What's your email?", type: 'email' },
-                      { id: 'org', label: "03 Organization name", type: 'text' },
-                      { id: 'services', label: "04 What services are you looking for?", type: 'text' },
-                      { id: 'budget', label: "05 Estimated budget", type: 'text' },
-                      { id: 'timeline', label: "06 Project timeline", type: 'text' }
+                      { id: 'name', label: "01 What's your name? *", type: 'text', required: true },
+                      { id: 'email', label: "02 What's your email? *", type: 'email', required: true },
+                      { id: 'org', label: "03 Organization (optional)", type: 'text', required: false },
+                      { id: 'services', label: "04 Services needed (optional)", type: 'text', required: false },
+                      { id: 'budget', label: "05 Budget (optional)", type: 'text', required: false },
+                      { id: 'timeline', label: "06 Timeline (optional)", type: 'text', required: false }
                     ].map((field) => (
                       <div key={field.id} className="relative group">
                         <motion.label
@@ -248,8 +280,8 @@ export default function ContactSection() {
                           onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
                           onFocus={() => setFocusedField(field.id)}
                           onBlur={() => setFocusedField(null)}
-                          className="w-full bg-transparent border-b border-white/20 py-2 text-white outline-none focus:border-transparent transition-colors"
-                          required
+                          className="w-full bg-transparent border-b border-white/20 py-2 text-white outline-none focus:border-transparent transition-colors focus-visible:ring-2 focus-visible:ring-[#4A63F3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                          required={field.required}
                         />
                         <motion.div
                           className="absolute bottom-0 left-0 h-[1px] bg-white origin-left"
@@ -271,7 +303,7 @@ export default function ContactSection() {
                           color: focusedField === 'message' ? '#fff' : 'rgba(255,255,255,0.5)'
                         }}
                       >
-                        05 Message
+                        07 Message *
                       </motion.label>
                       <textarea
                         id="message"
@@ -351,6 +383,8 @@ export default function ContactSection() {
                   {[
                     { name: 'GitHub', url: 'https://github.com/Rachit-Kakkad1' },
                     { name: 'LinkedIn', url: 'https://www.linkedin.com/in/rachit-kakkad-r29052007k' },
+                    { name: 'YouTube', url: 'https://www.youtube.com/@RachitKakkad' },
+                    { name: 'LeetCode', url: 'https://leetcode.com/u/kUyAWXHOC5' },
                     { name: 'Twitter', url: 'https://x.com/rachit_kakk2957' }
                   ].map((social) => (
                     <a

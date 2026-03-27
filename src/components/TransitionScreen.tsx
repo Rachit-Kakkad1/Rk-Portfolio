@@ -15,11 +15,11 @@ export default function TransitionScreen() {
         if (target) {
           (window as any).lenis?.scrollTo(target, { immediate: true });
         }
-      }, 600);
+      }, 150);
 
       setTimeout(() => {
         setIsActive(false);
-      }, 1200);
+      }, 400);
     };
 
     window.addEventListener('trigger-transition', handleTransition as EventListener);
@@ -33,14 +33,14 @@ export default function TransitionScreen() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
           className="fixed inset-0 z-[999] bg-[#1a1a1a] flex items-center justify-center"
         >
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ delay: 0.05, duration: 0.15 }}
             className="flex items-center gap-4 text-[#e5e5e5]"
           >
             <div className="w-2.5 h-2.5 rounded-full bg-[#e5e5e5]" />

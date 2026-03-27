@@ -50,12 +50,21 @@ export default function KeyboardSection() {
 
   const [activeSkillId, setActiveSkillId] = useState('react');
   const [splineApp, setSplineApp] = useState<Application>();
+  const [isDesktop, setIsDesktop] = useState(true);
   const [terminalState, setTerminalState] = useState({
     prompt: '',
     title: '',
     description: '',
     phase: 'idle'
   });
+
+  // Check viewport size on mount
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Setup interactions once Spline loads
   const handleSplineInteractions = (app: Application) => {
@@ -192,15 +201,17 @@ export default function KeyboardSection() {
   useEffect(() => {
     let isCancelled = false;
     
+    const tickAudio = new Audio('/keycap-sounds/press.mp3');
+    tickAudio.volume = 0.1;
+
     const typeText = async (text: string, setter: (val: string) => void, speed = 5, playAudio = true) => {
       for (let i = 0; i <= text.length; i++) {
         if (isCancelled) break;
         setter(text.slice(0, i));
         
         if (playAudio && i > 0 && i % 3 === 0) {
-          const tick = new Audio('/keycap-sounds/press.mp3');
-          tick.volume = 0.1;
-          tick.play().catch(() => {});
+          tickAudio.currentTime = 0;
+          tickAudio.play().catch(() => {});
         }
 
         if (speed > 0) {
@@ -246,14 +257,11 @@ export default function KeyboardSection() {
   // Handle Fade animations 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Setup simple scroll emergence fade
+      // Setup simple scroll emergence fade without pinning
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top top",
-          end: "+=150vh", // Shorter pin purely for a clean fade sequence
-          scrub: 1,
-          pin: true,
+          start: "top 60%",
         }
       });
 
@@ -318,6 +326,7 @@ export default function KeyboardSection() {
       id="keyboardScene" 
       ref={sectionRef}
       className="relative w-full min-h-screen py-24 md:py-0 md:h-screen bg-[#F6F3EE] text-[#1C1C1C] overflow-hidden flex items-center justify-center font-sans smooth-gpu"
+      style={{ isolation: 'isolate' }}
     >
       {/* Dynamic Cinematic Background Typography */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
@@ -329,6 +338,7 @@ export default function KeyboardSection() {
             exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="text-[120px] md:text-[220px] font-bold text-black whitespace-nowrap tracking-tighter"
+            style={{ willChange: 'transform, opacity, filter' }}
           >
             {skills.find(s => s.id === activeSkillId)?.title.toUpperCase()}
           </motion.h2>
@@ -337,42 +347,116 @@ export default function KeyboardSection() {
 
       <div className="keyboard-stage w-full max-w-7xl mx-auto px-6 h-full flex flex-col md:flex-row items-center justify-between relative z-10">
         
-        {/* Keyboard Area (60%) */}
-        <div className="relative w-full md:w-[60%] h-[50vh] md:h-[80vh] flex items-center justify-center">
-          {/* Radial Glow */}
-          <div 
-            ref={glowRef}
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(circle at center, rgba(0,0,0,0.15) 0%, transparent 60%)',
-              transform: 'translateY(10%) scale(1.2)'
-            }}
-          />
-          
-          {/* Keyboard World */}
-          <div 
-            ref={keyboardWorldRef}
-            className="keyboard-world w-full h-full relative z-10"
-          >
-            <Suspense fallback={
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="animate-spin w-8 h-8 border-2 border-black/20 border-t-black rounded-full"></div>
-              </div>
-            }>
-              <Spline
-                className="w-full h-full"
-                scene="/skills-keyboard.splinecode"
-                onLoad={handleSplineInteractions}
+        {/* Keyboard Area (60%) — Desktop: 3D Spline, Mobile: Static grid */}
+        <div className="relative w-full lg:w-[60%] h-auto lg:h-[80vh] flex flex-col items-center justify-center order-2 md:order-1">
+          {isDesktop ? (
+            <>
+              {/* Radial Glow */}
+              <div 
+                ref={glowRef}
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle at center, rgba(0,0,0,0.15) 0%, transparent 60%)',
+                  transform: 'translateY(10%) scale(1.2)'
+                }}
               />
-            </Suspense>
-          </div>
+              
+              {/* Keyboard World */}
+              <div 
+                ref={keyboardWorldRef}
+                className="keyboard-world w-full h-full relative z-10"
+              >
+                <Suspense fallback={
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="animate-spin w-8 h-8 border-2 border-black/20 border-t-black rounded-full"></div>
+                  </div>
+                }>
+                  <Spline
+                    className="w-full h-full"
+                    scene="/skills-keyboard.splinecode"
+                    onLoad={handleSplineInteractions}
+                  />
+                </Suspense>
+              </div>
+            </>
+          ) : (
+            /* Mobile: Categorized Premium Tactile Grid */
+            <div className="w-full flex flex-col gap-10 p-4 sm:p-6 pb-24">
+              {/* Ultra-Premium Mobile Title */}
+              <motion.div 
+                className="flex flex-col pt-8 pb-4"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-px bg-[#B45309]"></div>
+                  <span className="text-[#B45309] font-mono font-bold tracking-[0.3em] text-[10px] sm:text-[11px] uppercase">Technical Arsenal</span>
+                </div>
+                <h2 className="text-[2.75rem] sm:text-6xl font-black tracking-tighter text-[#1A1816] leading-[0.95] mb-2">
+                  System<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1A1816] to-[#A0A0A0]">Architecture.</span>
+                </h2>
+              </motion.div>
+
+              {[
+                { name: "Frontend Architecture", items: ['js', 'ts', 'react', 'next', 'html', 'css', 'tailwind', 'vite'] },
+                { name: "Backend & Systems", items: ['node', 'express', 'postgre', 'mongo', 'firebase', 'wordpress'] },
+                { name: "Cloud & DevSecOps", items: ['linux', 'aws', 'docker', 'nginx', 'vercel'] },
+                { name: "Developer Ecosystem", items: ['git', 'github', 'npm', 'prettier', 'vim'] }
+              ].map((category, catIndex) => (
+                <motion.div 
+                  key={category.name}
+                  className="flex flex-col gap-4"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: catIndex * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="text-[10px] sm:text-xs font-mono tracking-widest text-[#B45309] font-bold uppercase">{category.name}</span>
+                    <div className="flex-1 h-px bg-black/10" />
+                  </div>
+                  <div className="flex flex-wrap items-start gap-2 sm:gap-3">
+                    {category.items.map(itemId => {
+                      const skill = skills.find(s => s.id === itemId);
+                      if (!skill) return null;
+                      
+                      const isActive = activeSkillId === skill.id;
+                      return (
+                        <button
+                          key={skill.id}
+                          onClick={() => {
+                              setActiveSkillId(skill.id);
+                              if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
+                                  window.navigator.vibrate(20);
+                              }
+                          }}
+                          className={`relative flex items-center justify-center px-4 py-3 rounded-xl sm:rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-[0.15em] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] border ${
+                            isActive 
+                              ? 'bg-[#1A1816] text-[#F6F3EE] border-[#B45309]/50 shadow-[0_8px_20px_rgba(180,83,9,0.2)] scale-[1.05] z-10' 
+                              : 'bg-white/70 text-[#1A1816]/70 border-black/5 hover:bg-white hover:text-[#1A1816] hover:border-black/10 hover:shadow-md hover:-translate-y-0.5'
+                          }`}
+                        >
+                          {isActive && (
+                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#B45309] rounded-full shadow-[0_0_8px_rgba(180,83,9,0.8)] border-2 border-[#1A1816]" />
+                          )}
+                          {skill.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Terminal Panel (40%) */}
-        <div className="w-full md:w-[35%] z-20 mt-12 md:mt-0 flex flex-col justify-center">
+        <div className="hidden md:flex w-full md:w-[35%] z-20 mt-32 md:mt-0 mb-8 md:mb-0 flex-col justify-center order-1 md:order-2">
           <div 
             ref={skillPanelRef}
             className="font-mono text-[#ECE7DF] bg-[#1C1C1C] p-8 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.15)] h-[320px] w-full flex flex-col relative overflow-hidden border border-white/5"
+            style={{ willChange: 'transform, opacity' }}
           >
             {/* Terminal Header */}
             <div className="flex items-center gap-2 mb-6 opacity-50">
