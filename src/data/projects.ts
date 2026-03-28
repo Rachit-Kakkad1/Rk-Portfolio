@@ -352,11 +352,13 @@ export const hackathons: HackathonData[] = [
     highlights: ['Secure identity workflows', 'Backend architecture', 'Team leadership'],
     challenges: ['Designing a federated identity protocol that meets stringent national security requirements within a 36-hour sprint.'],
     achievement: '🏅 Rank 4 — Round 3 Finalist',
+    image: '/certificates/hackathons/National_Digital_Identity_&_Innovation_Hackathon_2025.png',
+    images: ['/certificates/hackathons/National_Digital_Identity_&_Innovation_Hackathon_2025.png'],
     links: {}
   },
   {
     id: 3,
-    title: 'ODOO × GUJARAT VIDHYAPITH — PLM FLOW',
+    title: 'ODOO × GUJARAT VIDHYAPITH',
     project: 'PLM Flow',
     outcome: '“Built a fault-tolerant PLM system with dual-database failover and real-time ECO tracking.”',
     longDescription: 'Engineered an enterprise-grade Product Lifecycle Management system featuring a robust dual-database (Supabase + MongoDB) synchronized failover mechanism, ensuring exactly-once processing for Engineering Change Orders.',
@@ -366,10 +368,10 @@ export const hackathons: HackathonData[] = [
     achievement: 'Hackathon Finalist',
     images: [
       '/certificates/hackathons/Odoo_X_Gujarat_Vidyapith_Hackathon_26.png',
-      '/certificates/hackathons/odoo-frame.jpg',
-      '/certificates/hackathons/odoo-wristband.png',
-      '/certificates/hackathons/odoo-ui-hero.png',
-      '/certificates/hackathons/odoo-ui-features.png'
+      '/certificates/hackathons/odoo/odoo-frame.jpg',
+      '/certificates/hackathons/odoo/odoo-wristband.png',
+      '/certificates/hackathons/odoo/odoo-ui-hero.png',
+      '/certificates/hackathons/odoo/odoo-ui-features.png'
     ],
     links: {
       github: 'https://github.com/Rachit-Kakkad1/Odoo_X_GV_PLM',
@@ -379,7 +381,7 @@ export const hackathons: HackathonData[] = [
   },
   {
     id: 4,
-    title: 'HACKCRUX × LNMIT — COS ENGINE',
+    title: 'HACKCRUX × LNMIT',
     project: 'COS Engine',
     outcome: '“Developed a cognitive operating system to track and reconstruct user mental state using AI.”',
     longDescription: 'Built a cognitive intelligence layer that runs entirely on-device to reconstruct lost user context using local natural language models (Whisper) and vector memory databases (FAISS + MiniLM) executing in sub-second latency.',
@@ -387,6 +389,8 @@ export const hackathons: HackathonData[] = [
     highlights: ['AI-based cognition tracking', 'Local-first system design', 'Real-time processing'],
     challenges: ['Orchestrating 8 local AI models dynamically without thermal throttling the host machine or exceeding VRAM limits.'],
     achievement: 'Hackathon Submission',
+    image: '/certificates/hackathons/HackCrux X LNMIT.png',
+    images: ['/certificates/hackathons/HackCrux X LNMIT.png'],
     links: {
       github: 'https://github.com/Rachit-Kakkad1/build-with-ai-hackcrux-2026',
       live: 'https://cos-cognitiveoperatingsystem.vercel.app/',
@@ -412,7 +416,7 @@ export const hackathons: HackathonData[] = [
   },
   {
     id: 6,
-    title: 'OPENPOOLS × DOPPELGANGER — AGRICERT',
+    title: 'OPENPOOLS × DOPPELGANGER',
     project: 'AgriCert',
     outcome: '“Built a blockchain-based agricultural certification system with cryptographic verification.”',
     longDescription: 'Architected a decentralized, tamper-proof certification pipeline allowing instant QR-based verification of agricultural origins, bringing cryptographic trust to an otherwise paper-driven supply chain.',
@@ -420,6 +424,8 @@ export const hackathons: HackathonData[] = [
     highlights: ['QR verification', 'Certification pipeline', 'Role-based system'],
     challenges: ['Designing an immutable state machine for certification transfers while ensuring zero-knowledge privacy for farmers.'],
     achievement: 'Score: 79.5',
+    image: '/certificates/hackathons/Openpools ( 30 hrs ).jpg',
+    images: ['/certificates/hackathons/Openpools ( 30 hrs ).jpg'],
     links: {
       github: 'https://github.com/Rachit-Kakkad1/agricert-platform',
       live: 'https://agricert-khaki.vercel.app',

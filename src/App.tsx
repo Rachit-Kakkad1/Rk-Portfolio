@@ -76,14 +76,14 @@ export default function App() {
   // Initialize Global Smooth Scrolling
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.1,
-      touchMultiplier: 1.5,
-      lerp: 0.1,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 2.0,
+      lerp: 0.05,
     });
 
     (window as any).lenis = lenis;
@@ -118,7 +118,7 @@ export default function App() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       setTimeout(() => {
         setIsDownloading(false);
       }, 1000);
@@ -154,10 +154,10 @@ export default function App() {
         onUpdate: (self) => {
           const currentVelocity = self.getVelocity() / 300;
           if (Math.abs(currentVelocity - lastVelocity) < 0.1) return; // Ignore micro-adjustments
-          
+
           lastVelocity = currentVelocity;
           const targetScale = self.direction !== 0 ? (self.direction + currentVelocity) : 1;
-          
+
           gsap.to(marquee, {
             timeScale: targetScale,
             duration: 0.4,
@@ -181,76 +181,76 @@ export default function App() {
 
       <div className={`transition-opacity duration-1000 ${showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <TransitionScreen />
-      
-      <div ref={containerRef} className="relative w-full h-[200vh] bg-[#9a9a9a] font-sans selection:bg-white selection:text-black">
-        <div className="sticky top-0 w-full h-screen overflow-hidden">
-          <div className="absolute top-0 left-0 w-full px-6 md:px-12 py-6 md:py-10 flex justify-between items-center text-white z-30 pointer-events-none opacity-0">
-            {/* Legacy navbar removed to prevent overlap with new premium Navigation system */}
-          </div>
 
-          {/* Left Pill - Positioned at the TOP LEFT for mobile to avoid face entirely */}
-          <div className="absolute left-0 right-auto top-8 md:top-[65%] md:-translate-y-1/2 bg-[#1a1a1a] text-white rounded-r-full flex items-center py-2 pr-2 pl-4 md:pl-8 z-30 shadow-2xl transition-transform hover:translate-x-1 duration-300">
-            <div className="text-[12px] md:text-[14px] leading-[1.3] mr-4 md:mr-6 font-medium tracking-wide text-left">
-              Located<br />in<br />Gandhinagar, India
+        <div ref={containerRef} className="relative w-full h-[200vh] bg-[#9a9a9a] font-sans selection:bg-white selection:text-black">
+          <div className="sticky top-0 w-full h-screen overflow-hidden">
+            <div className="absolute top-0 left-0 w-full px-6 md:px-12 py-6 md:py-10 flex justify-between items-center text-white z-30 pointer-events-none opacity-0">
+              {/* Legacy navbar removed to prevent overlap with new premium Navigation system */}
             </div>
-            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#0a0a0a] flex items-center justify-center shrink-0 overflow-hidden">
-              <RotatingGlobe />
-            </div>
-          </div>
 
-          {/* Right Text - Stays in the middle-right area for easy thumb access */}
-          <div className="absolute right-4 md:right-12 top-[65%] md:top-[42%] -translate-y-1/2 text-white z-30 flex flex-col gap-3 md:gap-5 items-start max-w-[70%] md:max-w-none">
-            {/* Available badge */}
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1F1F1F] border border-white/20 rounded-full">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-[10px] md:text-xs font-medium tracking-wider uppercase">Available for Work</span>
+            {/* Left Pill - Positioned at the TOP LEFT for mobile to avoid face entirely */}
+            <div className="absolute left-0 right-auto top-8 md:top-[65%] md:-translate-y-1/2 bg-[#1a1a1a] text-white rounded-r-full flex items-center py-2 pr-2 pl-4 md:pl-8 z-30 shadow-2xl transition-transform hover:translate-x-1 duration-300">
+              <div className="text-[12px] md:text-[14px] leading-[1.3] mr-4 md:mr-6 font-medium tracking-wide text-left">
+                Located<br />in<br />Gandhinagar, India
+              </div>
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#0a0a0a] flex items-center justify-center shrink-0 overflow-hidden">
+                <RotatingGlobe />
+              </div>
             </div>
-            <h1 className="text-[28px] md:text-[48px] leading-[1.1] font-bold tracking-tight text-left">
-              Rachit Kakkad
-            </h1>
-            <div className="text-[16px] md:text-[22px] leading-[1.3] font-medium tracking-tight text-white/80 text-left">
-              Full Stack Developer & AI Engineer
-            </div>
-            <p className="text-[12px] md:text-[14px] text-white/60 leading-relaxed max-w-md hidden md:block">
-              Building production-grade AI systems, blockchain platforms & cinematic web experiences with React, Node.js & Python.
-            </p>
-            {/* Social Links */}
-            <div className="flex items-center gap-3 mt-1">
-              <a href="https://github.com/Rachit-Kakkad1" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="GitHub"><Github size={18} /></a>
-              <a href="https://www.linkedin.com/in/rachit-kakkad-r29052007k" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="LinkedIn"><Linkedin size={18} /></a>
-              <a href="https://www.youtube.com/@RachitKakkad" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="YouTube"><Youtube size={18} /></a>
-              <a href="https://leetcode.com/u/kUyAWXHOC5" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="LeetCode"><LeetCode size={18} /></a>
-            </div>
-            
-            {/* Hero Action Buttons */}
-            <motion.div 
-              className="flex flex-row gap-4 mt-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
-            >
-              <a 
-                href="#projects" 
-                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Projects', target: 'projects' } })); }}
-                onMouseEnter={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const centerX = rect.left + rect.width / 2;
-                  const centerY = rect.top + rect.height / 2;
-                  gsap.to(e.currentTarget, {
-                    x: (e.clientX - centerX) * 0.2,
-                    y: (e.clientY - centerY) * 0.2,
-                    duration: 0.3,
-                    ease: "power2.out"
-                  });
-                }}
-                onMouseLeave={(e) => {
-                  gsap.to(e.currentTarget, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
-                }}
-                className="px-6 py-3 md:px-8 md:py-3.5 bg-white text-black font-semibold text-xs md:text-sm tracking-wide rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+
+            {/* Right Text - Stays in the middle-right area for easy thumb access */}
+            <div className="absolute right-4 md:right-12 top-[65%] md:top-[42%] -translate-y-1/2 text-white z-30 flex flex-col gap-3 md:gap-5 items-start max-w-[70%] md:max-w-none">
+              {/* Available badge */}
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1F1F1F] border border-white/20 rounded-full">
+                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <span className="text-[10px] md:text-xs font-medium tracking-wider uppercase">Available for Work</span>
+              </div>
+              <h1 className="text-[28px] md:text-[48px] leading-[1.1] font-bold tracking-tight text-left">
+                Rachit Kakkad
+              </h1>
+              <div className="text-[16px] md:text-[22px] leading-[1.3] font-medium tracking-tight text-white/80 text-left">
+                Full Stack Developer & AI Engineer
+              </div>
+              <p className="text-[12px] md:text-[14px] text-white/60 leading-relaxed max-w-md hidden md:block">
+                Building production-grade AI systems, blockchain platforms & cinematic web experiences with React, Node.js & Python.
+              </p>
+              {/* Social Links */}
+              <div className="flex items-center gap-3 mt-1">
+                <a href="https://github.com/Rachit-Kakkad1" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="GitHub"><Github size={18} /></a>
+                <a href="https://www.linkedin.com/in/rachit-kakkad-r29052007k" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="LinkedIn"><Linkedin size={18} /></a>
+                <a href="https://www.youtube.com/@RachitKakkad" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="YouTube"><Youtube size={18} /></a>
+                <a href="https://leetcode.com/u/kUyAWXHOC5" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="LeetCode"><LeetCode size={18} /></a>
+              </div>
+
+              {/* Hero Action Buttons */}
+              <motion.div
+                className="flex flex-row gap-4 mt-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
               >
-                View my work
-              </a>
-                <button 
+                <a
+                  href="#projects"
+                  onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Projects', target: 'projects' } })); }}
+                  onMouseEnter={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    gsap.to(e.currentTarget, {
+                      x: (e.clientX - centerX) * 0.2,
+                      y: (e.clientY - centerY) * 0.2,
+                      duration: 0.3,
+                      ease: "power2.out"
+                    });
+                  }}
+                  onMouseLeave={(e) => {
+                    gsap.to(e.currentTarget, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+                  }}
+                  className="px-6 py-3 md:px-8 md:py-3.5 bg-white text-black font-semibold text-xs md:text-sm tracking-wide rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+                >
+                  View my work
+                </a>
+                <button
                   onClick={handleDownloadResume}
                   disabled={isDownloading}
                   onMouseEnter={(e) => {
@@ -271,7 +271,7 @@ export default function App() {
                 >
                   <AnimatePresence mode="wait">
                     {isDownloading ? (
-                      <motion.div 
+                      <motion.div
                         key="loading"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -282,7 +282,7 @@ export default function App() {
                         <span>PREPARING...</span>
                       </motion.div>
                     ) : (
-                      <motion.span 
+                      <motion.span
                         key="idle"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -292,10 +292,10 @@ export default function App() {
                       </motion.span>
                     )}
                   </AnimatePresence>
-                  
+
                   {/* God Effect Shine */}
                   {isDownloading && (
-                    <motion.div 
+                    <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent z-10"
                       initial={{ x: '-100%' }}
                       animate={{ x: '200%' }}
@@ -304,64 +304,64 @@ export default function App() {
                   )}
                 </button>
               </motion.div>
-          </div>
+            </div>
 
-          {/* Person Image */}
-          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 h-[105vh] z-10 pointer-events-none origin-bottom flex justify-center">
-            <img 
-              ref={portraitRef}
-              src="/profile.png" 
-              alt="Portrait of Rachit Kakkad, Full Stack Developer & AI Engineer" 
-              className="h-full w-auto max-w-none object-cover object-bottom"
-            />
-          </div>
+            {/* Person Image */}
+            <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 h-[105vh] z-10 pointer-events-none origin-bottom flex justify-center">
+              <img
+                ref={portraitRef}
+                src="/profile.png"
+                alt="Portrait of Rachit Kakkad, Full Stack Developer & AI Engineer"
+                className="h-full w-auto max-w-none object-cover object-bottom"
+              />
+            </div>
 
-          {/* Huge Text */}
-          <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[22vw] md:text-[14vw] leading-none text-white font-medium z-20 pointer-events-none flex items-end overflow-hidden" style={{ letterSpacing: '-0.06em', willChange: 'transform' }}>
-            <div ref={headlineRef} className="flex w-max">
-              <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
-              <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
+            {/* Huge Text */}
+            <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[22vw] md:text-[14vw] leading-none text-white font-medium z-20 pointer-events-none flex items-end overflow-hidden" style={{ letterSpacing: '-0.06em', willChange: 'transform', backfaceVisibility: 'hidden' }}>
+              <div ref={headlineRef} className="flex w-max">
+                <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
+                <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <Navigation />
-      <section id="about" aria-label="About"><AboutSection /></section>
-      <section id="skills" aria-label="Skills">
-        <KeyboardSection />
-      </section>
-      <div id="work">
-        <section id="hackathon" aria-label="Hackathon Experience"><HackathonExperience /></section>
-        <section id="projects" aria-label="Projects"><ProjectsSection /></section>
-      </div>
-      
-      <section id="uses" className="py-32 bg-[#F6F3EE] border-t border-black/5">
-        <div className="max-w-[1400px] mx-auto px-12">
-          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B45309] mb-4">Hardware & Software</p>
-          <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-[#0E0F14] mb-12">Uses</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
-              <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">Development</h3>
-              <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">VS Code / WSL2 / Docker / Git / Postman / Oh My Zsh</p>
-            </div>
-            <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
-              <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">Design</h3>
-              <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Figma / Canva / Adobe Suite</p>
-            </div>
-            <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
-              <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">System</h3>
-              <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Windows 11 / ProArt Studiobook / mechanical keyboards</p>
+        <Navigation />
+        <section id="about" aria-label="About"><AboutSection /></section>
+        <section id="skills" aria-label="Skills">
+          <KeyboardSection />
+        </section>
+        <div id="work">
+          <section id="hackathon" aria-label="Hackathon Experience"><HackathonExperience /></section>
+          <section id="projects" aria-label="Projects"><ProjectsSection /></section>
+        </div>
+
+        <section id="uses" className="py-32 bg-[#F6F3EE] border-t border-black/5">
+          <div className="max-w-[1400px] mx-auto px-12">
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B45309] mb-4">Hardware & Software</p>
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-[#0E0F14] mb-12">Uses</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
+                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">Development</h3>
+                <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">VS Code / WSL2 / Docker / Git / Postman / Oh My Zsh</p>
+              </div>
+              <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
+                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">Design</h3>
+                <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Figma / Canva / Adobe Suite</p>
+              </div>
+              <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
+                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">System</h3>
+                <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Windows 11 / ProArt Studiobook / mechanical keyboards</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      
-      <section id="certificates" aria-label="Certificates"><CertificateSection /></section>
-      <section id="freelance" aria-label="Freelance Experience"><FreelanceExperience /></section>
-      <section id="education" aria-label="Education"><EducationSection /></section>
-      <section id="contact" aria-label="Contact"><ContactSection /></section>
-      
-      <AIAssistant />
+        </section>
+
+        <section id="certificates" aria-label="Certificates"><CertificateSection /></section>
+        <section id="freelance" aria-label="Freelance Experience"><FreelanceExperience /></section>
+        <section id="education" aria-label="Education"><EducationSection /></section>
+        <section id="contact" aria-label="Contact"><ContactSection /></section>
+
+        <AIAssistant />
       </div>
     </main>
   );

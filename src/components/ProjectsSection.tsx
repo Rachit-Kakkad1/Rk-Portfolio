@@ -2,6 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Github, Globe, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PROJECT_DATA, CODINGGITA_DATA, ProjectData } from '../data/projects';
+import AgriCertDetail from './AgriCertDetail';
+import COSDetail from './COSDetail';
+import PLMDetail from './PLMDetail';
+import ThreatLensDetail from './ThreatLensDetail';
+import FleetFlowDetail from './FleetFlowDetail';
+import LifeLensDetail from './LifeLensDetail';
+import CodingGitaDetail from './CodingGitaDetail';
+import AttendifyDetail from './AttendifyDetail';
 
 interface ProjectCellProps {
   tag: string;
@@ -608,6 +616,14 @@ function ProjectDetailOverlay({ project, onClose }: { project: ProjectData; onCl
 
 function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
+  const [showAgriCert, setShowAgriCert] = useState(false);
+  const [showCOS, setShowCOS] = useState(false);
+  const [showPLM, setShowPLM] = useState(false);
+  const [showThreatLens, setShowThreatLens] = useState(false);
+  const [showFleetFlow, setShowFleetFlow] = useState(false);
+  const [showLifeLens, setShowLifeLens] = useState(false);
+  const [showCodingGita, setShowCodingGita] = useState(false);
+  const [showAttendify, setShowAttendify] = useState(false);
 
   useEffect(() => {
     if (!document.querySelector('link[href*="Playfair"]')) {
@@ -641,7 +657,31 @@ function ProjectsSection() {
       }}
     >
       <AnimatePresence>
-        {selectedProject && (
+        {showAgriCert && (
+          <AgriCertDetail onClose={() => setShowAgriCert(false)} />
+        )}
+        {showCOS && (
+          <COSDetail onClose={() => setShowCOS(false)} />
+        )}
+        {showPLM && (
+          <PLMDetail onClose={() => setShowPLM(false)} />
+        )}
+        {showThreatLens && (
+          <ThreatLensDetail onClose={() => setShowThreatLens(false)} />
+        )}
+        {showFleetFlow && (
+          <FleetFlowDetail onClose={() => setShowFleetFlow(false)} />
+        )}
+        {showLifeLens && (
+          <LifeLensDetail onClose={() => setShowLifeLens(false)} />
+        )}
+        {showCodingGita && (
+          <CodingGitaDetail onClose={() => setShowCodingGita(false)} />
+        )}
+        {showAttendify && (
+          <AttendifyDetail onClose={() => setShowAttendify(false)} />
+        )}
+        {selectedProject && !showAgriCert && !showCOS && !showPLM && !showThreatLens && !showFleetFlow && !showLifeLens && !showCodingGita && !showAttendify && (
           <ProjectDetailOverlay
             project={selectedProject}
             onClose={() => setSelectedProject(null)}
@@ -749,7 +789,7 @@ function ProjectsSection() {
               github={PROJECT_DATA[0].github}
               live={PROJECT_DATA[0].live}
               docs={PROJECT_DATA[0].docs}
-              onClick={() => setSelectedProject(PROJECT_DATA[0])}
+              onClick={() => setShowAgriCert(true)}
             />
             <ProjectCell
               tag="AI · LOCAL LLM · PRODUCTIVITY"
@@ -762,7 +802,7 @@ function ProjectsSection() {
               github={PROJECT_DATA[5].github}
               live={PROJECT_DATA[5].live}
               docs={PROJECT_DATA[5].docs}
-              onClick={() => setSelectedProject(PROJECT_DATA[5])}
+              onClick={() => setShowCOS(true)}
             />
           </div>
         </div>
@@ -794,7 +834,7 @@ function ProjectsSection() {
               github={PROJECT_DATA[4].github}
               live={PROJECT_DATA[4].live}
               docs={PROJECT_DATA[4].docs}
-              onClick={() => setSelectedProject(PROJECT_DATA[4])}
+              onClick={() => setShowPLM(true)}
             />
             <ProjectCell
               tag="CYBERSECURITY · AI · DEVSECOPS"
@@ -806,7 +846,7 @@ function ProjectsSection() {
               github={PROJECT_DATA[2].github}
               live={PROJECT_DATA[2].live}
               docs={PROJECT_DATA[2].docs}
-              onClick={() => setSelectedProject(PROJECT_DATA[2])}
+              onClick={() => setShowThreatLens(true)}
             />
             <ProjectCell
               tag="LOGISTICS · ANALYTICS · REAL-TIME"
@@ -818,7 +858,7 @@ function ProjectsSection() {
               github={PROJECT_DATA[3].github}
               live={PROJECT_DATA[3].live}
               docs={PROJECT_DATA[3].docs}
-              onClick={() => setSelectedProject(PROJECT_DATA[3])}
+              onClick={() => setShowFleetFlow(true)}
             />
             <ProjectCell
               tag="AI · CLIMATE · WELLNESS"
@@ -830,7 +870,7 @@ function ProjectsSection() {
               github={PROJECT_DATA[1].github}
               live={PROJECT_DATA[1].live}
               docs={PROJECT_DATA[1].docs}
-              onClick={() => setSelectedProject(PROJECT_DATA[1])}
+              onClick={() => setShowLifeLens(true)}
             />
             <ProjectCell
               tag="AUTOMATION · WORKFLOWS"
@@ -854,14 +894,14 @@ function ProjectsSection() {
               github={PROJECT_DATA[7].github}
               live={PROJECT_DATA[7].live}
               docs={PROJECT_DATA[7].docs}
-              onClick={() => setSelectedProject(PROJECT_DATA[7])}
+              onClick={() => setShowAttendify(true)}
             />
           </div>
         </div>
 
         {/* ═══ CodingGita Strip ═══ */}
         <div
-          onClick={() => setSelectedProject(CODINGGITA_DATA)}
+          onClick={() => setShowCodingGita(true)}
           className="group cursor-pointer"
           style={{
             background: '#1A1816',
