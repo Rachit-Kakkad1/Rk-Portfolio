@@ -29,7 +29,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!robots\\.txt|sitemap\\.xml|google8a88f37a2ba9f09f\\.html).*)",
+      "source": "/((?!robots\\.txt|sitemap\\.xml|google1de9643a649aa488\\.html).*)",
       "destination": "/index.html"
     }
   ]
