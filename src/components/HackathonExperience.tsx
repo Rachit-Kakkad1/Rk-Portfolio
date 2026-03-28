@@ -32,8 +32,10 @@ export default function HackathonExperience() {
             <div className="w-2 h-2 rounded-full bg-[#B45309] animate-pulse" />
             <span className="text-[#B45309] font-mono tracking-[0.3em] uppercase text-[10px] font-bold">Engineering Dashboard</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#1A1816] font-mono uppercase">Competition_Record</h2>
-          <p className="text-[#1A1816]/50 max-w-xl text-sm font-mono leading-relaxed">
+          <h2 className="text-[clamp(1.875rem,8vw,3rem)] font-bold tracking-tight text-[#1A1816] font-mono uppercase break-words leading-[1.1]">
+            Competition_Record
+          </h2>
+          <p className="text-[#1A1816]/50 max-w-xl text-[clamp(0.75rem,2vw,0.875rem)] font-mono leading-relaxed">
             High-performance engineering under strict time constraints. A dashboard of elite hackathon builds, system architectures, and leadership outcomes.
           </p>
         </div>
@@ -181,37 +183,37 @@ function FeaturedCard({ hack, index, onClick }: { hack: HackathonData, index: nu
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
       onClick={onClick}
-      className="group relative bg-white border border-black/5 p-8 rounded-2xl hover:-translate-y-1 hover:border-black/15 shadow-sm hover:shadow-xl cursor-pointer transition-all duration-300 flex flex-col h-[400px] overflow-hidden"
+      className="group relative bg-white border border-black/5 p-6 md:p-8 rounded-2xl hover:-translate-y-1 hover:border-black/15 shadow-sm hover:shadow-xl cursor-pointer transition-all duration-300 flex flex-col h-auto min-h-[400px] overflow-hidden"
     >
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#B45309]/5 to-transparent blur-[60px] pointer-events-none group-hover:from-[#B45309]/15 transition-all duration-500" />
       
       <div className="flex flex-wrap justify-between items-start gap-4 mb-6 relative z-10 w-full">
         <div className="px-3 py-1.5 bg-black text-white rounded-md shadow-md shrink-0">
-          <span className="text-[10px] font-black tracking-widest uppercase break-words">{hack.achievement}</span>
+          <span className="text-[9px] md:text-[10px] font-black tracking-widest uppercase break-words">{hack.achievement}</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           {hack.links?.github && (
             <a href={hack.links.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-1 rounded-full text-black/20 hover:bg-black/5 hover:text-[#1A1816] transition-all duration-300">
-              <Github className="w-5 h-5" />
+              <Github className="w-4 h-4 md:w-5 md:h-5" />
             </a>
           )}
           {hack.links?.live && (
             <a href={hack.links.live} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-1 rounded-full text-black/20 hover:bg-black/5 hover:text-[#1A1816] transition-all duration-300">
-              <Globe className="w-5 h-5" />
+              <Globe className="w-4 h-4 md:w-5 md:h-5" />
             </a>
           )}
           {hack.links?.docs && (
             <a href={hack.links.docs} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-1 rounded-full text-black/20 hover:bg-black/5 hover:text-[#1A1816] transition-all duration-300">
-              <FileText className="w-5 h-5" />
+              <FileText className="w-4 h-4 md:w-5 md:h-5" />
             </a>
           )}
-          <ArrowUpRight className="text-black/20 w-8 h-8 group-hover:text-[#B45309] transition-colors duration-300 ml-2" />
+          <ArrowUpRight className="text-black/20 w-6 h-6 md:w-8 md:h-8 group-hover:text-[#B45309] transition-colors duration-300 ml-1 md:ml-2" />
         </div>
       </div>
 
       <div className="relative z-10 mt-auto">
         <p className="text-[10px] md:text-xs font-mono text-[#B45309] uppercase tracking-widest mb-2 font-bold line-clamp-2 md:line-clamp-1">{hack.title}</p>
-        <h3 className="text-3xl md:text-5xl font-black mb-6 tracking-tight text-[#1A1816]">{hack.project}</h3>
+        <h3 className="text-2xl md:text-[clamp(1.5rem,5vw,3rem)] font-black mb-4 md:mb-6 tracking-tight text-[#1A1816] leading-[1.1]">{hack.project}</h3>
         
         <div className="flex flex-col gap-2 mb-8">
           {hack.highlights.slice(0, 3).map((h, i) => (

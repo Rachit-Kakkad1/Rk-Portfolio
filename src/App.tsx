@@ -17,6 +17,7 @@ import ContactSection from './components/ContactSection';
 import Navigation from './components/Navigation';
 import TransitionScreen from './components/TransitionScreen';
 import AIAssistant from './components/AIAssistant';
+import CinemaIntro from './components/CinemaIntro';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,64 +65,13 @@ function RotatingGlobe() {
   );
 }
 
-function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const followerRef = useRef<HTMLDivElement>(null);
-  const mouseX = useRef(0);
-  const mouseY = useRef(0);
-  const followerX = useRef(0);
-  const followerY = useRef(0);
-
-  useEffect(() => {
-    // Skip on mobile/touch
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    
-    const cursor = cursorRef.current;
-    const follower = followerRef.current;
-    if (!cursor || !follower) return;
-
-    let rafId: number;
-
-    // Direct CSS transform — no GSAP overhead per frame
-    const tick = () => {
-      // Cursor follows instantly
-      cursor.style.transform = `translate(${mouseX.current}px, ${mouseY.current}px) translate(-50%, -50%)`;
-      
-      // Follower lerps smoothly (0.12 = ~8 frames to catch up)
-      followerX.current += (mouseX.current - followerX.current) * 0.12;
-      followerY.current += (mouseY.current - followerY.current) * 0.12;
-      follower.style.transform = `translate(${followerX.current}px, ${followerY.current}px) translate(-50%, -50%)`;
-      
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-
-    const onMouseMove = (e: MouseEvent) => {
-      mouseX.current = e.clientX;
-      mouseY.current = e.clientY;
-    };
-
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  return (
-    <>
-      <div ref={cursorRef} className="fixed top-0 left-0 w-2 h-2 bg-black rounded-full pointer-events-none z-[9999] hidden lg:block shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ willChange: 'transform' }} />
-      <div ref={followerRef} className="fixed top-0 left-0 w-10 h-10 border border-white/30 rounded-full pointer-events-none z-[9998] hidden lg:block" style={{ willChange: 'transform' }} />
-    </>
-  );
-}
 
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const portraitRef = useRef<HTMLImageElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
   // Initialize Global Smooth Scrolling
   useEffect(() => {
@@ -222,8 +172,15 @@ export default function App() {
   }, []);
 
   return (
-    <main className="bg-[#9a9a9a]">
-      <TransitionScreen />
+    <main className={`bg-[#9a9a9a] ${showIntro ? 'h-screen overflow-hidden' : ''}`}>
+      <AnimatePresence>
+        {showIntro && (
+          <CinemaIntro onComplete={() => setShowIntro(false)} />
+        )}
+      </AnimatePresence>
+
+      <div className={`transition-opacity duration-1000 ${showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <TransitionScreen />
       
       <div ref={containerRef} className="relative w-full h-[200vh] bg-[#9a9a9a] font-sans selection:bg-white selection:text-black">
         <div className="sticky top-0 w-full h-screen overflow-hidden">
@@ -231,8 +188,8 @@ export default function App() {
             {/* Legacy navbar removed to prevent overlap with new premium Navigation system */}
           </div>
 
-          {/* Left Pill */}
-          <div className="absolute left-0 top-[30%] md:top-1/2 -translate-y-1/2 bg-[#1a1a1a] text-white rounded-r-full flex items-center py-2 pr-2 pl-4 md:pl-8 z-30 shadow-2xl">
+          {/* Left Pill - Positioned at the TOP LEFT for mobile to avoid face entirely */}
+          <div className="absolute left-0 right-auto top-8 md:top-[65%] md:-translate-y-1/2 bg-[#1a1a1a] text-white rounded-r-full flex items-center py-2 pr-2 pl-4 md:pl-8 z-30 shadow-2xl transition-transform hover:translate-x-1 duration-300">
             <div className="text-[12px] md:text-[14px] leading-[1.3] mr-4 md:mr-6 font-medium tracking-wide text-left">
               Located<br />in<br />Gandhinagar, India
             </div>
@@ -241,14 +198,14 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Text */}
-          <div className="absolute right-4 md:right-12 top-[55%] md:top-[42%] -translate-y-1/2 text-white z-30 flex flex-col gap-3 md:gap-5 items-start max-w-[55%] md:max-w-none">
+          {/* Right Text - Stays in the middle-right area for easy thumb access */}
+          <div className="absolute right-4 md:right-12 top-[65%] md:top-[42%] -translate-y-1/2 text-white z-30 flex flex-col gap-3 md:gap-5 items-start max-w-[70%] md:max-w-none">
             {/* Available badge */}
             <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1F1F1F] border border-white/20 rounded-full">
               <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
               <span className="text-[10px] md:text-xs font-medium tracking-wider uppercase">Available for Work</span>
             </div>
-            <h1 className="text-[24px] md:text-[48px] leading-[1.1] font-bold tracking-tight text-left">
+            <h1 className="text-[28px] md:text-[48px] leading-[1.1] font-bold tracking-tight text-left">
               Rachit Kakkad
             </h1>
             <div className="text-[16px] md:text-[22px] leading-[1.3] font-medium tracking-tight text-white/80 text-left">
@@ -404,8 +361,8 @@ export default function App() {
       <section id="education" aria-label="Education"><EducationSection /></section>
       <section id="contact" aria-label="Contact"><ContactSection /></section>
       
-      <CustomCursor />
       <AIAssistant />
+      </div>
     </main>
   );
 }

@@ -1,0 +1,8 @@
+# Robots.txt for https://rachit-hk-portfolio.vercel.app
+# Allow all crawlers
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://rachit-hk-portfolio.vercel.app/sitemap.xml

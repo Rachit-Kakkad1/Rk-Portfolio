@@ -1,6 +1,12 @@
 <div align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=1A1816&height=200&section=header&text=Rachit's%20Engineering%20Matrix&fontSize=45&fontColor=B45309" alt="header" />
+
+  <br />
   
+  > *"Most portfolios are static documents. This is a living rendering engine. Engineered for sub-millisecond speeds, designed for cinematic impact, and wired directly into a live neural network."*
+
+  <br />
+
   # 🚀 The Quantum Portfolio Architecture
 
   *A high-performance cinematic developer portfolio built with React, Framer Motion, GSAP, and integrated 3D/AI technology.*

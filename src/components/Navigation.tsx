@@ -242,7 +242,7 @@ export default function Navigation() {
       {/* === MOBILE: High-End Hamburger & Overlay === */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed top-6 right-6 z-[100] w-14 h-14 rounded-full bg-[#0E0F14] border border-white/10 text-[#F6F3EE] flex items-center justify-center shadow-2xl md:hidden transition-all duration-500 ${isScrolled || isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}
+        className={`fixed top-6 right-6 z-[100] w-14 h-14 rounded-full bg-[#0E0F14] border border-white/10 text-[#F6F3EE] flex items-center justify-center shadow-2xl md:hidden transition-all duration-500 ${isOpen ? 'scale-100 opacity-100' : 'scale-100 opacity-100'}`}
       >
         <AnimatePresence mode="wait">
           {isOpen ? <X key="x" size={24} /> : <Menu key="m" size={24} />}

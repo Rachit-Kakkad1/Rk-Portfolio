@@ -31,10 +31,17 @@ html, body {
   transform-style: preserve-3d;
 }
 
-@media (min-width: 1024px) {
-  body, a, button, .cursor-pointer {
-    cursor: none !important;
-  }
+/* Cursor styles — visible pointer for interactive elements */
+body {
+  cursor: default;
+}
+
+a, button, [role="button"], .cursor-pointer, input[type="submit"], select, label[for] {
+  cursor: pointer !important;
+}
+
+input, textarea {
+  cursor: text !important;
 }
 
 /* Accessibility: focus-visible ring for keyboard navigation */
@@ -48,5 +55,55 @@ html, body {
 @media (max-width: 1023px) {
   .project-cell {
     grid-column: auto !important;
+  }
+}
+
+/* Cinema Intro Styles */
+.cinema-text-glow {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2),
+               0 0 40px rgba(255, 255, 255, 0.1);
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 10%); }
+  80% { transform: translate(-15%, 0); }
+  90% { transform: translate(10%, 5%); }
+}
+
+.cinema-grain::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+  will-change: transform;
+}
+
+.cinema-grain-fast::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.5s steps(2) infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinema-grain::before,
+  .cinema-grain-fast::before {
+    animation: none;
   }
 }
