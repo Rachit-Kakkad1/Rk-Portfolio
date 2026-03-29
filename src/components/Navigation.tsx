@@ -116,8 +116,8 @@ export default function Navigation() {
       <nav 
         className={`fixed top-0 left-0 w-full z-[90] transition-all duration-500 hidden md:block ${
           isScrolled 
-            ? (isDarkTheme ? 'bg-[#0a0a0a]/80 border-b border-white/5 py-4 backdrop-blur-2xl shadow-2xl' : 'bg-[#F6F3EE]/80 border-b border-black/5 py-4 backdrop-blur-2xl shadow-2xl')
-            : 'bg-transparent py-10'
+            ? (isDarkTheme ? 'bg-[#0a0a0a]/80 border-b border-white/5 py-4 backdrop-blur-2xl shadow-2xl opacity-100 pointer-events-auto' : 'bg-[#F6F3EE]/80 border-b border-black/5 py-4 backdrop-blur-2xl shadow-2xl opacity-100 pointer-events-auto')
+            : 'bg-transparent py-10 opacity-0 pointer-events-none'
         }`}
         style={{ willChange: 'padding, background-color, backdrop-filter, border-color' }}
       >
