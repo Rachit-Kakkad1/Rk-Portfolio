@@ -35,7 +35,7 @@ export default function AboutSection() {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
         <h2
           ref={bgTextRef}
-          className="text-[80px] md:text-[120px] font-black leading-[0.85] text-black select-none text-center tracking-tighter uppercase"
+          className="text-[80px] md:text-[120px] font-black leading-[0.85] text-black select-none text-center tracking-tighter uppercase smooth-gpu"
         >
           ABOUT<br />ME
         </h2>
@@ -99,9 +99,9 @@ export default function AboutSection() {
 // =====================================
 
 const GALLERY_IMAGES = [
-  "/about/rachit-1.jpg",
-  "/about/rachit-2.jpg",
-  "/about/rachit-3.jpg",
+  "/about/rachit-2.png",
+  "/about/rachit-1.png",
+  "/about/rachit-3.png",
 ];
 
 function StackedImageGallery() {
@@ -134,7 +134,7 @@ function StackedImageGallery() {
           return (
             <motion.div
               key={src}
-              className="absolute w-full h-full rounded-[2rem] overflow-hidden shadow-2xl bg-black flex items-center justify-center"
+              className="absolute w-full h-full rounded-[2rem] overflow-hidden shadow-2xl bg-black flex items-center justify-center gpu-accel"
               initial={false}
               animate={{
                 y,
