@@ -7,3 +7,6 @@ We deploy IntersectionObservers across all heavy WebGL and Canvas instances (lik
 
 ## Hardware Acceleration
 We enforce `translateZ(0)` and `will-change: transform` via the `.gpu-accel` utility class on massively repainting nodes—notably the bottom GSAP marquee and transparent typography sections—giving the browser's compositor thread explicit VRAM control.
+
+## Render Loops
+Continuous GSAP tickers are heavily clamped. For instance, the ScrollTrigger calculating scroll velocity uses mathematically smoothed values to prevent infinite layout recalculations during rapid wheel inputs.
