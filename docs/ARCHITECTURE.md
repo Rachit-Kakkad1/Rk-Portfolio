@@ -16,3 +16,6 @@ All critical hero and gallery elements mandate optimized PNG processing. High-re
 
 ## Navigation Analytics
 The global layout uses requestAnimationFrame to throttle the `window.scrollY` event listeners controlling the sticky Nav visibility, thereby dropping unnecessary sub-frame event executions.
+
+## Kinetic UI
+The flip cards employ native perspective transforms spanning over 2000px depth. The layers avoid `backdrop-filter` overlapping where mathematically possible to prevent WebKit rendering crashes on iOS.
