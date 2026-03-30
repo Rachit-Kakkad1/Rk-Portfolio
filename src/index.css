@@ -107,3 +107,17 @@ input, textarea {
     animation: none;
   }
 }
+
+/* Hardware Acceleration Utilities */
+.smooth-gpu {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.gpu-accel {
+  transform: translateZ(0);
+  will-change: transform;
+}
