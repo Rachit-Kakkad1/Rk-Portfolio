@@ -19,3 +19,6 @@ The global layout uses requestAnimationFrame to throttle the `window.scrollY` ev
 
 ## Kinetic UI
 The flip cards employ native perspective transforms spanning over 2000px depth. The layers avoid `backdrop-filter` overlapping where mathematically possible to prevent WebKit rendering crashes on iOS.
+
+## Spline Runtime
+The custom Spline canvas dynamically adjusts internal spatial XYZ scaling down to 15% purely for mobile footprints to escape 60% viewport clamping issues previously experienced on 1024px screens.
