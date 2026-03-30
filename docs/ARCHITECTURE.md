@@ -25,3 +25,6 @@ The custom Spline canvas dynamically adjusts internal spatial XYZ scaling down t
 
 ## Responsive Matrix
 The CSS Grid maps strictly to sub-1024 breakpoints for non-desktop surfaces, offloading the physical flex-box computations statically during CSS parse rather than tracking container queries dynamically natively.
+
+## Deployment Topology
+The Vite build process guarantees asset minification and tree-shaking specifically against the `@splinetool` and `gsap` dependencies to ensure the initial JS chunk payload sits beautifully below the TTI budget.
