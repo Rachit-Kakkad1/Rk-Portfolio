@@ -319,6 +319,27 @@ export default function KeyboardSection() {
       yoyo: true,
       ease: "sine.inOut"
     });
+
+    // --- High-End Performance Culling ---
+    // Pause the 3D engine completely when scrolled out of view
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          try { splineApp.play(); } catch(e) {}
+        } else {
+          try { splineApp.stop(); } catch(e) {}
+        }
+      },
+      { rootMargin: "200px 0px" } // Start rendering just before it enters view
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
   }, [splineApp]);
 
   return (
@@ -337,7 +358,7 @@ export default function KeyboardSection() {
             animate={{ opacity: 0.04, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="text-[120px] md:text-[220px] font-bold text-black whitespace-nowrap tracking-tighter"
+            className="text-[120px] md:text-[220px] font-bold text-black whitespace-nowrap tracking-tighter smooth-gpu"
             style={{ willChange: 'transform, opacity, filter' }}
           >
             {skills.find(s => s.id === activeSkillId)?.title.toUpperCase()}
