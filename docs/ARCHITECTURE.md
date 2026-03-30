@@ -10,3 +10,6 @@ We enforce `translateZ(0)` and `will-change: transform` via the `.gpu-accel` uti
 
 ## Render Loops
 Continuous GSAP tickers are heavily clamped. For instance, the ScrollTrigger calculating scroll velocity uses mathematically smoothed values to prevent infinite layout recalculations during rapid wheel inputs.
+
+## Media Assets
+All critical hero and gallery elements mandate optimized PNG processing. High-resolution elements load progressively behind framer-motion opacity tweens to construct a seamless visual queue.
