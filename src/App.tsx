@@ -29,6 +29,9 @@ function RotatingGlobe() {
 
   useEffect(() => {
     let phi = 0;
+    let observer: IntersectionObserver;
+    let isVisible = true;
+
     const globe = createGlobe(canvasRef.current!, {
       devicePixelRatio: 1,
       width: 64,
@@ -37,7 +40,7 @@ function RotatingGlobe() {
       theta: 0.2,
       dark: 1,
       diffuse: 1.2,
-      mapSamples: 4000,
+      mapSamples: 2000, // Reduced slightly for massive performance gain, no visual delta at 64px
       mapBrightness: 6,
       baseColor: [0.604, 0.604, 0.604],
       markerColor: [1, 1, 1],
@@ -46,20 +49,32 @@ function RotatingGlobe() {
         { location: [23.2156, 72.6369], size: 0.1 }
       ],
       onRender: (state) => {
+        if (!isVisible) return; // Freeze globe when off-screen
         state.phi = phi;
         phi += 0.005;
       }
     });
 
+    observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    if (canvasRef.current) {
+      observer.observe(canvasRef.current);
+    }
+
     return () => {
       globe.destroy();
+      observer.disconnect();
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      style={{ width: 64, height: 64 }}
+      style={{ width: 64, height: 64, willChange: 'transform' }}
       className="rounded-full"
     />
   );
@@ -148,21 +163,23 @@ export default function App() {
         ease: "none",
       });
 
-      // Throttled ScrollTrigger update for marquee speed
+      // Highly Optimized ScrollTrigger update for marquee speed
+      // Calculates velocity without triggering layout recalculations (thrashing)
       let lastVelocity = 0;
       ScrollTrigger.create({
         onUpdate: (self) => {
+          // Clamp and smooth velocity heavily
           const currentVelocity = self.getVelocity() / 300;
-          if (Math.abs(currentVelocity - lastVelocity) < 0.1) return; // Ignore micro-adjustments
+          if (Math.abs(currentVelocity - lastVelocity) < 0.1) return;
 
           lastVelocity = currentVelocity;
           const targetScale = self.direction !== 0 ? (self.direction + currentVelocity) : 1;
 
           gsap.to(marquee, {
             timeScale: targetScale,
-            duration: 0.4,
+            duration: 0.8, // Slower smoothing prevents abrupt CPU spikes
             overwrite: "auto",
-            ease: "power1.out"
+            ease: "power2.out"
           });
         }
       });
@@ -184,42 +201,46 @@ export default function App() {
 
         <div ref={containerRef} className="relative w-full h-[200vh] bg-[#9a9a9a] font-sans selection:bg-white selection:text-black">
           <div className="sticky top-0 w-full h-screen overflow-hidden">
-            <div className="absolute top-0 left-0 w-full px-6 md:px-12 py-6 md:py-10 flex justify-between items-center text-white z-30 pointer-events-none opacity-0">
-              {/* Legacy navbar removed to prevent overlap with new premium Navigation system */}
+
+
+
+            {/* ─── PORTRAIT IMAGE (FULL-WIDTH CENTERED BACKGROUND) ─── */}
+            <div className="absolute inset-0 w-full h-full z-10 pointer-events-none overflow-hidden">
+              <img
+                ref={portraitRef}
+                src="/profile2.png"
+                alt="Portrait of Rachit Kakkad, Full Stack Developer & AI Engineer"
+                className="w-full h-full object-cover"
+                style={{ objectPosition: 'center 5%' }}
+              />
             </div>
 
-            {/* Left Pill - Positioned at the TOP LEFT for mobile to avoid face entirely */}
-            <div className="absolute left-0 right-auto top-8 md:top-[65%] md:-translate-y-1/2 bg-[#1a1a1a] text-white rounded-r-full flex items-center py-2 pr-2 pl-4 md:pl-8 z-30 shadow-2xl transition-transform hover:translate-x-1 duration-300">
-              <div className="text-[12px] md:text-[14px] leading-[1.3] mr-4 md:mr-6 font-medium tracking-wide text-left">
-                Located<br />in<br />Gandhinagar, India
-              </div>
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#0a0a0a] flex items-center justify-center shrink-0 overflow-hidden">
-                <RotatingGlobe />
-              </div>
-            </div>
-
-            {/* Right Text - Stays in the middle-right area for easy thumb access */}
-            <div className="absolute right-4 md:right-12 top-[65%] md:top-[42%] -translate-y-1/2 text-white z-30 flex flex-col gap-3 md:gap-5 items-start max-w-[70%] md:max-w-none">
+            {/* ─── LEFT CONTENT BLOCK ─── */}
+            <div className="absolute left-6 md:left-10 lg:left-16 top-[50%] md:top-[45%] -translate-y-1/2 text-white z-20 flex flex-col gap-3 md:gap-4 items-start max-w-[85%] md:max-w-[45%] lg:max-w-[40%]">
               {/* Available badge */}
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1F1F1F] border border-white/20 rounded-full">
+              <div className="flex items-center gap-2 px-4 py-2 bg-[#1F1F1F] border border-white/15 rounded-full shadow-lg">
                 <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-[10px] md:text-xs font-medium tracking-wider uppercase">Available for Work</span>
+                <span className="text-[10px] md:text-xs font-semibold tracking-[0.15em] uppercase">Available for Work</span>
               </div>
-              <h1 className="text-[28px] md:text-[48px] leading-[1.1] font-bold tracking-tight text-left">
+
+              <h1 className="text-[32px] md:text-[52px] lg:text-[60px] leading-[1.05] font-bold tracking-tight text-left">
                 Rachit Kakkad
               </h1>
-              <div className="text-[16px] md:text-[22px] leading-[1.3] font-medium tracking-tight text-white/80 text-left">
+
+              <div className="text-[16px] md:text-[22px] lg:text-[26px] leading-[1.3] font-semibold tracking-tight text-white/85 text-left">
                 Full Stack Developer & AI Engineer
               </div>
-              <p className="text-[12px] md:text-[14px] text-white/60 leading-relaxed max-w-md hidden md:block">
+
+              <p className="text-[12px] md:text-[14px] text-white/55 leading-relaxed max-w-md">
                 Building production-grade AI systems, blockchain platforms & cinematic web experiences with React, Node.js & Python.
               </p>
+
               {/* Social Links */}
               <div className="flex items-center gap-3 mt-1">
-                <a href="https://github.com/Rachit-Kakkad1" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="GitHub"><Github size={18} /></a>
-                <a href="https://www.linkedin.com/in/rachit-kakkad-r29052007k" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="LinkedIn"><Linkedin size={18} /></a>
-                <a href="https://www.youtube.com/@RachitKakkad" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="YouTube"><Youtube size={18} /></a>
-                <a href="https://leetcode.com/u/kUyAWXHOC5" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] transition-[background-color,transform] duration-300" aria-label="LeetCode"><LeetCode size={18} /></a>
+                <a href="https://github.com/Rachit-Kakkad1" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="GitHub"><Github size={18} /></a>
+                <a href="https://www.linkedin.com/in/rachit-kakkad-r29052007k" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="LinkedIn"><Linkedin size={18} /></a>
+                <a href="https://www.youtube.com/@RachitKakkad" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="YouTube"><Youtube size={18} /></a>
+                <a href="https://leetcode.com/u/kUyAWXHOC5" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="LeetCode"><LeetCode size={18} /></a>
               </div>
 
               {/* Hero Action Buttons */}
@@ -306,19 +327,31 @@ export default function App() {
               </motion.div>
             </div>
 
-            {/* Person Image */}
-            <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 h-[105vh] z-10 pointer-events-none origin-bottom flex justify-center">
-              <img
-                ref={portraitRef}
-                src="/profile.png"
-                alt="Portrait of Rachit Kakkad, Full Stack Developer & AI Engineer"
-                className="h-full w-auto max-w-none object-cover object-bottom"
-              />
+            {/* ─── ROTATING HEADLINE BADGE (RIGHT SIDE) ─── */}
+            <div className="absolute right-6 md:right-16 top-[65%] md:top-[55%] -translate-y-1/2 z-30 mix-blend-difference opacity-80 pointer-events-none">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                className="w-32 h-32 md:w-48 md:h-48 relative flex items-center justify-center smooth-gpu"
+              >
+                <div className="absolute inset-0 border border-white/20 rounded-full scale-75" />
+                <svg viewBox="0 0 100 100" className="w-full h-full text-white">
+                  <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
+                  <text className="text-[9.5px] font-bold tracking-[0.25em] uppercase fill-current">
+                    <textPath href="#circlePath" startOffset="0%">
+                      • FULL STACK DEVELOPER • AI ENGINEER • WEB3 ENTHUSIAST
+                    </textPath>
+                  </text>
+                </svg>
+                {/* Center dot/star */}
+                <div className="absolute w-2 h-2 bg-white rounded-full animate-pulse" />
+              </motion.div>
             </div>
 
-            {/* Huge Text */}
-            <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[22vw] md:text-[14vw] leading-none text-white font-medium z-20 pointer-events-none flex items-end overflow-hidden" style={{ letterSpacing: '-0.06em', willChange: 'transform', backfaceVisibility: 'hidden' }}>
-              <div ref={headlineRef} className="flex w-max">
+            {/* ─── BOTTOM MARQUEE TEXT ─── */}
+            {/* Behind portrait (z-5) so the person partially overlaps the text */}
+            <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[22vw] md:text-[14vw] leading-none text-white/90 font-bold z-[5] pointer-events-none flex items-end overflow-hidden smooth-gpu" style={{ letterSpacing: '-0.04em', WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+              <div ref={headlineRef} className="flex w-max smooth-gpu">
                 <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
                 <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
               </div>
