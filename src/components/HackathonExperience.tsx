@@ -26,13 +26,13 @@ function KineticFlipCard({ hack, index, isSpan2Type, onClick }: { hack: Hackatho
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative perspective-[2000px] h-[520px] ${spanClass} cursor-pointer w-full will-change-transform`}
+      className={`group relative perspective-[2000px] h-[520px] ${spanClass} cursor-pointer w-full gpu-accel`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
       <motion.div
-        className="w-full h-full relative will-change-transform"
+        className="w-full h-full relative smooth-gpu"
         initial={false}
         animate={{ rotateY: isHovered ? 180 : 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 25, mass: 1 }}
