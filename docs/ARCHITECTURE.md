@@ -28,3 +28,6 @@ The CSS Grid maps strictly to sub-1024 breakpoints for non-desktop surfaces, off
 
 ## Deployment Topology
 The Vite build process guarantees asset minification and tree-shaking specifically against the `@splinetool` and `gsap` dependencies to ensure the initial JS chunk payload sits beautifully below the TTI budget.
+
+## Future Pipeline
+Pending integration: React Server Components. By lifting the stateless sections (like the cinematic intro and specific text banners) to the edge node, we intend to cut first element render metrics globally.
