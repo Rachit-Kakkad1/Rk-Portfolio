@@ -13,3 +13,6 @@ Continuous GSAP tickers are heavily clamped. For instance, the ScrollTrigger cal
 
 ## Media Assets
 All critical hero and gallery elements mandate optimized PNG processing. High-resolution elements load progressively behind framer-motion opacity tweens to construct a seamless visual queue.
+
+## Navigation Analytics
+The global layout uses requestAnimationFrame to throttle the `window.scrollY` event listeners controlling the sticky Nav visibility, thereby dropping unnecessary sub-frame event executions.
