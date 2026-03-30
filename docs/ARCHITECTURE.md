@@ -22,3 +22,6 @@ The flip cards employ native perspective transforms spanning over 2000px depth. 
 
 ## Spline Runtime
 The custom Spline canvas dynamically adjusts internal spatial XYZ scaling down to 15% purely for mobile footprints to escape 60% viewport clamping issues previously experienced on 1024px screens.
+
+## Responsive Matrix
+The CSS Grid maps strictly to sub-1024 breakpoints for non-desktop surfaces, offloading the physical flex-box computations statically during CSS parse rather than tracking container queries dynamically natively.
