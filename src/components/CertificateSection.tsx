@@ -216,287 +216,197 @@ const CERTIFICATES = [
   }
 ];
 
-function BentoCard({ cert, index, onClick }: { cert: typeof CERTIFICATES[0]; index: number; onClick: () => void }) {
+function NewsCard({ cert, index, onClick }: { cert: typeof CERTIFICATES[0]; index: number; onClick: () => void }) {
   const isFeatured = ['hackathon-electrosphere', 'hackathon-national-id', 'hackathon-odoo-gv', 'hackathon-mosip', 'skill-gemini'].includes(cert.id);
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{
-        duration: 0.5,
-        delay: index * 0.05,
-        layout: { type: "spring", stiffness: 300, damping: 30 }
-      }}
+      transition={{ duration: 0.8, delay: index * 0.05 }}
       onClick={onClick}
-      className={`relative group cursor-pointer rounded-[2rem] overflow-hidden bg-white border border-black/5 shadow-sm hover:shadow-2xl transition-all duration-500 will-change-transform ${
-        isFeatured ? 'md:col-span-2 md:row-span-1' : 'col-span-1'
-      }`}
+      className="group relative cursor-pointer bg-[#fcfaf0] p-4 border border-[#e0ddcf] shadow-[2px_2px_0px_rgba(0,0,0,0.05)] hover:shadow-[8px_8px_0px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col aspect-[4/5] overflow-hidden"
     >
-      {/* Refractive Ledger Container */}
-      <div className="relative w-full h-full p-6 flex flex-col gap-5">
-        {/* Certificate Image Frame */}
-        <div className={`relative w-full overflow-hidden rounded-2xl bg-[#F9F8F6] border border-black/[0.03] transition-transform duration-700 group-hover:scale-[1.03] ${
-          isFeatured ? 'h-[320px] md:h-[400px]' : 'h-[220px]'
-        }`}>
-          <img
-            src={cert.link}
-            alt={cert.title}
-            className="w-full h-full object-contain p-6 md:p-8 drop-shadow-2xl"
-          />
+      {/* Newspaper Grain Texture Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
 
-          {/* Prismatic Border Overlay */}
-          <div className="absolute inset-0 border border-black/5 rounded-2xl pointer-events-none" />
-
-          {/* Holographic Verification Seal (Featured Only) */}
-          {isFeatured && (
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute top-6 right-6 w-16 h-16 opacity-10 pointer-events-none"
-            >
-              <svg viewBox="0 0 100 100" className="w-full h-full fill-[#B45309]">
-                <path d="M50 0 L61.8 38.2 L100 50 L61.8 61.8 L50 100 L38.2 61.8 L0 50 L38.2 38.2 Z" />
-              </svg>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Info Block — Museum-Grade Typography */}
-        <div className="flex flex-col gap-2 px-2 pb-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black tracking-[0.3em] text-[#B45309] uppercase">{cert.issuer}</span>
-            <div className="flex items-center gap-2">
-              {isFeatured && (
-                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 rounded-full">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-[8px] font-bold text-green-700 uppercase tracking-tighter">Verified</span>
-                </div>
-              )}
-              <span className="text-[10px] font-bold text-black/20 font-mono tracking-tighter">{cert.year}</span>
-            </div>
-          </div>
-
-          <h3 className={`font-black tracking-tight text-black leading-tight ${isFeatured ? 'text-2xl md:text-3xl pr-8' : 'text-sm'}`}>
-            {cert.title}
-          </h3>
-
-          <p className="text-[11px] text-black/40 line-clamp-2 leading-relaxed font-mono mt-1 pr-4">
-            {cert.description}
-          </p>
-
-          <div className="flex flex-wrap gap-2 mt-4">
-            {cert.skills.map(skill => (
-              <span key={skill} className="px-2.5 py-1 bg-black/5 border border-black/[0.03] rounded-full text-[9px] font-bold uppercase tracking-tight text-black/50">
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Hover Spotlight Effect */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#B45309]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      {/* Header Info (Classified Style) */}
+      <div className="flex justify-between items-center mb-3 border-b border-[#e0ddcf] pb-2">
+        <span className="text-[9px] font-black uppercase tracking-widest text-black/40 font-serif italic">Vol. {cert.year}</span>
+        <span className="text-[9px] font-black uppercase tracking-widest text-[#B45309] font-serif">Verified Ledger</span>
       </div>
 
-      {/* Corner Arrow Indicator */}
-      <div className="absolute top-8 right-8 w-10 h-10 rounded-full bg-white border border-black/5 flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-xl transform translate-x-4 group-hover:translate-x-0 transition-all duration-500">
-        <ArrowUpRight size={18} className="text-black" />
+      {/* Image Container (Halftone Effect) */}
+      <div className="relative w-full aspect-video mb-4 overflow-hidden bg-white border border-[#e0ddcf] p-2 grayscale group-hover:grayscale-0 transition-all duration-700">
+        <img
+          src={cert.link}
+          alt={cert.title}
+          className="w-full h-full object-contain filter contrast-[1.1] brightness-[0.95]"
+        />
+        {/* Halftone Dot Overlay */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle,black_1px,transparent_1px)] bg-[size:3px_3px]" />
+      </div>
+
+      {/* Card Content */}
+      <div className="flex flex-col flex-1">
+        <div className="text-[8px] font-black uppercase tracking-tighter text-[#B45309] mb-1 font-serif italic">
+          {cert.issuer}
+        </div>
+        <h3 className="text-lg font-black leading-[1.1] text-black tracking-tighter mb-2 group-hover:text-[#B45309] transition-colors duration-300 font-serif overflow-hidden line-clamp-2">
+          {cert.title}
+        </h3>
+        <p className="text-[11px] leading-relaxed text-black/60 line-clamp-2 italic font-serif opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          "{cert.description}"
+        </p>
+      </div>
+
+      {/* Red Stamp (Featured Only) */}
+      {isFeatured && (
+        <div className="absolute top-[60%] right-[-10%] rotate-[-15deg] pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity duration-500">
+          <div className="border-4 border-red-600 px-4 py-1 text-red-600 font-serif font-black text-xl uppercase tracking-widest rounded shadow-sm">
+            VERIFIED
+          </div>
+        </div>
+      )}
+
+      {/* Footer Column (News Sidebar) */}
+      <div className="mt-auto pt-3 border-t border-double border-[#e0ddcf] flex justify-between items-center">
+        <div className="flex gap-2">
+          {cert.skills.slice(0, 2).map(skill => (
+            <span key={skill} className="text-[8px] font-bold text-black/30 uppercase tracking-[0.1em]">{skill}</span>
+          ))}
+        </div>
+        <ArrowUpRight size={12} className="text-black/20 group-hover:text-black transition-colors" />
       </div>
     </motion.div>
   );
 }
 
-
 export default function CertificateSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [activeCategory, setActiveCategory] = useState<'hackathons' | 'skills'>('hackathons');
   const [selectedCert, setSelectedCert] = useState<any | null>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.05], [0, 1]);
-  const exitOpacity = useTransform(scrollYProgress, [0.95, 1], [1, 0]);
-
-  // High-End Vertical Parallax for the Ledger
-  // We offset the list based on its height to ensure it fits the scroll-progress
-  const ledgerY = useTransform(scrollYProgress, [0.1, 0.9], ["0%", "-65%"]);
-
-  const filteredCerts = CERTIFICATES.filter(c => c.category === activeCategory);
+  const hackathons = CERTIFICATES.filter(c => c.category === 'hackathons');
+  const skills = CERTIFICATES.filter(c => c.category === 'skills');
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-screen bg-[#F6F3EE] text-[#1C1C1C] py-20"
+      className="relative w-full min-h-screen bg-[#F6F3EE] text-[#1C1C1C] py-24"
     >
       <div className="w-full h-full flex flex-col">
-        {/* ─── THE PRISMATIC OPTIC REVEAL HEADLINE ─── */}
-        <div className="relative z-30 max-w-6xl mx-auto px-6 w-full mb-20">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-8 md:gap-20"
-          >
-            <div className="flex-1 relative group">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="flex items-center gap-4 mb-6"
-              >
-                <div className="px-3 py-1 bg-black text-white text-[10px] font-bold rounded-full uppercase tracking-widest">Section 04</div>
-                <div className="h-px w-12 bg-black/10" />
-                <span className="text-[#B45309] font-mono tracking-[0.4em] uppercase text-[10px] font-black">Verification Ledger</span>
-              </motion.div>
+        {/* Newspaper Headroom Masthead */}
+        <div className="relative z-30 max-w-7xl mx-auto px-6 w-full mb-12 border-b-4 border-black pb-8">
+          {/* Ticker Tape (Breaking News) */}
+          <div className="w-full bg-black text-[#fcfaf0] py-2 mb-8 overflow-hidden whitespace-nowrap border-y border-black uppercase font-mono text-[9px] font-bold flex">
+            <motion.div
+              animate={{ x: [0, -1000] }}
+              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              className="flex gap-20 shrink-0"
+            >
+              {[...Array(10)].map((_, i) => (
+                <span key={i}>
+                  Breaking News: Rachit Kakkad secures 2nd Place in ElectroSphere 2K26 • Tech Chronicle: AI Specialization Completed • Official: Rank 4 in National Digital Identity Hackathon • 
+                </span>
+              ))}
+            </motion.div>
+          </div>
 
-              <div className="relative overflow-hidden">
-                {/* Scanner Beam (Controlled by Scroll) */}
-                <motion.div
-                  style={{
-                    left: useTransform(scrollYProgress, [0.05, 0.25], ["-20%", "120%"]),
-                    willChange: 'left'
-                  }}
-                  className="absolute top-0 bottom-0 w-[2px] bg-[#B45309] z-[31] shadow-[0_0_20px_#B45309] pointer-events-none"
-                />
-
-                {/* Base Layer: Black */}
-                <h2 className="text-[clamp(48px,8vw,120px)] font-black tracking-[-0.04em] leading-[0.9] text-black uppercase select-none">
-                  {["Certifications", "& Awards"].map((word, i) => (
-                    <motion.span
-                      key={i}
-                      initial={{ opacity: 0, y: 40, rotateX: -30 }}
-                      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                      transition={{ duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                      className="block"
-                    >
-                      {word}
-                    </motion.span>
-                  ))}
-                </h2>
-
-                {/* Masked Highlight Layer: Prismatic Glow */}
-                <motion.h2
-                  style={{
-                    maskImage: useTransform(scrollYProgress, (v) =>
-                      `linear-gradient(to right, transparent ${v * 400 - 50}%, black ${v * 400}%, transparent ${v * 400 + 50}%)`
-                    ),
-                    WebkitMaskImage: useTransform(scrollYProgress, (v) =>
-                      `linear-gradient(to right, transparent ${v * 400 - 50}%, black ${v * 400}%, transparent ${v * 400 + 50}%)`
-                    ),
-                  }}
-                  className="absolute inset-0 text-[clamp(48px,8vw,120px)] font-black tracking-[-0.04em] leading-[0.9] text-[#B45309] uppercase select-none z-[30] pointer-events-none transition-opacity duration-300"
-                >
-                  {["Certifications", "& Awards"].map((word, i) => (
-                    <span key={i} className="block">{word}</span>
-                  ))}
-                </motion.h2>
+          <div className="flex flex-col md:flex-row justify-between items-end gap-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-4 mb-4 font-serif italic text-[10px] text-[#B45309] font-black tracking-[0.3em] uppercase">
+                <span>The Global Archives</span>
+                <span className="w-12 h-[1px] bg-[#B45309]/30"></span>
+                <span>Issue No. 04</span>
+                <span className="w-12 h-[1px] bg-[#B45309]/30"></span>
+                <span>Price: Professional Excellence</span>
               </div>
+              <h2 className="text-[clamp(44px,12vw,140px)] font-black tracking-[-0.06em] leading-[0.8] text-black uppercase select-none font-serif">
+                THE LEDGER <span className="text-[#B45309]">POST</span>
+              </h2>
             </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="max-w-[300px] mb-4"
-            >
-              <p className="font-mono text-[11px] leading-relaxed text-black/40 uppercase tracking-widest text-right">
-                A verified ledger of academic excellence and technical specialization across global institutions.
+            <div className="max-w-xs border-l-[3px] border-black pl-6 hidden lg:block">
+              <div className="mb-2 font-serif font-black text-xs uppercase italic tracking-tighter">Editorial Note:</div>
+              <p className="font-serif italic text-[11px] leading-relaxed text-black/60">
+                A definitive collection of competitive victories and technical proficiencies, curated for the modern technological landscape. Verified for authenticity via blockchain ledger.
               </p>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ scaleX: 0, originX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="h-[2px] w-full bg-black/5 mt-12"
-          />
+            </div>
+          </div>
         </div>
 
-        {/* Cinematic Background Typography - Opacity Adjusted for Perceptual Speed */}
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeCategory}
-              initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
-              animate={{ opacity: 0.03, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="text-[20vw] font-bold tracking-tighter text-black whitespace-nowrap select-none will-change-transform"
-            >
-              {activeCategory.toUpperCase()}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Category Explorer Toggle */}
-        <div className="relative z-30 max-w-4xl mx-auto px-6 w-full mb-12">
-          <div className="flex bg-[#E8E8E8] p-1.5 rounded-2xl border border-black/5 w-fit mx-auto overflow-hidden">
-            {(['hackathons', 'skills'] as const).map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`relative px-8 py-3 rounded-xl text-sm font-bold tracking-widest uppercase transition-all duration-500 overflow-hidden ${activeCategory === cat ? 'text-white' : 'text-black/40 hover:text-black'
-                  }`}
-              >
-                <span className="relative z-10">{cat}</span>
-                {activeCategory === cat && (
-                  <motion.div
-                    layoutId="category-bg"
-                    className="absolute inset-0 bg-[#1C1C1C] z-0"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-              </button>
+        {/* Section 1: Hackathons */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6 mb-24">
+          <div className="flex items-center gap-4 mb-10 overflow-hidden border-y-[1px] border-black/10 py-3">
+            <span className="font-serif font-black text-xs uppercase bg-black text-white px-2 py-0.5">FRONT PAGE</span>
+            <h3 className="text-3xl md:text-5xl font-black font-serif italic text-black whitespace-nowrap tracking-tighter">
+              Competitive <span className="text-[#B45309]">Excellence</span>
+            </h3>
+            <div className="flex-1 h-[2px] bg-black/10 border-y-[1px] border-black/5"></div>
+            <span className="font-serif italic text-[10px] text-black/40 hidden md:block uppercase font-bold tracking-widest">Section A — Hackathons</span>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+            {hackathons.map((cert, index) => (
+              <NewsCard
+                key={cert.id}
+                cert={cert}
+                index={index}
+                onClick={() => setSelectedCert(cert)}
+              />
             ))}
           </div>
         </div>
-        <div
-          className="relative z-10 w-full max-w-6xl mx-auto px-6 h-auto pb-40"
-        >
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div
-              key={activeCategory}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 pb-32"
-            >
-              {filteredCerts.map((cert, index) => (
-                <BentoCard
-                  key={cert.id}
-                  cert={cert}
-                  index={index}
-                  onClick={() => setSelectedCert(cert)}
-                />
-              ))}
-            </motion.div>
-          </AnimatePresence>
+
+        {/* Section 2: Skills */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6">
+          <div className="flex items-center gap-4 mb-10 overflow-hidden border-y-[1px] border-black/10 py-3">
+            <span className="font-serif font-black text-xs uppercase bg-black text-white px-2 py-0.5">FEATURES</span>
+            <h3 className="text-3xl md:text-5xl font-black font-serif italic text-black whitespace-nowrap tracking-tighter">
+              Technical <span className="text-[#B45309]">Proficiencies</span>
+            </h3>
+            <div className="flex-1 h-[2px] bg-black/10 border-y-[1px] border-black/5"></div>
+            <span className="font-serif italic text-[10px] text-black/40 hidden md:block uppercase font-bold tracking-widest">Section B — Core Skills</span>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+            {skills.map((cert, index) => (
+              <NewsCard
+                key={cert.id}
+                cert={cert}
+                index={index + hackathons.length}
+                onClick={() => setSelectedCert(cert)}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Categories Marker */}
-        <div className="absolute top-[20%] right-8 md:right-12 h-[60vh] w-[1px] bg-black/5 flex flex-col items-center z-40 hidden md:flex">
-          <div className="text-[10px] font-bold text-black/20 uppercase tracking-widest rotate-90 mb-8 whitespace-nowrap">Ledger Progress</div>
-          <div className="flex-1 w-px bg-black/5 relative">
-            <motion.div
-              className="absolute top-0 left-0 w-full bg-[#B45309]"
-              style={{ height: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
-            />
-          </div>
-          <div className="mt-8">
-            <motion.div
-              className="w-2 h-2 rounded-full bg-green-500 animate-pulse"
-            />
-          </div>
+        {/* Classifieds / Footer Info */}
+        <div className="max-w-7xl mx-auto px-6 w-full mt-24 border-t-2 border-black pt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+           <div className="border-r border-black/10 pr-6">
+              <h4 className="font-serif font-black text-[10px] uppercase tracking-widest mb-4 text-[#B45309]">The Classifieds</h4>
+              <p className="text-[10px] font-serif leading-loose text-black/50">
+                WANTED: Scalable engineering challenges. <br/>
+                OFFERED: Production-grade AI systems, blockchain protocols, and cinematic web experiences. <br/>
+                CONTACT: Rachit Kakkad via LinkedIn.
+              </p>
+           </div>
+           <div className="border-r border-black/10 pr-6">
+              <h4 className="font-serif font-black text-[10px] uppercase tracking-widest mb-4 text-[#B45309]">Weather Report</h4>
+              <p className="text-[10px] font-serif leading-loose text-black/50 italic">
+                A warm front of innovation is moving across the development stack. High probability of rapid deployment and pixel-perfection in the coming days.
+              </p>
+           </div>
+           <div className="pl-0 md:pl-6 text-right">
+              <h4 className="font-serif font-black text-[10px] uppercase tracking-widest mb-4">Stock Market</h4>
+              <div className="text-[10px] font-serif font-black flex flex-col gap-1 items-end uppercase text-black/40">
+                 <span>REACT (RKT) ▲ 9.3%</span>
+                 <span>BLOCKCHAIN (BLC) ▲ 12.1%</span>
+                 <span>AI/ML (GEN) ▲ 15.4%</span>
+              </div>
+           </div>
         </div>
+
 
 
         {/* Global Verification Badge - Moved outside sticky for better breathing room */}

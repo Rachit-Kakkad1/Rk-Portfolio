@@ -188,6 +188,20 @@ export default function App() {
     return () => ctx.revert();
   }, []);
 
+  // Auto-scroll to hash route when intro finishes
+  useEffect(() => {
+    if (!showIntro && window.location.hash) {
+      setTimeout(() => {
+        const id = window.location.hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element && (window as any).lenis) {
+          // A bit of offset for the floating nav header
+          (window as any).lenis.scrollTo(element, { offset: -80, immediate: true });
+        }
+      }, 500); // Allow fade transitions to settle
+    }
+  }, [showIntro]);
+
   return (
     <main className={`bg-[#9a9a9a] ${showIntro ? 'h-screen overflow-hidden' : ''}`}>
       <AnimatePresence>
@@ -199,53 +213,56 @@ export default function App() {
       <div className={`transition-opacity duration-1000 ${showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <TransitionScreen />
 
-        <div ref={containerRef} className="relative w-full h-[200vh] bg-[#9a9a9a] font-sans selection:bg-white selection:text-black">
+        <div id="home" ref={containerRef} className="relative w-full h-[200vh] bg-[#9a9a9a] font-sans selection:bg-white selection:text-black">
           <div className="sticky top-0 w-full h-screen overflow-hidden">
 
 
 
             {/* ─── PORTRAIT IMAGE (FULL-WIDTH CENTERED BACKGROUND) ─── */}
-            <div className="absolute inset-0 w-full h-full z-10 pointer-events-none overflow-hidden">
+            <div className="absolute inset-0 w-full h-full z-10 pointer-events-none overflow-hidden bg-black/20">
               <img
                 ref={portraitRef}
                 src="/profile2.png"
                 alt="Portrait of Rachit Kakkad, Full Stack Developer & AI Engineer"
                 className="w-full h-full object-cover"
-                style={{ objectPosition: 'center 5%' }}
+                style={{ objectPosition: 'center 15%' }}
               />
+              {/* Mobile-only subtle gradient overlay to ensure text readability */}
+              <div className="absolute inset-0 md:hidden bg-gradient-to-b from-black/60 via-black/20 to-black/60" />
+              <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-black/40 via-transparent to-transparent" />
             </div>
 
             {/* ─── LEFT CONTENT BLOCK ─── */}
-            <div className="absolute left-6 md:left-10 lg:left-16 top-[50%] md:top-[45%] -translate-y-1/2 text-white z-20 flex flex-col gap-3 md:gap-4 items-start max-w-[85%] md:max-w-[45%] lg:max-w-[40%]">
+            <div className="absolute left-6 md:left-10 lg:left-16 top-[45%] md:top-[45%] -translate-y-1/2 text-white z-20 flex flex-col gap-4 md:gap-5 items-start max-w-[90%] md:max-w-[50%] lg:max-w-[40%]">
               {/* Available badge */}
-              <div className="flex items-center gap-2 px-4 py-2 bg-[#1F1F1F] border border-white/15 rounded-full shadow-lg">
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-[10px] md:text-xs font-semibold tracking-[0.15em] uppercase">Available for Work</span>
+              <div className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-[#1F1F1F]/80 backdrop-blur-md border border-white/15 rounded-full shadow-lg">
+                <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-400 animate-pulse" />
+                <span className="text-[9px] md:text-xs font-semibold tracking-[0.15em] uppercase">Available for Work</span>
               </div>
 
-              <h1 className="text-[32px] md:text-[52px] lg:text-[60px] leading-[1.05] font-bold tracking-tight text-left">
+              <h1 className="text-[clamp(1.8rem,8vw,4rem)] md:text-[52px] lg:text-[72px] leading-[1.05] font-black tracking-tight text-left drop-shadow-xl">
                 Rachit Kakkad
               </h1>
 
-              <div className="text-[16px] md:text-[22px] lg:text-[26px] leading-[1.3] font-semibold tracking-tight text-white/85 text-left">
+              <div className="text-[14px] md:text-[20px] lg:text-[24px] leading-[1.3] font-bold tracking-tight text-white/85 text-left drop-shadow-lg">
                 Full Stack Developer & AI Engineer
               </div>
 
-              <p className="text-[12px] md:text-[14px] text-white/55 leading-relaxed max-w-md">
+              <p className="text-[11px] md:text-[14px] text-white/70 leading-relaxed max-w-[320px] md:max-w-md drop-shadow-md">
                 Building production-grade AI systems, blockchain platforms & cinematic web experiences with React, Node.js & Python.
               </p>
 
               {/* Social Links */}
-              <div className="flex items-center gap-3 mt-1">
-                <a href="https://github.com/Rachit-Kakkad1" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="GitHub"><Github size={18} /></a>
-                <a href="https://www.linkedin.com/in/rachit-kakkad-r29052007k" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="LinkedIn"><Linkedin size={18} /></a>
-                <a href="https://www.youtube.com/@RachitKakkad" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="YouTube"><Youtube size={18} /></a>
-                <a href="https://leetcode.com/u/kUyAWXHOC5" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#1F1F1F] border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="LeetCode"><LeetCode size={18} /></a>
+              <div className="flex flex-wrap items-center gap-2 md:gap-3 mt-2">
+                <a href="https://github.com/Rachit-Kakkad1" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="GitHub"><Github size={16} /></a>
+                <a href="https://www.linkedin.com/in/rachit-kakkad-r29052007k" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="LinkedIn"><Linkedin size={16} /></a>
+                <a href="https://www.youtube.com/@RachitKakkad" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="YouTube"><Youtube size={16} /></a>
+                <a href="https://leetcode.com/u/kUyAWXHOC5" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="LeetCode"><LeetCode size={16} /></a>
               </div>
 
-              {/* Hero Action Buttons */}
+              {/* Hero Action Buttons - Responsive Row/Col */}
               <motion.div
-                className="flex flex-row gap-4 mt-2"
+                className="flex flex-row flex-wrap gap-3 md:gap-4 mt-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
@@ -253,42 +270,14 @@ export default function App() {
                 <a
                   href="#projects"
                   onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Projects', target: 'projects' } })); }}
-                  onMouseEnter={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const centerX = rect.left + rect.width / 2;
-                    const centerY = rect.top + rect.height / 2;
-                    gsap.to(e.currentTarget, {
-                      x: (e.clientX - centerX) * 0.2,
-                      y: (e.clientY - centerY) * 0.2,
-                      duration: 0.3,
-                      ease: "power2.out"
-                    });
-                  }}
-                  onMouseLeave={(e) => {
-                    gsap.to(e.currentTarget, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
-                  }}
-                  className="px-6 py-3 md:px-8 md:py-3.5 bg-white text-black font-semibold text-xs md:text-sm tracking-wide rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+                  className="px-5 py-2.5 md:px-8 md:py-3.5 bg-white text-black font-black text-[10px] md:text-sm tracking-[0.1em] uppercase rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)]"
                 >
-                  View my work
+                  View Work
                 </a>
                 <button
                   onClick={handleDownloadResume}
                   disabled={isDownloading}
-                  onMouseEnter={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const centerX = rect.left + rect.width / 2;
-                    const centerY = rect.top + rect.height / 2;
-                    gsap.to(e.currentTarget, {
-                      x: (e.clientX - centerX) * 0.2,
-                      y: (e.clientY - centerY) * 0.2,
-                      duration: 0.3,
-                      ease: "power2.out"
-                    });
-                  }}
-                  onMouseLeave={(e) => {
-                    gsap.to(e.currentTarget, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
-                  }}
-                  className={`px-6 py-3 md:px-8 md:py-3.5 ${isDownloading ? 'bg-[#B45309]' : 'bg-[#1F1F1F]'} text-white font-medium text-xs md:text-sm tracking-wide rounded-full border border-white/20 hover:bg-[#2A2A2A] hover:scale-105 transition-[background-color,transform] duration-500 flex items-center justify-center relative overflow-hidden`}
+                  className={`px-5 py-2.5 md:px-8 md:py-3.5 ${isDownloading ? 'bg-[#B45309]' : 'bg-[#1F1F1F]/80 backdrop-blur-md'} text-white font-black text-[10px] md:text-sm tracking-[0.1em] uppercase rounded-full border border-white/20 hover:bg-[#2A2A2A] hover:scale-105 transition-all duration-500 flex items-center justify-center relative overflow-hidden min-w-[140px] md:min-w-[180px]`}
                 >
                   <AnimatePresence mode="wait">
                     {isDownloading ? (
@@ -299,7 +288,7 @@ export default function App() {
                         exit={{ opacity: 0, y: -10 }}
                         className="flex items-center gap-2"
                       >
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         <span>PREPARING...</span>
                       </motion.div>
                     ) : (
@@ -313,22 +302,12 @@ export default function App() {
                       </motion.span>
                     )}
                   </AnimatePresence>
-
-                  {/* God Effect Shine */}
-                  {isDownloading && (
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent z-10"
-                      initial={{ x: '-100%' }}
-                      animate={{ x: '200%' }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                    />
-                  )}
                 </button>
               </motion.div>
             </div>
 
             {/* ─── ROTATING HEADLINE BADGE (RIGHT SIDE) ─── */}
-            <div className="absolute right-6 md:right-16 top-[65%] md:top-[55%] -translate-y-1/2 z-30 mix-blend-difference opacity-80 pointer-events-none">
+            <div className="absolute right-6 md:right-16 top-[75%] md:top-[55%] -translate-y-1/2 z-30 mix-blend-difference opacity-40 md:opacity-80 pointer-events-none scale-[0.7] md:scale-100 origin-right">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
@@ -350,10 +329,10 @@ export default function App() {
 
             {/* ─── BOTTOM MARQUEE TEXT ─── */}
             {/* Behind portrait (z-5) so the person partially overlaps the text */}
-            <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[22vw] md:text-[14vw] leading-none text-white/90 font-bold z-[5] pointer-events-none flex items-end overflow-hidden smooth-gpu" style={{ letterSpacing: '-0.04em', WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+            <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[30vw] md:text-[14vw] leading-none text-white/90 font-black z-[5] pointer-events-none flex items-end overflow-hidden smooth-gpu" style={{ letterSpacing: '-0.06em', WebkitTextStroke: '1px rgba(255,255,255,0.05)' }}>
               <div ref={headlineRef} className="flex w-max smooth-gpu">
-                <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
-                <span className="inline-block pr-[4vw]">AI/ML Enthusiast — Full Stack Developer — MERN Stack —</span>
+                <span className="inline-block pr-[4vw]">AI/ML • DEV • MERN •</span>
+                <span className="inline-block pr-[4vw]">AI/ML • DEV • MERN •</span>
               </div>
             </div>
           </div>
@@ -368,22 +347,22 @@ export default function App() {
           <section id="projects" aria-label="Projects"><ProjectsSection /></section>
         </div>
 
-        <section id="uses" className="py-32 bg-[#F6F3EE] border-t border-black/5">
-          <div className="max-w-[1400px] mx-auto px-12">
+        <section id="uses" className="py-20 md:py-32 bg-[#F6F3EE] border-t border-black/5">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12">
             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B45309] mb-4">Hardware & Software</p>
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-[#0E0F14] mb-12">Uses</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
-                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">Development</h3>
-                <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">VS Code / WSL2 / Docker / Git / Postman / Oh My Zsh</p>
+            <h2 className="text-4xl md:text-7xl font-black tracking-tighter text-[#0E0F14] mb-12 uppercase">Uses</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
+              <div className="p-6 md:p-8 bg-black/5 rounded-3xl border border-black/5">
+                <h3 className="text-lg md:text-xl font-black mb-4 uppercase tracking-tighter">Development</h3>
+                <p className="text-[12px] md:text-sm text-[#0E0F14]/60 leading-relaxed font-mono">VS Code / WSL2 / Docker / Git / Postman / Oh My Zsh</p>
               </div>
-              <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
-                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">Design</h3>
-                <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Figma / Canva / Adobe Suite</p>
+              <div className="p-6 md:p-8 bg-black/5 rounded-3xl border border-black/5">
+                <h3 className="text-lg md:text-xl font-black mb-4 uppercase tracking-tighter">Design</h3>
+                <p className="text-[12px] md:text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Figma / Canva / Adobe Suite</p>
               </div>
-              <div className="p-8 bg-black/5 rounded-3xl border border-black/5">
-                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">System</h3>
-                <p className="text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Windows 11 / ProArt Studiobook / mechanical keyboards</p>
+              <div className="p-6 md:p-8 bg-black/5 rounded-3xl border border-black/5">
+                <h3 className="text-lg md:text-xl font-black mb-4 uppercase tracking-tighter">System</h3>
+                <p className="text-[12px] md:text-sm text-[#0E0F14]/60 leading-relaxed font-mono">Windows 11 / ProArt Studiobook / mechanical keyboards</p>
               </div>
             </div>
           </div>

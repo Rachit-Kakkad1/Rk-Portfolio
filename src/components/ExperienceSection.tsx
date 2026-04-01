@@ -91,7 +91,7 @@ export default function ExperienceSection() {
         </div>
 
         {/* Papers Container */}
-        <div className="relative w-full max-w-[600px] h-[400px] z-10 perspective-[1200px] px-6 md:px-0">
+        <div className="relative w-full max-w-[600px] h-[450px] sm:h-[400px] z-10 perspective-[1200px] px-6 md:px-0">
           {experiences.map((exp, index) => {
             const { inputs, yOutputs, scaleOutputs, opacityOutputs } = getCardTransforms(index, experiences.length);
             

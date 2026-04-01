@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, X, ExternalLink, Github, FileText, Globe, ChevronLeft, ChevronRight, MousePointerClick } from 'lucide-react';
+import { ArrowUpRight, X, ExternalLink, Github, FileText, Globe, ChevronLeft, ChevronRight, MousePointerClick, Eye, EyeOff } from 'lucide-react';
 import { hackathons, HackathonData } from '../data/projects';
 import AgriCertDetail from './AgriCertDetail';
 import COSDetail from './COSDetail';
@@ -11,14 +11,29 @@ import ThreatLensDetail from './ThreatLensDetail';
 // KINETIC FLIP CARD COMPONENT
 // ==========================================
 function KineticFlipCard({ hack, index, isSpan2Type, onClick }: { hack: HackathonData; index: number; isSpan2Type: 'col-span-1' | 'col-span-2' | 'row-span-2'; onClick: () => void }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const certImage = hack.image || (hack.images && hack.images[0]) || '';
+  const [showGallery, setShowGallery] = useState(false);
+  const [currentImg, setCurrentImg] = useState(0);
 
   // Determine span classes for bento grid layout
   const spanClass = 
-    isSpan2Type === 'col-span-2' ? 'md:col-span-2 md:h-[540px]' : 
-    isSpan2Type === 'row-span-2' ? 'md:row-span-2 md:col-span-1 md:h-[1104px]' : 
-    'md:col-span-1 md:h-[540px]';
+    isSpan2Type === 'col-span-2' ? 'md:col-span-2' : 
+    isSpan2Type === 'row-span-2' ? 'md:row-span-2 md:col-span-1' : 
+    'md:col-span-1';
+
+  // Collect all images for the slideshow
+  const allImages: string[] = [];
+  if (hack.images) allImages.push(...hack.images);
+  if (hack.image && !allImages.includes(hack.image)) allImages.unshift(hack.image);
+  if (allImages.length === 0) allImages.push(''); // Fallback
+
+  // Slideshow interval
+  useEffect(() => {
+    if (!showGallery || allImages.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentImg(prev => (prev + 1) % allImages.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [showGallery, allImages.length]);
 
   return (
     <motion.div
@@ -26,154 +41,164 @@ function KineticFlipCard({ hack, index, isSpan2Type, onClick }: { hack: Hackatho
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative perspective-[2000px] h-[520px] ${spanClass} cursor-pointer w-full gpu-accel`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className={`group relative h-full min-h-[500px] ${spanClass} cursor-pointer w-full rounded-[24px] overflow-hidden bg-white/90 border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col`}
       onClick={onClick}
     >
-      <motion.div
-        className="w-full h-full relative smooth-gpu"
-        initial={false}
-        animate={{ rotateY: isHovered ? 180 : 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25, mass: 1 }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        {/* ─── FRONT FACE (Editorial Glass) ─── */}
-        {/* ─── FRONT FACE (Editorial Glass) ─── */}
-        <div
-          className="absolute inset-0 bg-white/90 backdrop-blur-xl border border-black/5 rounded-[24px] p-6 md:p-8 flex flex-col shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden pointer-events-auto"
-          style={{ backfaceVisibility: 'hidden' }}
-        >
-          {/* Subtle noise texture */}
-          <div className="absolute inset-0 opacity-[0.015] pointer-events-none mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
-          
-          {/* Achievement Badge + Social Links */}
-          <div className="flex justify-between items-start gap-3 mb-5 relative z-30 w-full">
-            <div className="px-3 md:px-4 py-2 bg-[#1A1816] text-[#F5F2ED] rounded-lg shadow-[4px_4px_0px_#B45309] shrink-0 transform transition-transform group-hover:-translate-y-1 group-hover:-translate-x-1 duration-300 pointer-events-none max-w-[70%]">
-              <span className="text-[9px] md:text-[10px] font-black tracking-[0.2em] uppercase leading-tight block">{hack.achievement}</span>
-            </div>
-            {/* The links container must have pointer events to be clickable before the card flips */}
-            <div className="flex items-center gap-1 md:gap-2 bg-white/80 backdrop-blur-md p-1 md:p-1.5 rounded-full border border-black/10 shadow-sm pointer-events-auto transition-opacity duration-300 shrink-0" style={{ opacity: isHovered ? 0 : 1 }}>
-              {hack.links?.github && (
-                <a href={hack.links.github} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                  className="p-1.5 md:p-2 rounded-full text-[#1A1816]/50 hover:bg-[#1A1816] hover:text-[#F5F2ED] transition-all duration-300 cursor-pointer" title="GitHub">
-                  <Github className="w-4 h-4 md:w-4 md:h-4" />
-                </a>
-              )}
-              {hack.links?.live && (
-                <a href={hack.links.live} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                  className="p-1.5 md:p-2 rounded-full text-[#1A1816]/50 hover:bg-[#1A1816] hover:text-[#F5F2ED] transition-all duration-300 cursor-pointer" title="Live Site">
-                  <Globe className="w-4 h-4 md:w-4 md:h-4" />
-                </a>
-              )}
-              {hack.links?.docs && (
-                <a href={hack.links.docs} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
-                  className="p-1.5 md:p-2 rounded-full text-[#1A1816]/50 hover:bg-[#1A1816] hover:text-[#F5F2ED] transition-all duration-300 cursor-pointer" title="Documentation">
-                  <FileText className="w-4 h-4 md:w-4 md:h-4" />
-                </a>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-8 md:mt-12 relative z-10 w-full pointer-events-none flex flex-col justify-start">
-            <div className="pointer-events-none hidden md:block">
-              <p className="text-[10px] md:text-[11px] font-mono text-[#B45309] uppercase tracking-[0.2em] mb-2 font-bold line-clamp-1 border-l-2 border-[#B45309] pl-3 leading-relaxed w-full">{hack.project}</p>
-              <h3 className="text-2xl lg:text-[clamp(1.5rem,2.5vw,2.5rem)] font-black tracking-tight text-[#1A1816] leading-[1.05] group-hover:tracking-normal transition-all duration-500 will-change-transform mb-3 w-full pr-4 line-clamp-4">{hack.title}</h3>
-
-              {/* Project description to fill empty space */}
-              {hack.longDescription && (
-                <div className="w-full bg-black/[0.02] p-2.5 rounded-lg border border-black/5 mb-2">
-                  <p className="text-[11px] lg:text-[11px] font-mono text-[#1A1816]/60 leading-[1.6] line-clamp-2 italic">
-                    "{hack.longDescription}"
-                  </p>
+      {/* ─── GALLERY VIEW (ON) ─── */}
+      <AnimatePresence>
+        {showGallery && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute inset-0 z-40 bg-[#1A1816]"
+          >
+            {allImages[currentImg] ? (
+              <AnimatePresence mode="popLayout">
+                <motion.img 
+                  key={currentImg}
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8 }}
+                  src={allImages[currentImg]} 
+                  alt={`${hack.project} view`} 
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity" 
+                />
+              </AnimatePresence>
+            ) : (
+              <div className="absolute inset-0 bg-[#1A1816] flex items-center justify-center p-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-[#1A1816] to-[#1A1816]">
+                <div className="border border-white/10 w-full h-full flex items-center justify-center rounded-xl relative overflow-hidden">
+                  <span className="font-mono text-white/30 text-sm uppercase tracking-[0.4em]">Official Record</span>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+            
+            {/* Cinematic Gradient for Text Blending */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent mix-blend-multiply" />
 
-            {/* Mobile simplified header that doesn't include the paragraph to save space */}
-            <div className="pointer-events-none block md:hidden mt-4">
-               <p className="text-[10px] font-mono text-[#B45309] uppercase tracking-[0.2em] mb-2 font-bold line-clamp-1 border-l-2 border-[#B45309] pl-3 leading-relaxed w-full">{hack.project}</p>
-               <h3 className="text-3xl font-black tracking-tight text-[#1A1816] leading-[1.05] group-hover:tracking-normal transition-all duration-500 will-change-transform mb-3 w-full pr-4 line-clamp-4">{hack.title}</h3>
-            </div>
-
-            <div className={`flex ${isSpan2Type === 'col-span-2' ? 'flex-row flex-wrap gap-2 lg:gap-4' : 'flex-col gap-2'} mb-4 lg:mb-6 mt-4 w-full`}>
-              {hack.highlights.slice(0, 3).map((h, i) => (
-                <div key={i} className="flex items-start gap-2.5 w-full">
-                  <div className="w-1 h-1 lg:w-1.5 lg:h-1.5 rounded-full bg-[#1A1816]/20 mt-1.5 lg:mt-2 shrink-0 group-hover:bg-[#B45309] transition-colors duration-500" />
-                  <span className="text-[12px] lg:text-[13px] font-mono font-medium text-[#1A1816]/60 leading-tight line-clamp-1 w-full">{h}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap gap-1.5 pt-4 lg:pt-5 border-t border-black/5 relative w-full">
-              {hack.tech.map(t => (
-                <span key={t} className="px-2 lg:px-2.5 py-1 bg-black/5 rounded-md border border-black/5 text-[9px] lg:text-[10px] font-mono font-bold text-[#1A1816]/50 transition-colors uppercase tracking-wider">{t}</span>
-              ))}
-              
-              {/* Call to action hover hint */}
-              <motion.div 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
-                transition={{ duration: 0.3 }}
-                className="hidden md:flex absolute right-0 top-4 items-center gap-1.5 text-[#B45309] font-mono text-[9px] font-bold tracking-[0.2em] uppercase bg-white/80 backdrop-blur pl-2"
+            {/* Float EyeOff Button */}
+            <div className="group/eyeoff absolute top-6 right-6 md:top-8 md:right-8 z-50">
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowGallery(false); }}
+                className="p-2.5 bg-black/20 backdrop-blur-md rounded-full shadow-lg border border-white/20 text-white hover:bg-[#B45309] transition-all duration-300"
+                aria-label="Return to Details"
               >
-                Inspect <MousePointerClick size={12} />
-              </motion.div>
-            </div>
-          </div>
-        </div>
-
-        {/* ─── BACK FACE (Physical Certificate) ─── */}
-        <div
-          className="absolute inset-0 rounded-[24px] overflow-hidden border-2 border-white/50 bg-[#1A1816] shadow-2xl"
-          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-        >
-          {/* Certificate Image */}
-          {certImage ? (
-            <img src={certImage} alt={`${hack.project} Certificate`} className="w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700 blur-[2px] hover:blur-none scale-105 hover:scale-100" />
-          ) : (
-            <div className="w-full h-full bg-[#1A1816] flex items-center justify-center p-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-[#1A1816] to-[#1A1816]">
-              <div className="border border-white/10 w-full h-full flex items-center justify-center rounded-xl relative overflow-hidden">
-                <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%,transparent_100%)] bg-[length:250px_250px] animate-[shimmer_2s_infinite_linear]" />
-                <span className="font-mono text-white/30 text-sm uppercase tracking-[0.4em]">Official Record</span>
+                <EyeOff size={18} />
+              </button>
+              {/* Tooltip Hint */}
+              <div className="absolute top-14 right-0 px-3 py-1.5 bg-white text-[#1A1816] text-[9px] font-bold font-mono tracking-[0.2em] uppercase rounded shadow-xl opacity-0 pointer-events-none group-hover/eyeoff:opacity-100 group-hover/eyeoff:translate-y-1 transition-all duration-300 whitespace-nowrap z-50">
+                Hide Certificates
+                <div className="absolute -top-1 right-4 w-2 h-2 bg-white rotate-45" />
               </div>
             </div>
-          )}
-
-          {/* Deep elegant vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 mix-blend-multiply" />
-          <div className="absolute inset-0 border border-white/10 rounded-[24px]" />
-
-          {/* Ribbon Cross (top-right corner) */}
-          <div className="absolute -top-1 -right-1 w-28 h-28 overflow-hidden z-20">
-            <div className="absolute top-[22px] -right-[14px] w-[160px] text-center py-2 bg-[#B45309] text-white text-[9px] font-black tracking-[0.3em] uppercase shadow-[0_4px_12px_rgba(0,0,0,0.5)] border-y border-white/20"
-              style={{ transform: 'rotate(45deg)' }}>
-              VERIFIED
+            
+            {/* Blended Title Content */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-50 pointer-events-none">
+              <p className="font-mono text-[11px] md:text-[12px] text-[#B45309] uppercase tracking-[0.3em] font-black drop-shadow-md mb-3">{hack.project}</p>
+              <h3 className="text-3xl lg:text-[clamp(1.8rem,3vw,3rem)] font-black tracking-tighter text-white leading-[1.05] drop-shadow-2xl">{hack.title}</h3>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ─── DEFAULT DETAILS VIEW (OFF) ─── */}
+      <div className={`relative flex-1 p-6 md:p-8 flex flex-col transition-opacity duration-500 z-10 ${showGallery ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        {/* Subtle noise texture */}
+        <div className="absolute inset-0 opacity-[0.015] pointer-events-none mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
+        
+        {/* Achievement Badge + Social Links */}
+        <div className="flex flex-wrap justify-between items-start gap-3 mb-5 relative z-30 w-full">
+          <div className="px-3 md:px-4 py-2 bg-[#1A1816] text-[#F5F2ED] rounded-lg shadow-[4px_4px_0px_#B45309] shrink-0 pointer-events-none">
+            <span className="text-[9px] md:text-[10px] font-black tracking-[0.2em] uppercase leading-tight block">{hack.achievement}</span>
           </div>
-
-          {/* Wax Seal (bottom-right) */}
-          <div className="absolute bottom-8 right-8 w-16 h-16 rounded-full bg-[#92400e] flex items-center justify-center border-2 border-white/10 z-20"
-            style={{ boxShadow: 'inset 0 4px 8px rgba(255,255,255,0.2), inset 0 -4px 8px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.6)' }}>
-            <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center bg-[#B45309]"
-                 style={{ boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3)' }}>
-              <span className="text-[#F5F2ED] text-[9px] font-black tracking-widest text-center leading-[1.1] opacity-90" style={{ textShadow: '0 -1px 1px rgba(0,0,0,0.5)' }}>✦<br/>RK</span>
+          <div className="flex items-center gap-1 md:gap-2 ml-auto shrink-0">
+            {(hack.links?.github || hack.links?.live || hack.links?.docs) && (
+              <div className="flex items-center gap-1 md:gap-1.5 bg-white/80 backdrop-blur-md p-1 md:p-1.5 rounded-full border border-black/10 shadow-sm pointer-events-auto shrink-0">
+                {hack.links?.github && (
+                  <a href={hack.links.github} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                    className="p-1.5 md:p-2 rounded-full text-[#1A1816]/50 hover:bg-[#1A1816] hover:text-[#F5F2ED] transition-all duration-300 cursor-pointer" title="GitHub">
+                    <Github className="w-4 h-4 md:w-4 md:h-4" />
+                  </a>
+                )}
+                {hack.links?.live && (
+                  <a href={hack.links.live} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                    className="p-1.5 md:p-2 rounded-full text-[#1A1816]/50 hover:bg-[#1A1816] hover:text-[#F5F2ED] transition-all duration-300 cursor-pointer" title="Live Site">
+                    <Globe className="w-4 h-4 md:w-4 md:h-4" />
+                  </a>
+                )}
+                {hack.links?.docs && (
+                  <a href={hack.links.docs} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                    className="p-1.5 md:p-2 rounded-full text-[#1A1816]/50 hover:bg-[#1A1816] hover:text-[#F5F2ED] transition-all duration-300 cursor-pointer" title="Documentation">
+                    <FileText className="w-4 h-4 md:w-4 md:h-4" />
+                  </a>
+                )}
+              </div>
+            )}
+            
+            <div className="group/eye relative shrink-0 z-50">
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
+                className="p-2.5 md:p-2.5 bg-white/80 backdrop-blur-md rounded-full shadow-sm border border-black/10 text-[#1A1816]/60 hover:bg-[#B45309] hover:border-[#B45309] hover:text-[#F5F2ED] transition-all duration-300 pointer-events-auto shrink-0"
+                aria-label="View Certificate"
+              >
+                <Eye size={18} />
+              </button>
+              {/* Tooltip Hint */}
+              <div className="absolute top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#1A1816] text-[#F5F2ED] text-[9px] font-bold font-mono tracking-[0.2em] uppercase rounded shadow-lg opacity-0 pointer-events-none group-hover/eye:opacity-100 group-hover/eye:translate-y-1 transition-all duration-300 whitespace-nowrap z-50">
+                Show Certificates
+                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1A1816] rotate-45" />
+              </div>
             </div>
-          </div>
-
-          {/* Bottom Info Bar */}
-          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 z-20 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-            <p className="text-white font-black text-2xl md:text-3xl mb-2 tracking-tight drop-shadow-xl">{hack.project}</p>
-            <div className="flex items-center gap-3">
-              <span className="w-8 h-[1px] bg-[#B45309]" />
-              <p className="text-white/80 font-mono text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-bold">{hack.achievement}</p>
-            </div>
-            <p className="text-white/50 font-mono text-[10px] tracking-widest uppercase mt-6 border border-white/10 inline-block px-3 py-1.5 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-              Click to view case study →
-            </p>
           </div>
         </div>
-      </motion.div>
+
+        <div className="mt-8 md:mt-12 relative z-10 w-full pointer-events-none flex flex-col justify-start">
+          <div className="pointer-events-none hidden md:block">
+            <p className="text-[10px] md:text-[11px] font-mono text-[#B45309] uppercase tracking-[0.2em] mb-2 font-bold line-clamp-1 border-l-2 border-[#B45309] pl-3 leading-relaxed w-full">{hack.project}</p>
+            <h3 className="text-2xl lg:text-[clamp(1.5rem,2.5vw,2.5rem)] font-black tracking-tight text-[#1A1816] leading-[1.05] mb-3 w-full pr-4 line-clamp-4">{hack.title}</h3>
+
+            {hack.longDescription && (
+              <div className="w-full bg-black/[0.02] p-2.5 rounded-lg border border-black/5 mb-2">
+                <p className="text-[11px] lg:text-[11px] font-mono text-[#1A1816]/60 leading-[1.6] line-clamp-2 italic">
+                  "{hack.longDescription}"
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="pointer-events-none block md:hidden mt-4">
+             <p className="text-[10px] font-mono text-[#B45309] uppercase tracking-[0.2em] mb-2 font-bold line-clamp-1 border-l-2 border-[#B45309] pl-3 leading-relaxed w-full">{hack.project}</p>
+             <h3 className="text-3xl font-black tracking-tight text-[#1A1816] leading-[1.05] mb-3 w-full pr-4 line-clamp-4">{hack.title}</h3>
+          </div>
+
+          <div className={`flex ${isSpan2Type === 'col-span-2' ? 'flex-row flex-wrap gap-2 lg:gap-4' : 'flex-col gap-2'} mb-4 lg:mb-6 mt-4 w-full`}>
+            {hack.highlights.slice(0, 3).map((h, i) => (
+              <div key={i} className="flex items-start gap-2.5 w-full">
+                <div className="w-1 h-1 lg:w-1.5 lg:h-1.5 rounded-full bg-[#1A1816]/20 mt-1.5 lg:mt-2 shrink-0 group-hover:bg-[#B45309] transition-colors duration-500" />
+                <span className="text-[12px] lg:text-[13px] font-mono font-medium text-[#1A1816]/60 leading-tight line-clamp-1 w-full">{h}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5 pt-4 lg:pt-5 border-t border-black/5 relative w-full mt-auto">
+            {hack.tech.map(t => (
+              <span key={t} className="px-2 lg:px-2.5 py-1 bg-black/5 rounded-md border border-black/5 text-[9px] lg:text-[10px] font-mono font-bold text-[#1A1816]/50 uppercase tracking-wider shrink-0 break-words">{t}</span>
+            ))}
+            
+            <motion.div 
+              initial={{ opacity: 0, x: -10 }}
+              whileHover={{ scale: 1.05 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="ml-auto hidden md:flex items-center gap-1.5 text-[#B45309] font-mono text-[9px] font-bold tracking-[0.2em] uppercase bg-white/80 backdrop-blur pl-2 pointer-events-auto cursor-pointer group-hover:underline shrink-0"
+              onClick={onClick}
+            >
+              Inspect <MousePointerClick size={12} />
+            </motion.div>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -455,10 +480,10 @@ export default function HackathonExperience() {
             
             // To make sure mobile works correctly and doesn't break, span 2 is only applied down to md breakpoint.
             return (
-              <div key={hack.id} className={`${spanType === 'col-span-2' ? 'lg:col-span-2' : ''}`}>
+              <div key={hack.id} className={`w-full h-full ${spanType === 'col-span-2' ? 'lg:col-span-2' : ''}`}>
                  <KineticFlipCard 
                    hack={hack} 
-                   index={i} 
+                   index={i}  
                    isSpan2Type={spanType} 
                    onClick={() => handleCardClick(hack)} 
                  />

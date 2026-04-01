@@ -155,7 +155,7 @@ export default function ContactSection() {
         className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
         style={{ opacity: textOpacity, y: textY }}
       >
-        <h1 className="text-[20vw] md:text-[15vw] font-bold leading-[0.8] tracking-[-0.03em] text-center whitespace-nowrap will-change-transform">
+        <h1 className="text-[clamp(40px,18vw,220px)] md:text-[15vw] font-bold leading-[0.8] tracking-[-0.03em] text-center whitespace-nowrap will-change-transform">
           LET'S BUILD<br />SOMETHING<br />TOGETHER
         </h1>
       </motion.div>
@@ -165,7 +165,7 @@ export default function ContactSection() {
 
           {/* Left Side: CTA */}
           <div className="flex flex-col items-start relative">
-            <h2 className="text-5xl md:text-7xl font-medium tracking-tight mb-12 leading-tight">
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-medium tracking-tight mb-12 leading-tight">
               LET'S START<br />A PROJECT<br />TOGETHER
             </h2>
 

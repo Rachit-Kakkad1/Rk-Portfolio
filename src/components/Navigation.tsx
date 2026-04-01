@@ -67,8 +67,15 @@ export default function Navigation() {
           // Grouping logic: map specific sections to "work"
           if (id === 'projects' || id === 'hackathon') {
             setActiveSection('work');
+            window.history.replaceState(null, '', `#${id}`);
           } else {
             setActiveSection(id);
+            if (id === 'home') {
+              // If we are at the very top, clear the hash or set it to #home
+              window.history.replaceState(null, '', '#home');
+            } else {
+              window.history.replaceState(null, '', `#${id}`);
+            }
           }
         }
       });
@@ -77,7 +84,7 @@ export default function Navigation() {
     observerRef.current = new IntersectionObserver(observerCallback, observerOptions);
     
     // Sections to observe
-    const sectionIds = ['about', 'skills', 'hackathon', 'projects', 'freelance', 'education', 'contact', 'uses'];
+    const sectionIds = ['home', 'about', 'skills', 'hackathon', 'projects', 'freelance', 'education', 'certificates', 'contact', 'uses'];
     sectionIds.forEach((id) => {
       const element = document.getElementById(id);
       if (element) observerRef.current?.observe(element);

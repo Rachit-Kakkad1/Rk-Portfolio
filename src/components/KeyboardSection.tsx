@@ -358,8 +358,8 @@ export default function KeyboardSection() {
             animate={{ opacity: 0.04, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="text-[120px] md:text-[220px] font-bold text-black whitespace-nowrap tracking-tighter smooth-gpu"
-            style={{ willChange: 'transform, opacity, filter' }}
+            className="text-[clamp(60px,25vw,180px)] md:text-[220px] font-bold text-black whitespace-nowrap tracking-tighter smooth-gpu"
+            style={{ translateZ: 0, backfaceVisibility: 'hidden' }}
           >
             {skills.find(s => s.id === activeSkillId)?.title.toUpperCase()}
           </motion.h2>

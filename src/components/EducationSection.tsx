@@ -76,7 +76,7 @@ export default function EducationSection() {
           <h2 className="text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase text-[#B45309] mb-4">
             Academic Foundation
           </h2>
-          <h3 className="text-5xl md:text-8xl font-bold tracking-tighter text-black uppercase leading-none">
+          <h3 className="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tighter text-black uppercase leading-none">
             Education
           </h3>
         </div>
