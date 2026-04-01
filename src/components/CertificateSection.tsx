@@ -17,11 +17,11 @@ const CERTIFICATES = [
     },
     {
       id: 'hackathon-national-id',
-      year: '2025',
+      year: '2026',
       title: 'National Digital Identity & Innovation Hackathon',
       description: 'Secured Rank 4 in Round 3 as Team Leader of a 5-member team (API Assassins), demonstrating outstanding technical excellence, strategic problem-solving, and innovation in large-scale digital identity systems.',
       issuer: 'Digital Innovation & Citizen Services Consortium (DICSC)',
-      credentialId: 'NDI-2025-HACK',
+      credentialId: 'NDI-2026-HACK',
       link: '/certificates/hackathons/National_Digital_Identity_&_Innovation_Hackathon_2025.png',
       skills: ['System Design', 'Digital Identity', 'Leadership', 'Scalable Architecture'],
       category: 'hackathons'
@@ -39,99 +39,99 @@ const CERTIFICATES = [
     },
     {
       id: 'hackathon-convolve',
-      year: '2024',
+      year: '2025',
       title: 'Convolve-4.0 ( IIT GUWAHATI )',
       description: 'ML/AI focused hackathon solving complex predictive modeling challenges.',
       issuer: 'IIT Guwahati',
-      credentialId: 'IITG-CONVOLVE-2024',
+      credentialId: 'IITG-CONVOLVE-2025',
       link: '/certificates/hackathons/Convolve-4.0 ( IIT GUWAHATI ).jpg',
       skills: ['Machine Learning', 'Data Science'],
       category: 'hackathons'
     },
     {
       id: 'hackathon-mosip',
-      year: '2024',
+      year: '2025',
       title: 'MOSIP ( IIT MADRAS )',
       description: 'Developed innovative solutions for digital identity systems in global populations.',
       issuer: 'IIT Madras',
-      credentialId: 'IITM-MOSIP-2024',
+      credentialId: 'IITM-MOSIP-2025',
       link: '/certificates/hackathons/MOSIP ( IIT MADRAS ).jpg',
       skills: ['Digital ID', 'Security'],
       category: 'hackathons'
     },
     {
       id: 'hackathon-appian',
-      year: '2024',
+      year: '2025',
       title: 'Appian ( IIT MADRAS )',
       description: 'Competition focused on low-code automation and enterprise process management.',
       issuer: 'IIT Madras',
-      credentialId: 'IITM-APPIAN-2024',
+      credentialId: 'IITM-APPIAN-2025',
       link: '/certificates/hackathons/Appian ( IIT MADRAS ).jpg',
       skills: ['Automation', 'BPM'],
       category: 'hackathons'
     },
     {
       id: 'hackathon-openpools',
-      year: '2024',
+      year: '2025',
       title: 'Openpools ( 30 hrs )',
       description: '30-hour intensive building phase for decentralized finance protocols.',
       issuer: 'Openpools',
-      credentialId: 'OP-HACK-2024',
+      credentialId: 'OP-HACK-2025',
       link: '/certificates/hackathons/Openpools ( 30 hrs ).jpg',
       skills: ['DeFi', 'Web3'],
       category: 'hackathons'
     },
     {
       id: 'hackathon-changethon',
-      year: '2024',
+      year: '2025',
       title: 'Changethon ( IIT ROORKEE )',
       description: 'Social impact innovation challenge tackling real-world sustainability issues.',
       issuer: 'IIT Roorkee',
-      credentialId: 'IITR-CHANGE-2024',
+      credentialId: 'IITR-CHANGE-2025',
       link: '/certificates/hackathons/Changethon ( IIT ROORKEE ).jpg',
       skills: ['Social Impact', 'Innovation'],
       category: 'hackathons'
     },
     {
       id: 'hackathon-codesummit',
-      year: '2023',
+      year: '2025',
       title: 'CodeSummit Competitive Coding',
       description: 'ACM organized competitive coding event focusing on algorithmic efficiency.',
       issuer: 'ACM',
-      credentialId: 'ACM-CS-2023',
+      credentialId: 'ACM-CS-2025',
       link: '/certificates/hackathons/CodeSummit_Competitive_Coding_Event_ACM.jpg',
       skills: ['Algorithms', 'Data Structures'],
       category: 'hackathons'
     },
     {
       id: 'hackathon-devheat',
-      year: '2023',
+      year: '2025',
       title: 'DEV HEAT',
       description: 'Intensive development sprint focused on rapid feature deployment.',
       issuer: 'Dev Heat Organization',
-      credentialId: 'DH-PARTIC-23',
+      credentialId: 'DH-PARTIC-25',
       link: '/certificates/hackathons/DEV_HEAT_PARTICIPATION.jpg',
       skills: ['Full Stack', 'Agile'],
       category: 'hackathons'
     },
     {
       id: 'hackathon-corporate-quiz',
-      year: '2024',
+      year: '2025',
       title: 'Corporate Quiz ( IIT MADRAS )',
       description: 'Strategy and business operations centered quiz competition.',
       issuer: 'IIT Madras',
-      credentialId: 'IITM-CORP-2024',
+      credentialId: 'IITM-CORP-2025',
       link: '/certificates/hackathons/Corporate Quiz ( IIT MADRAS ).jpg',
       skills: ['Strategy', 'Operations'],
       category: 'hackathons'
     },
     {
       id: 'hackathon-tata',
-      year: '2024',
+      year: '2025',
       title: 'Crucible Campus Quiz ( TATA )',
       description: 'Prestigious national business quiz by the Tata Group.',
       issuer: 'TATA',
-      credentialId: 'TATA-CRUCIBLE-24',
+      credentialId: 'TATA-CRUCIBLE-25',
       link: '/certificates/hackathons/Crucible Campus Quiz ( TATA ).jpg',
       skills: ['Business Intelligence', 'Logic'],
       category: 'hackathons'
@@ -139,77 +139,77 @@ const CERTIFICATES = [
   // Skill Certificates
   {
     id: 'skill-gemini',
-    year: '2024',
+    year: '2026',
     title: 'Google Gemini AI Specialization',
     description: 'Mastering Large Language Models and Generative AI applications using Google Gemini.',
     issuer: 'Google',
-    credentialId: 'G-GEMINI-2024',
+    credentialId: 'G-GEMINI-2026',
     link: '/certificates/skills/gemini.png',
     skills: ['Gen AI', 'LLMs'],
     category: 'skills'
   },
   {
     id: 'skill-github',
-    year: '2023',
+    year: '2025',
     title: 'Version Control with Git & GitHub',
     description: 'Advanced workflow management, branching strategies, and collaboration via Git.',
     issuer: 'Meta',
-    credentialId: 'META-GIT-9912',
+    credentialId: 'META-GIT-2025',
     link: '/certificates/skills/git-github.png',
     skills: ['Git', 'Version Control'],
     category: 'skills'
   },
   {
     id: 'skill-google-ml',
-    year: '2023',
+    year: '2025',
     title: 'Machine Learning Foundations',
     description: 'Core concepts of supervised and unsupervised learning models.',
     issuer: 'Google',
-    credentialId: 'G-ML-FOUND-23',
+    credentialId: 'G-ML-FOUND-25',
     link: '/certificates/skills/google-ml.png',
     skills: ['Machine Learning', 'AI'],
     category: 'skills'
   },
   {
     id: 'skill-google-js',
-    year: '2023',
+    year: '2025',
     title: 'Programming with JavaScript',
     description: 'Building dynamic web applications with modern JavaScript ES6+ standards.',
     issuer: 'Google',
-    credentialId: 'G-JS-PROG-23',
+    credentialId: 'G-JS-PROG-25',
     link: '/certificates/skills/google-programming.png',
     skills: ['JavaScript', 'Frontend'],
     category: 'skills'
   },
   {
     id: 'skill-google-python',
-    year: '2022',
+    year: '2025',
     title: 'Crash Course on Python',
     description: 'In-depth exploration of Python syntax, data structures, and automation.',
     issuer: 'Google',
-    credentialId: 'G-PYTHON-CRASH',
+    credentialId: 'G-PYTHON-CRASH-25',
     link: '/certificates/skills/google-python.png',
     skills: ['Python', 'Automation'],
     category: 'skills'
   },
   {
     id: 'skill-outskill-genai',
-    year: '2024',
+    year: '2026',
     title: 'Generative AI Mastery',
     description: 'Developing applications with vector databases and prompt engineering.',
     issuer: 'Outskill',
-    credentialId: 'OUT-GENAI-101',
+    credentialId: 'OUT-GENAI-2026',
     link: '/certificates/skills/outskill-genai.png',
     skills: ['Generative AI', 'Vector DB'],
     category: 'skills'
   },
   {
     id: 'skill-mongodb',
-    year: '2023',
+    year: '2025',
     title: 'MongoDB Database Essentials',
     description: 'NoSQL database design, indexing, and complex aggregation pipelines.',
     issuer: 'WsCube Tech',
-    credentialId: 'WS-MONGO-23',
+    credentialId: 'WS-MONGO-25',
     link: '/certificates/skills/wscube-mongodb.jpg',
     skills: ['MongoDB', 'NoSQL'],
     category: 'skills'
@@ -217,8 +217,7 @@ const CERTIFICATES = [
 ];
 
 function NewsCard({ cert, index, onClick }: { cert: typeof CERTIFICATES[0]; index: number; onClick: () => void }) {
-  const isFeatured = ['hackathon-electrosphere', 'hackathon-national-id', 'hackathon-odoo-gv', 'hackathon-mosip', 'skill-gemini'].includes(cert.id);
-
+  // Every certificate is verified now as per request
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -261,14 +260,12 @@ function NewsCard({ cert, index, onClick }: { cert: typeof CERTIFICATES[0]; inde
         </p>
       </div>
 
-      {/* Red Stamp (Featured Only) */}
-      {isFeatured && (
-        <div className="absolute top-[60%] right-[-10%] rotate-[-15deg] pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity duration-500">
-          <div className="border-4 border-red-600 px-4 py-1 text-red-600 font-serif font-black text-xl uppercase tracking-widest rounded shadow-sm">
-            VERIFIED
-          </div>
+      {/* Red Stamp (All Certificates) */}
+      <div className="absolute top-[60%] right-[-10%] rotate-[-15deg] pointer-events-none opacity-20 group-hover:opacity-60 transition-opacity duration-500">
+        <div className="border-[3px] border-red-600 px-3 py-0.5 text-red-600 font-serif font-black text-lg uppercase tracking-widest rounded shadow-sm">
+          VERIFIED
         </div>
-      )}
+      </div>
 
       {/* Footer Column (News Sidebar) */}
       <div className="mt-auto pt-3 border-t border-double border-[#e0ddcf] flex justify-between items-center">
@@ -314,7 +311,7 @@ export default function CertificateSection() {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-            <div className="flex-1">
+            <div className="flex-1 w-full">
               <div className="flex items-center gap-4 mb-4 font-serif italic text-[10px] text-[#B45309] font-black tracking-[0.3em] uppercase">
                 <span>The Global Archives</span>
                 <span className="w-12 h-[1px] bg-[#B45309]/30"></span>
@@ -322,7 +319,7 @@ export default function CertificateSection() {
                 <span className="w-12 h-[1px] bg-[#B45309]/30"></span>
                 <span>Price: Professional Excellence</span>
               </div>
-              <h2 className="text-[clamp(44px,12vw,140px)] font-black tracking-[-0.06em] leading-[0.8] text-black uppercase select-none font-serif">
+              <h2 className="text-[clamp(32px,12vw,140px)] font-black tracking-[-0.06em] leading-[0.8] text-black uppercase select-none font-serif">
                 THE LEDGER <span className="text-[#B45309]">POST</span>
               </h2>
             </div>
@@ -338,12 +335,12 @@ export default function CertificateSection() {
         {/* Section 1: Hackathons */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6 mb-24">
           <div className="flex items-center gap-4 mb-10 overflow-hidden border-y-[1px] border-black/10 py-3">
-            <span className="font-serif font-black text-xs uppercase bg-black text-white px-2 py-0.5">FRONT PAGE</span>
-            <h3 className="text-3xl md:text-5xl font-black font-serif italic text-black whitespace-nowrap tracking-tighter">
+            <span className="font-serif font-black text-xs uppercase bg-black text-white px-2 py-0.5 shrink-0">FRONT PAGE</span>
+            <h3 className="text-3xl md:text-5xl font-black font-serif italic text-black tracking-tighter">
               Competitive <span className="text-[#B45309]">Excellence</span>
             </h3>
             <div className="flex-1 h-[2px] bg-black/10 border-y-[1px] border-black/5"></div>
-            <span className="font-serif italic text-[10px] text-black/40 hidden md:block uppercase font-bold tracking-widest">Section A — Hackathons</span>
+            <span className="font-serif italic text-[10px] text-black/40 hidden md:block uppercase font-bold tracking-widest shrink-0">Section A — Hackathons</span>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
@@ -361,12 +358,12 @@ export default function CertificateSection() {
         {/* Section 2: Skills */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex items-center gap-4 mb-10 overflow-hidden border-y-[1px] border-black/10 py-3">
-            <span className="font-serif font-black text-xs uppercase bg-black text-white px-2 py-0.5">FEATURES</span>
-            <h3 className="text-3xl md:text-5xl font-black font-serif italic text-black whitespace-nowrap tracking-tighter">
+            <span className="font-serif font-black text-xs uppercase bg-black text-white px-2 py-0.5 shrink-0">FEATURES</span>
+            <h3 className="text-3xl md:text-5xl font-black font-serif italic text-black tracking-tighter">
               Technical <span className="text-[#B45309]">Proficiencies</span>
             </h3>
             <div className="flex-1 h-[2px] bg-black/10 border-y-[1px] border-black/5"></div>
-            <span className="font-serif italic text-[10px] text-black/40 hidden md:block uppercase font-bold tracking-widest">Section B — Core Skills</span>
+            <span className="font-serif italic text-[10px] text-black/40 hidden md:block uppercase font-bold tracking-widest shrink-0">Section B — Core Skills</span>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
