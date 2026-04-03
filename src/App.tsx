@@ -18,6 +18,7 @@ import Navigation from './components/Navigation';
 import TransitionScreen from './components/TransitionScreen';
 import AIAssistant from './components/AIAssistant';
 import CinemaIntro from './components/CinemaIntro';
+import { useScrollReveal } from './useScrollReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -87,6 +88,9 @@ export default function App() {
   const headlineRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
+
+  // Initialize scroll-based text reveal animations after intro completes
+  useScrollReveal([showIntro]);
 
   // Initialize Global Smooth Scrolling
   useEffect(() => {
@@ -338,20 +342,20 @@ export default function App() {
           </div>
         </div>
         <Navigation />
-        <section id="about" aria-label="About"><AboutSection /></section>
-        <section id="skills" aria-label="Skills">
+        <section id="about" aria-label="About" data-scroll-reveal="fade-up"><AboutSection /></section>
+        <section id="skills" aria-label="Skills" data-scroll-reveal="fade-up" data-scroll-delay="0.1">
           <KeyboardSection />
         </section>
         <div id="work">
-          <section id="hackathon" aria-label="Hackathon Experience"><HackathonExperience /></section>
-          <section id="projects" aria-label="Projects"><ProjectsSection /></section>
+          <section id="hackathon" aria-label="Hackathon Experience" data-scroll-reveal="fade-up"><HackathonExperience /></section>
+          <section id="projects" aria-label="Projects" data-scroll-reveal="fade-up"><ProjectsSection /></section>
         </div>
 
-        <section id="uses" className="py-20 md:py-32 bg-[#F6F3EE] border-t border-black/5">
+        <section id="uses" className="py-20 md:py-32 bg-[#F6F3EE] border-t border-black/5" data-scroll-reveal="fade-up">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12">
             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B45309] mb-4">Hardware & Software</p>
             <h2 className="text-4xl md:text-7xl font-black tracking-tighter text-[#0E0F14] mb-12 uppercase">Uses</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12" data-scroll-reveal="fade-up" data-scroll-stagger="0.1">
               <div className="p-6 md:p-8 bg-black/5 rounded-3xl border border-black/5">
                 <h3 className="text-lg md:text-xl font-black mb-4 uppercase tracking-tighter">Development</h3>
                 <p className="text-[12px] md:text-sm text-[#0E0F14]/60 leading-relaxed font-mono">VS Code / WSL2 / Docker / Git / Postman / Oh My Zsh</p>
@@ -368,9 +372,9 @@ export default function App() {
           </div>
         </section>
 
-        <section id="certificates" aria-label="Certificates"><CertificateSection /></section>
-        <section id="freelance" aria-label="Freelance Experience"><FreelanceExperience /></section>
-        <section id="education" aria-label="Education"><EducationSection /></section>
+        <section id="certificates" aria-label="Certificates" data-scroll-reveal="fade-up"><CertificateSection /></section>
+        <section id="freelance" aria-label="Freelance Experience" data-scroll-reveal="fade-left"><FreelanceExperience /></section>
+        <section id="education" aria-label="Education" data-scroll-reveal="fade-up"><EducationSection /></section>
         <section id="contact" aria-label="Contact"><ContactSection /></section>
 
         <AIAssistant />

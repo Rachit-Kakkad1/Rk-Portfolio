@@ -121,3 +121,18 @@ input, textarea {
   transform: translateZ(0);
   will-change: transform;
 }
+
+/* ─── Scroll Reveal Initial States ─── */
+/* Prevents FOUC: elements start hidden, GSAP reveals them on scroll */
+[data-scroll-reveal] {
+  will-change: transform, opacity;
+}
+
+/* Respect accessibility: no hidden state for reduced-motion users */
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
