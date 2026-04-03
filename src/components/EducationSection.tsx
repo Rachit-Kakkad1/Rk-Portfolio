@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 const EDUCATION_DATA = [
   {
     type: "Degree",
-    degree: "B.Tech in Computer Engineering",
+    degree: "B.E in Computer Engineering",
     institution: "Swaminarayan University, Kalol, Gujarat",
     duration: "2025 — 2029",
     status: "1st Year (Pursuing)",

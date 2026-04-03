@@ -335,7 +335,12 @@ export const hackathons: HackathonData[] = [
     challenges: ['Translating complex security vulnerabilities into deterministic, static analysis patterns without requiring cloud compute.'],
     achievement: '🥈 Rank 2 — Software Edition',
     image: '/certificates/hackathons/ElectroSphere_2K26.jpg',
-    images: ['/certificates/hackathons/ElectroSphere_2K26.jpg', '/threatlens.jpg'],
+    images: [
+      '/certificates/hackathons/ElectroSphere_2K26.jpg',
+      '/certificates/hackathons/electrosphere/group-1.jpeg',
+      '/certificates/hackathons/electrosphere/group-2.jpeg',
+      '/certificates/hackathons/electrosphere/group-3.png'
+    ],
     links: {
       github: 'https://github.com/Rachit-Kakkad1/ThreatLens/tree/main/Code',
       live: 'https://threatlens-topaz.vercel.app',
@@ -390,7 +395,13 @@ export const hackathons: HackathonData[] = [
     challenges: ['Orchestrating 8 local AI models dynamically without thermal throttling the host machine or exceeding VRAM limits.'],
     achievement: 'Hackathon Submission',
     image: '/certificates/hackathons/HackCrux X LNMIT.png',
-    images: ['/certificates/hackathons/HackCrux X LNMIT.png'],
+    images: [
+      '/certificates/hackathons/HackCrux X LNMIT.png',
+      '/certificates/hackathons/HackCrux X LNMIT/group-1.jpg',
+      '/certificates/hackathons/HackCrux X LNMIT/solo-1.jpg',
+      '/certificates/hackathons/HackCrux X LNMIT/solo-2.jpg',
+      '/certificates/hackathons/HackCrux X LNMIT/solo-3.jpg'
+    ],
     links: {
       github: 'https://github.com/Rachit-Kakkad1/build-with-ai-hackcrux-2026',
       live: 'https://cos-cognitiveoperatingsystem.vercel.app/',
@@ -407,7 +418,13 @@ export const hackathons: HackathonData[] = [
     highlights: ['Dual-lens analytics', 'AI behavioral insights', 'Real-time feedback system'],
     challenges: ['Engineering a normalized scoring algorithm that accurately weights highly disparate data sets (biometrics vs emissions).'],
     achievement: 'Participation (Gemini Competition)',
-    images: ['/lifelens.jpg'],
+    images: [
+      '/certificates/hackathons/DEV_HEAT_PARTICIPATION.jpg',
+      '/certificates/hackathons/dev heat/group-1.jpeg',
+      '/certificates/hackathons/dev heat/solo-1.JPG',
+      '/certificates/hackathons/dev heat/solo-2.JPG',
+      '/certificates/hackathons/dev heat/team-1.JPG'
+    ],
     links: {
       github: 'https://github.com/Rachit-Kakkad1/lifelens-ai-dashboard',
       live: 'https://lifelens-ai-dashboard.vercel.app/',
