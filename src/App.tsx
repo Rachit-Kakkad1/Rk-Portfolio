@@ -82,12 +82,15 @@ function RotatingGlobe() {
 }
 
 
+
+
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const portraitRef = useRef<HTMLImageElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
+
 
   // Initialize scroll-based text reveal animations after intro completes
   useScrollReveal([showIntro]);
@@ -192,19 +195,7 @@ export default function App() {
     return () => ctx.revert();
   }, []);
 
-  // Auto-scroll to hash route when intro finishes
-  useEffect(() => {
-    if (!showIntro && window.location.hash) {
-      setTimeout(() => {
-        const id = window.location.hash.replace('#', '');
-        const element = document.getElementById(id);
-        if (element && (window as any).lenis) {
-          // A bit of offset for the floating nav header
-          (window as any).lenis.scrollTo(element, { offset: -80, immediate: true });
-        }
-      }, 500); // Allow fade transitions to settle
-    }
-  }, [showIntro]);
+
 
   return (
     <main className={`bg-[#9a9a9a] ${showIntro ? 'h-screen overflow-hidden' : ''}`}>

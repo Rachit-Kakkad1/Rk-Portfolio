@@ -26,6 +26,8 @@ const MORE_ITEMS = [
   { label: 'Resume', icon: FileText, target: "/Rachit Kakkad's Resume.pdf", type: 'link' },
 ];
 
+
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -35,6 +37,9 @@ export default function Navigation() {
   const isDarkTheme = activeSection === 'contact';
 
   const observerRef = useRef<IntersectionObserver | null>(null);
+  // Lock observer updates during programmatic scroll to prevent flickering
+  const scrollLockRef = useRef(false);
+  const scrollLockTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Performance-optimized Section Tracking & Sticky Trigger
   useEffect(() => {
@@ -61,21 +66,17 @@ export default function Navigation() {
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      // Skip observer updates while a nav-click scroll is in progress
+      if (scrollLockRef.current) return;
+
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const id = entry.target.id;
           // Grouping logic: map specific sections to "work"
           if (id === 'projects' || id === 'hackathon') {
             setActiveSection('work');
-            window.history.replaceState(null, '', `#${id}`);
           } else {
             setActiveSection(id);
-            if (id === 'home') {
-              // If we are at the very top, clear the hash or set it to #home
-              window.history.replaceState(null, '', '#home');
-            } else {
-              window.history.replaceState(null, '', `#${id}`);
-            }
           }
         }
       });
@@ -93,9 +94,19 @@ export default function Navigation() {
     return () => observerRef.current?.disconnect();
   }, []);
 
+
+
   const handleNavClick = (e: React.MouseEvent, target: string) => {
     e.preventDefault();
     
+    // Immediately set active section & lock observer to prevent flicker
+    setActiveSection(target);
+    scrollLockRef.current = true;
+    clearTimeout(scrollLockTimerRef.current);
+    scrollLockTimerRef.current = setTimeout(() => {
+      scrollLockRef.current = false;
+    }, 1200); // Matches Lenis scroll duration
+
     // Special handling for grouped "work"
     const scrollTarget = target === 'work' ? 'hackathon' : target;
     const element = document.getElementById(scrollTarget);
@@ -109,6 +120,14 @@ export default function Navigation() {
 
   const handleMoreItemClick = (item: typeof MORE_ITEMS[0]) => {
     if (item.type === 'scroll') {
+      // Lock observer during scroll to prevent flicker
+      setActiveSection(item.target);
+      scrollLockRef.current = true;
+      clearTimeout(scrollLockTimerRef.current);
+      scrollLockTimerRef.current = setTimeout(() => {
+        scrollLockRef.current = false;
+      }, 1200);
+
       const element = document.getElementById(item.target);
       if (element) {
         (window as any).lenis?.scrollTo(element, { offset: -80 });
@@ -140,7 +159,7 @@ export default function Navigation() {
           {/* Identity */}
           <div className="w-[200px]">
             <a 
-              href="#" 
+              href="/" 
               onClick={(e) => { e.preventDefault(); (window as any).lenis?.scrollTo(0); }} 
               className="group flex flex-col"
             >
