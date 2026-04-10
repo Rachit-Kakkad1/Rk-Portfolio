@@ -32,15 +32,6 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
 
 export default function CodingGitaDetail({ onClose }: CodingGitaDetailProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: containerRef });
-  
-  // Subtle parallax
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -49,20 +40,19 @@ export default function CodingGitaDetail({ onClose }: CodingGitaDetailProps) {
   }, [onClose]);
 
   const sectionStyle: React.CSSProperties = {
-    maxWidth: '1200px',
+    maxWidth: '1100px',
     margin: '0 auto',
     padding: '0 clamp(16px, 4vw, 48px)',
-    position: 'relative',
-    zIndex: 10,
   };
 
-  const textPrimary = '#FFFFFF';
-  const textSecondary = 'rgba(255,255,255,0.6)';
-  const textMuted = 'rgba(255,255,255,0.4)';
-  const accent = '#D4AF37'; // Gold Authority
-  const bg = '#030308'; // Deep Black
-  const cardBg = 'rgba(255,255,255,0.02)';
-  const borderColor = 'rgba(255,255,255,0.08)';
+  const accent = '#6366f1';
+  const accentBg = 'rgba(99,102,241,';
+  const textPrimary = '#1A1816';
+  const textSecondary = 'rgba(26,24,22,0.55)';
+  const textMuted = 'rgba(26,24,22,0.35)';
+  const bg = '#F5F2ED';
+  const cardBg = '#ffffff';
+  const borderColor = 'rgba(0,0,0,0.06)';
 
   return (
     <motion.div
@@ -70,9 +60,8 @@ export default function CodingGitaDetail({ onClose }: CodingGitaDetailProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      data-lenis-prevent="true"
-      style={{ position: 'fixed', inset: 0, zIndex: 200, background: bg, overflowY: 'auto', overflowX: 'hidden', color: textPrimary }}
+      transition={{ duration: 0.5 }}
+      style={{ minHeight: '100vh', background: bg, overflowX: 'hidden', color: textPrimary, paddingTop: '80px' }}
     >
       {/* ─── FIXED NAV BAR ─── */}
       <div style={{
