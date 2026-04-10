@@ -32,15 +32,6 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
 
 export default function LifeLensDetail({ onClose }: LifeLensDetailProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: containerRef });
-  
-  // Parallax for Background Gradient
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -49,19 +40,20 @@ export default function LifeLensDetail({ onClose }: LifeLensDetailProps) {
   }, [onClose]);
 
   const sectionStyle: React.CSSProperties = {
-    maxWidth: '1200px',
+    maxWidth: '1100px',
     margin: '0 auto',
     padding: '0 clamp(16px, 4vw, 48px)',
-    position: 'relative',
-    zIndex: 10,
   };
 
+  const accent = '#0891b2';
+  const accentBg = 'rgba(8,145,178,';
   const textPrimary = '#1A1816';
-  const textSecondary = 'rgba(26,24,22,0.6)';
+  const textSecondary = 'rgba(26,24,22,0.55)';
   const textMuted = 'rgba(26,24,22,0.35)';
   const bg = '#F5F2ED';
   const glassBg = 'rgba(255, 255, 255, 0.5)';
   const glassBorder = 'rgba(255, 255, 255, 0.6)';
+  const cardBg = '#ffffff';
   const borderColor = 'rgba(0,0,0,0.06)';
 
   return (
@@ -70,15 +62,13 @@ export default function LifeLensDetail({ onClose }: LifeLensDetailProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8 }}
-      data-lenis-prevent="true"
-      style={{ position: 'fixed', inset: 0, zIndex: 200, background: bg, overflowY: 'auto', overflowX: 'hidden', color: textPrimary }}
+      transition={{ duration: 0.5 }}
+      style={{ minHeight: '100vh', background: bg, overflowX: 'hidden', color: textPrimary, paddingTop: '80px' }}
     >
       {/* ─── AMBIENT BACKGROUND GRADIENT ─── */}
       <motion.div 
         style={{ 
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
-          y: bgY,
           background: 'radial-gradient(circle at 20% 10%, rgba(16, 185, 129, 0.08) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(59, 130, 246, 0.08) 0%, transparent 40%), radial-gradient(circle at 50% 90%, rgba(168, 85, 247, 0.06) 0%, transparent 50%)',
           filter: 'blur(40px)',
         }} 
