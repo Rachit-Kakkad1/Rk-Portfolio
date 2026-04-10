@@ -32,14 +32,6 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
 
 export default function AttendifyDetail({ onClose }: AttendifyDetailProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: containerRef });
-  
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -48,20 +40,18 @@ export default function AttendifyDetail({ onClose }: AttendifyDetailProps) {
   }, [onClose]);
 
   const sectionStyle: React.CSSProperties = {
-    maxWidth: '1200px',
+    maxWidth: '1100px',
     margin: '0 auto',
     padding: '0 clamp(16px, 4vw, 48px)',
-    position: 'relative',
-    zIndex: 10,
   };
 
+  const accent = '#0369a1';
+  const accentBg = 'rgba(3,105,161,';
   const textPrimary = '#1A1816';
-  const textSecondary = 'rgba(26,24,22,0.6)';
+  const textSecondary = 'rgba(26,24,22,0.55)';
   const textMuted = 'rgba(26,24,22,0.35)';
-  const accent = '#B45309';
   const bg = '#F5F2ED';
-  const glassBg = 'rgba(255, 255, 255, 0.4)';
-  const glassBorder = 'rgba(255, 255, 255, 0.6)';
+  const cardBg = '#ffffff';
   const borderColor = 'rgba(0,0,0,0.06)';
 
   return (
@@ -70,9 +60,8 @@ export default function AttendifyDetail({ onClose }: AttendifyDetailProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8 }}
-      className="fixed inset-0 z-[200] overflow-y-auto overflow-x-hidden"
-      style={{ background: bg, color: textPrimary }}
+      transition={{ duration: 0.5 }}
+      style={{ minHeight: '100vh', background: bg, overflowX: 'hidden', color: textPrimary, paddingTop: '80px' }}
     >
       {/* ─── FIXED NAV BAR ─── */}
       <div style={{
