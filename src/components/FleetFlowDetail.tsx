@@ -34,18 +34,13 @@ export default function FleetFlowDetail({ onClose }: FleetFlowDetailProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
-
-  useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
   const sectionStyle: React.CSSProperties = {
-    maxWidth: '1200px',
+    maxWidth: '1100px',
     margin: '0 auto',
     padding: '0 clamp(16px, 4vw, 48px)',
   };
@@ -66,8 +61,7 @@ export default function FleetFlowDetail({ onClose }: FleetFlowDetailProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      data-lenis-prevent="true"
-      style={{ position: 'fixed', inset: 0, zIndex: 200, background: bg, overflowY: 'auto', overflowX: 'hidden', color: textPrimary }}
+      style={{ minHeight: '100vh', background: bg, overflowX: 'hidden', color: textPrimary, paddingTop: '80px' }}
     >
       {/* ─── FIXED NAV BAR ─── */}
       <div style={{
