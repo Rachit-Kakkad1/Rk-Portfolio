@@ -50,7 +50,7 @@ export default function KeyboardSection() {
 
   const [activeSkillId, setActiveSkillId] = useState('react');
   const [splineApp, setSplineApp] = useState<Application>();
-  const [isDesktop, setIsDesktop] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [terminalState, setTerminalState] = useState({
     prompt: '',
     title: '',
@@ -58,9 +58,9 @@ export default function KeyboardSection() {
     phase: 'idle'
   });
 
-  // Check viewport size on mount
+  // Check viewport size on mount - Disable 3D on mobile (<768px)
   useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 1024);
+    const check = () => setIsDesktop(window.innerWidth >= 768);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
