@@ -11,18 +11,23 @@ export default function AboutSection() {
   const bgTextRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
+    if (!sectionRef.current || !contentRef.current || !bgTextRef.current) return;
+    
     const ctx = gsap.context(() => {
       gsap.set(contentRef.current, { opacity: 0, y: 30 });
       gsap.set(bgTextRef.current, { opacity: 0 });
 
-      ScrollTrigger.create({
+      const trigger = ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top 70%",
         onEnter: () => {
           gsap.to(bgTextRef.current, { opacity: 0.03, scale: 1, duration: 1.5, ease: "power2.out" });
           gsap.to(contentRef.current, { opacity: 1, y: 0, duration: 1, ease: "power3.out" });
-        }
+        },
+        once: true
       });
+      
+      return () => trigger.kill();
     }, sectionRef);
 
     return () => ctx.revert();
@@ -99,9 +104,9 @@ export default function AboutSection() {
 // =====================================
 
 const GALLERY_IMAGES = [
-  "/about/rachit-2.png",
-  "/about/rachit-1.png",
-  "/about/rachit-3.png",
+  "/solo-2.webp",
+  "/group-1.webp",
+  "/solo-1.webp",
 ];
 
 function StackedImageGallery() {
@@ -146,7 +151,7 @@ function StackedImageGallery() {
               transition={{ duration: 0.85, ease: [0.165, 0.84, 0.44, 1] }}
               style={{ top: 0, left: 0 }}
             >
-              <img src={src} alt={`Gallery image ${i + 1}`} className="w-full h-full object-cover" />
+              <img src={src} alt={`Gallery image ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
               
               {/* Overlay for depth perception on background cards */}
               {!isFront && <div className="absolute inset-0 bg-[#F6F3EE]/30 backdrop-blur-[2px]" />}
