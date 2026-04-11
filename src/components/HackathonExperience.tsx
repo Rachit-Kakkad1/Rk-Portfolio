@@ -65,6 +65,8 @@ function KineticFlipCard({ hack, index, isSpan2Type, onClick }: { hack: Hackatho
                   src={allImages[currentImg]} 
                   alt={`${hack.project} view`} 
                   className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity" 
+                  loading="lazy"
+                  decoding="async"
                 />
               </AnimatePresence>
             ) : (
