@@ -22,15 +22,15 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
     // phase 6: FINAL FADE OUT
 
     const timers = [
-      setTimeout(() => setPhase(1), 800),  // A Portfolio BY
-      setTimeout(() => setPhase(2), 2200), // RACHIT KAKKAD
-      setTimeout(() => setPhase(3), 3200), // Subtitle
-      setTimeout(() => setPhase(4), 4200), // Divider + Roles
-      setTimeout(() => setPhase(5), 5500), // Flare
+      setTimeout(() => setPhase(1), 150),  // A Portfolio BY
+      setTimeout(() => setPhase(2), 400),  // RACHIT KAKKAD
+      setTimeout(() => setPhase(3), 650),  // Subtitle
+      setTimeout(() => setPhase(4), 900),  // Divider + Roles
+      setTimeout(() => setPhase(5), 1150), // Flare
       setTimeout(() => {
         setPhase(6);
-        setTimeout(onComplete, 1200); // Final transition delay
-      }, 7500),
+        setTimeout(onComplete, 300); // Final transition delay
+      }, 1450),
     ];
 
     const handleKey = (e: KeyboardEvent) => {
