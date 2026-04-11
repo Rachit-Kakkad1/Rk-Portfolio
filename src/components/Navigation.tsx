@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Github, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, FileText } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LeetCode } from './Icons';
 import GuestbookModal from './GuestbookModal';
 
 const NAV_ITEMS = [
-  { label: 'About', target: 'about' },
-  { label: 'Skills', target: 'skills' },
-  { label: 'Work', target: 'work' },
-  { label: 'Experience', target: 'freelance' },
-  { label: 'Contact', target: 'contact' },
+  { label: 'About', target: 'about', path: '/about' },
+  { label: 'Skills', target: 'skills', path: '/skills' },
+  { label: 'Work', target: 'work', path: '/work' },
+  { label: 'Experience', target: 'freelance', path: '/experience' },
+  { label: 'Contact', target: 'contact', path: '/contact' },
 ];
 
 const SOCIAL_LINKS = [
@@ -20,15 +21,15 @@ const SOCIAL_LINKS = [
 ];
 
 const MORE_ITEMS = [
-  { label: 'Uses', icon: Monitor, target: 'uses', type: 'scroll' },
+  { label: 'Uses', icon: Monitor, target: 'uses', type: 'scroll', path: '/uses' },
   { label: 'Guestbook', icon: MessageSquare, target: 'guestbook', type: 'modal' },
-  { label: 'Education', icon: BookOpen, target: 'education', type: 'scroll' },
+  { label: 'Education', icon: BookOpen, target: 'education', type: 'scroll', path: '/education' },
   { label: 'Resume', icon: FileText, target: "/Rachit Kakkad's Resume.pdf", type: 'link' },
 ];
 
-
-
 export default function Navigation() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
@@ -37,11 +38,9 @@ export default function Navigation() {
   const isDarkTheme = activeSection === 'contact';
 
   const observerRef = useRef<IntersectionObserver | null>(null);
-  // Lock observer updates during programmatic scroll to prevent flickering
   const scrollLockRef = useRef(false);
   const scrollLockTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  // Performance-optimized Section Tracking & Sticky Trigger
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -57,7 +56,6 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // IntersectionObserver for Section Tracking
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -66,13 +64,11 @@ export default function Navigation() {
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      // Skip observer updates while a nav-click scroll is in progress
       if (scrollLockRef.current) return;
 
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const id = entry.target.id;
-          // Grouping logic: map specific sections to "work"
           if (id === 'projects' || id === 'hackathon') {
             setActiveSection('work');
           } else {
@@ -84,7 +80,6 @@ export default function Navigation() {
 
     observerRef.current = new IntersectionObserver(observerCallback, observerOptions);
     
-    // Sections to observe
     const sectionIds = ['home', 'about', 'skills', 'hackathon', 'projects', 'freelance', 'education', 'certificates', 'contact', 'uses'];
     sectionIds.forEach((id) => {
       const element = document.getElementById(id);
@@ -92,35 +87,40 @@ export default function Navigation() {
     });
 
     return () => observerRef.current?.disconnect();
-  }, []);
+  }, [location.pathname]);
 
-
-
-  const handleNavClick = (e: React.MouseEvent, target: string) => {
+  const handleNavClick = (e: React.MouseEvent, target: string, path: string) => {
     e.preventDefault();
     
-    // Immediately set active section & lock observer to prevent flicker
     setActiveSection(target);
     scrollLockRef.current = true;
     clearTimeout(scrollLockTimerRef.current);
     scrollLockTimerRef.current = setTimeout(() => {
       scrollLockRef.current = false;
-    }, 1200); // Matches Lenis scroll duration
+    }, 1200);
 
-    // Special handling for grouped "work"
-    const scrollTarget = target === 'work' ? 'hackathon' : target;
-    const element = document.getElementById(scrollTarget);
-    
-    if (element) {
-      (window as any).lenis?.scrollTo(element, { offset: -80 });
+    if (location.pathname === '/' || location.pathname === path || NAV_ITEMS.some(item => item.path === location.pathname)) {
+      const scrollTarget = target === 'work' ? 'hackathon' : target;
+      const element = document.getElementById(scrollTarget);
+      if (element) {
+        (window as any).lenis?.scrollTo(element, { 
+          offset: -80,
+          duration: 1.5,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+        });
+      }
+      // Update URL without hash
+      window.history.pushState(null, '', path);
+    } else {
+      navigate(path);
     }
+    
     setIsOpen(false);
     setIsMoreOpen(false);
   };
 
   const handleMoreItemClick = (item: typeof MORE_ITEMS[0]) => {
-    if (item.type === 'scroll') {
-      // Lock observer during scroll to prevent flicker
+    if (item.type === 'scroll' && item.path) {
       setActiveSection(item.target);
       scrollLockRef.current = true;
       clearTimeout(scrollLockTimerRef.current);
@@ -128,9 +128,18 @@ export default function Navigation() {
         scrollLockRef.current = false;
       }, 1200);
 
-      const element = document.getElementById(item.target);
-      if (element) {
-        (window as any).lenis?.scrollTo(element, { offset: -80 });
+      if (location.pathname === '/' || location.pathname === item.path) {
+        const element = document.getElementById(item.target);
+        if (element) {
+          (window as any).lenis?.scrollTo(element, { 
+            offset: -80,
+            duration: 1.5,
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+          });
+        }
+        window.history.pushState(null, '', item.path);
+      } else {
+        navigate(item.path);
       }
     } else if (item.type === 'modal') {
       setIsGuestbookOpen(true);
@@ -145,7 +154,6 @@ export default function Navigation() {
     <>
       <GuestbookModal isOpen={isGuestbookOpen} onClose={() => setIsGuestbookOpen(false)} />
 
-      {/* === DESKTOP: Unified Premium Navigation === */}
       <nav 
         className={`fixed top-0 left-0 w-full z-[90] transition-all duration-500 hidden md:block ${
           isScrolled 
@@ -156,11 +164,10 @@ export default function Navigation() {
       >
         <div className="max-w-[1400px] mx-auto px-12 flex items-center justify-between">
           
-          {/* Identity */}
           <div className="w-[200px]">
             <a 
               href="/" 
-              onClick={(e) => { e.preventDefault(); (window as any).lenis?.scrollTo(0); }} 
+              onClick={(e) => { e.preventDefault(); navigate('/'); (window as any).lenis?.scrollTo(0); }} 
               className="group flex flex-col"
             >
               <span className={`font-bold text-lg tracking-tighter uppercase leading-none transition-colors duration-500 ${
@@ -176,7 +183,6 @@ export default function Navigation() {
             </a>
           </div>
 
-          {/* Navigation Links */}
           <div className={`flex items-center gap-1 p-1 rounded-full border backdrop-blur-sm transition-all duration-500 ${
             isScrolled 
               ? (isDarkTheme ? 'bg-white/5 border-white/5' : 'bg-black/5 border-black/5') 
@@ -187,8 +193,8 @@ export default function Navigation() {
               return (
                 <a
                   key={item.label}
-                  href={`#${item.target}`}
-                  onClick={(e) => handleNavClick(e, item.target)}
+                  href={item.path}
+                  onClick={(e) => handleNavClick(e, item.target, item.path)}
                   className={`relative px-4 py-2 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 rounded-full ${
                     isActive 
                       ? (isScrolled ? (isDarkTheme ? 'text-white' : 'text-[#0E0F14]') : 'text-white') 
@@ -298,7 +304,7 @@ export default function Navigation() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + idx * 0.05 }}
-                  onClick={(e) => handleNavClick(e as any, item.target)}
+                  onClick={(e) => handleNavClick(e as any, item.target, item.path)}
                   className="group cursor-pointer"
                 >
                   <span className={`text-5xl font-bold uppercase tracking-tighter transition-colors ${activeSection === item.target ? 'text-[#B45309]' : 'text-[#0E0F14]/40 group-hover:text-[#0E0F14]'}`}>
