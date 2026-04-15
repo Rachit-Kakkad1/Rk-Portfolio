@@ -19,14 +19,14 @@ export default function App() {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.4, // Slightly longer for premium feel
+      duration: 1.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 0.9,
       touchMultiplier: 1.5,
-      lerp: 0.05, // Lower lerp = smoother, more viscous scroll
+      lerp: 0.03,
     });
 
     lenisRef.current = lenis;
@@ -40,24 +40,31 @@ export default function App() {
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
-    // Refresh ScrollTrigger on resize with a small delay to prevent glitches
+    // Refresh ScrollTrigger on resize with debounce to prevent glitches
+    let resizeTimer: ReturnType<typeof setTimeout>;
     const handleResize = () => {
-      ScrollTrigger.refresh();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 200);
     };
     window.addEventListener('resize', handleResize);
 
     return () => {
       gsap.ticker.remove(update);
       window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
       lenis.destroy();
     };
   }, []);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    lenisRef.current?.stop();
-    lenisRef.current?.start();
-    lenisRef.current?.scrollTo(0, { immediate: true });
+    // Only reset scroll for actual route changes, not hash/section navigations
+    const mainRoutes = ['/', '/work'];
+    if (mainRoutes.includes(location.pathname) || location.pathname.startsWith('/project/')) {
+      window.scrollTo(0, 0);
+      lenisRef.current?.scrollTo(0, { immediate: true });
+    }
   }, [location.pathname]);
 
   return (
@@ -74,6 +81,9 @@ export default function App() {
           <Route path="/skills" element={<Home />} />
           <Route path="/experience" element={<Home />} />
           <Route path="/contact" element={<Home />} />
+          <Route path="/certificates" element={<Home />} />
+          <Route path="/uses" element={<Home />} />
+          <Route path="/education" element={<Home />} />
         </Routes>
       </AnimatePresence>
     </div>

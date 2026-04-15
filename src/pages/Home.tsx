@@ -123,9 +123,11 @@ export default function Home() {
     sessionStorage.setItem('introShown', 'true');
   };
 
-  // Handle initial scroll based on path
+  // Handle initial scroll based on path — runs ONCE on mount only
+  const hasScrolledToPath = useRef(false);
   useEffect(() => {
-    if (!showIntro) {
+    if (!showIntro && !hasScrolledToPath.current) {
+      hasScrolledToPath.current = true;
       const path = location.pathname.substring(1); // remove leading slash
       if (path && path !== 'home') {
         const target = path === 'work' ? 'hackathon' : path;
@@ -137,7 +139,8 @@ export default function Home() {
         }
       }
     }
-  }, [showIntro, location.pathname]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showIntro]);
 
   const handleDownloadResume = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -160,6 +163,7 @@ export default function Home() {
     let ctx: any;
     const initMarquee = () => {
       ctx = gsap.context(() => {
+        // Continuous seamless marquee
         const marquee = gsap.to(headlineRef.current, {
           xPercent: -50,
           repeat: -1,
@@ -211,12 +215,12 @@ export default function Home() {
                 src="/profile2.png"
                 alt="Portrait of Rachit Kakkad"
                 className="w-full h-full object-cover"
-                style={{ objectPosition: 'center 15%' }}
+                style={{ objectPosition: 'center 15%', contentVisibility: 'visible' }}
                 width="1920"
                 height="1080"
                 loading="eager"
                 fetchPriority="high"
-                decoding="async"
+                decoding="sync"
               />
               <div className="absolute inset-0 md:hidden bg-gradient-to-b from-black/60 via-black/20 to-black/60" />
               <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-black/40 via-transparent to-transparent" />
@@ -292,29 +296,16 @@ export default function Home() {
               </motion.div>
             </div>
 
-            <div className="absolute right-6 md:right-16 top-[75%] md:top-[55%] -translate-y-1/2 z-30 mix-blend-difference opacity-40 md:opacity-80 pointer-events-none scale-[0.7] md:scale-100 origin-right">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                className="w-32 h-32 md:w-48 md:h-48 relative flex items-center justify-center smooth-gpu"
-              >
-                <div className="absolute inset-0 border border-white/20 rounded-full scale-75" />
-                <svg viewBox="0 0 100 100" className="w-full h-full text-white">
-                  <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-                  <text className="text-[9.5px] font-bold tracking-[0.25em] uppercase fill-current">
-                    <textPath href="#circlePath" startOffset="0%">
-                      • FULL STACK DEVELOPER • AI ENGINEER • WEB3 ENTHUSIAST
-                    </textPath>
-                  </text>
-                </svg>
-                <div className="absolute w-2 h-2 bg-white rounded-full animate-pulse" />
-              </motion.div>
-            </div>
-
-            <div className="absolute bottom-[2vh] left-0 w-full whitespace-nowrap text-[30vw] md:text-[14vw] leading-none text-white/90 font-black z-[5] pointer-events-none flex items-end overflow-hidden smooth-gpu" style={{ letterSpacing: '-0.06em', WebkitTextStroke: '1px rgba(255,255,255,0.05)' }}>
-              <div ref={headlineRef} className="flex w-max smooth-gpu">
-                <span className="inline-block pr-[4vw]">AI/ML • DEV • MERN •</span>
-                <span className="inline-block pr-[4vw]">AI/ML • DEV • MERN •</span>
+            {/* Marquee headline — bottom of hero, Snellenberg-style */}
+            <div className="absolute bottom-[4vh] md:bottom-[6vh] left-0 w-full whitespace-nowrap text-[16vw] md:text-[8vw] leading-[0.9] text-white font-black z-[15] pointer-events-none flex items-end overflow-hidden smooth-gpu" style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.03em' }}>
+              <div ref={headlineRef} className="flex items-baseline w-max smooth-gpu">
+                <span className="inline-block">Full-Stack Developer</span>
+                <span className="inline-block px-[2vw] md:px-[1.5vw] text-white/30">—</span>
+                <span className="inline-block">AI Systems Engineer</span>
+                <span className="inline-block px-[2vw] md:px-[1.5vw] text-white/30">—</span>
+                <span className="inline-block">Backend Engineer</span>
+                <span className="inline-block px-[2vw] md:px-[1.5vw] text-white/30">—</span>
+                <span className="inline-block">Security Systems Engineer</span>
               </div>
             </div>
           </div>
@@ -363,11 +354,11 @@ export default function Home() {
           </LazySection>
 
           <LazySection id="certificates">
-            <section aria-label="Certificates" data-scroll-reveal="fade-up"><LazyCertificateSection /></section>
+            <section aria-label="Certificates"><LazyCertificateSection /></section>
           </LazySection>
 
           <LazySection id="freelance">
-            <section aria-label="Freelance Experience" data-scroll-reveal="fade-left"><LazyFreelanceExperience /></section>
+            <section aria-label="Freelance Experience"><LazyFreelanceExperience /></section>
           </LazySection>
 
           <LazySection id="education">

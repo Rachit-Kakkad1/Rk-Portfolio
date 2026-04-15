@@ -140,8 +140,8 @@ input, textarea {
   }
 }
 
-/* Ensure images don't cause layout shifts */
-img {
+/* Ensure below-the-fold images don't cause layout shifts */
+img[loading="lazy"] {
   content-visibility: auto;
 }
 

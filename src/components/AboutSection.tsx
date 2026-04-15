@@ -104,9 +104,9 @@ export default function AboutSection() {
 // =====================================
 
 const GALLERY_IMAGES = [
-  "/solo-2.webp",
-  "/group-1.webp",
-  "/solo-1.webp",
+  "/about/rachit-1.png",
+  "/about/rachit-2.png",
+  "/about/rachit-3.png",
 ];
 
 function StackedImageGallery() {

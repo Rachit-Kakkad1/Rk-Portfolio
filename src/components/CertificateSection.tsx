@@ -220,10 +220,10 @@ function NewsCard({ cert, index, onClick }: { cert: typeof CERTIFICATES[0]; inde
   // Every certificate is verified now as per request
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.05 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.6, delay: Math.min(index * 0.04, 0.3) }}
       onClick={onClick}
       className="group relative cursor-pointer bg-[#fcfaf0] p-4 border border-[#e0ddcf] shadow-[2px_2px_0px_rgba(0,0,0,0.05)] hover:shadow-[8px_8px_0px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col aspect-[4/5] overflow-hidden"
     >

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Github, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, FileText } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, FileText, Award } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LeetCode } from './Icons';
 import GuestbookModal from './GuestbookModal';
@@ -21,11 +21,94 @@ const SOCIAL_LINKS = [
 ];
 
 const MORE_ITEMS = [
+  { label: 'Certificates', icon: Award, target: 'certificates', type: 'scroll', path: '/certificates' },
   { label: 'Uses', icon: Monitor, target: 'uses', type: 'scroll', path: '/uses' },
   { label: 'Guestbook', icon: MessageSquare, target: 'guestbook', type: 'modal' },
   { label: 'Education', icon: BookOpen, target: 'education', type: 'scroll', path: '/education' },
   { label: 'Resume', icon: FileText, target: "/Rachit Kakkad's Resume.pdf", type: 'link' },
 ];
+
+// ─── TYPEWRITER LOGO ─────────────────────────────────────────────────────────
+// Shows "©RK" by default, typewriter-expands to "©Rachit Kakkad" on hover
+const COLLAPSED = '©RK';
+const EXPANDED  = '©Rachit Kakkad';
+
+function TypewriterLogo({ isScrolled, isDarkTheme }: { isScrolled: boolean; isDarkTheme: boolean }) {
+  const [displayText, setDisplayText] = useState(COLLAPSED);
+  const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearTimers = () => {
+    if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
+    if (timeoutRef.current) { clearTimeout(timeoutRef.current); timeoutRef.current = null; }
+  };
+
+  useEffect(() => {
+    clearTimers();
+
+    if (isHovered) {
+      // Type forward: ©RK → ©Rachit Kakkad
+      let i = COLLAPSED.length;
+      setDisplayText(COLLAPSED);
+      // Small initial delay before typing starts
+      timeoutRef.current = setTimeout(() => {
+        intervalRef.current = setInterval(() => {
+          i++;
+          if (i <= EXPANDED.length) {
+            setDisplayText(EXPANDED.slice(0, i));
+          } else {
+            clearTimers();
+          }
+        }, 55); // ~55ms per character for fast, snappy typing
+      }, 100);
+    } else {
+      // Erase backward: ©Rachit Kakkad → ©RK
+      let current = displayText;
+      if (current.length <= COLLAPSED.length) return;
+      
+      let len = current.length;
+      intervalRef.current = setInterval(() => {
+        len--;
+        if (len >= COLLAPSED.length) {
+          setDisplayText(EXPANDED.slice(0, len));
+        } else {
+          setDisplayText(COLLAPSED);
+          clearTimers();
+        }
+      }, 35); // Faster erase for snappy feel
+    }
+
+    return clearTimers;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHovered]);
+
+  const textColor = isScrolled
+    ? (isDarkTheme ? 'text-white' : 'text-[#0E0F14]')
+    : 'text-white';
+
+  return (
+    <div
+      className="relative flex items-center"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <span
+        className={`font-black text-lg tracking-tight leading-none transition-colors duration-300 whitespace-nowrap font-mono ${textColor}`}
+      >
+        {displayText}
+      </span>
+      {/* Typewriter cursor — blinking caret */}
+      <motion.span
+        className={`inline-block w-[2px] h-[16px] ml-[2px] ${
+          isScrolled ? (isDarkTheme ? 'bg-white' : 'bg-[#0E0F14]') : 'bg-white'
+        }`}
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
+      />
+    </div>
+  );
+}
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -99,7 +182,8 @@ export default function Navigation() {
       scrollLockRef.current = false;
     }, 1200);
 
-    if (location.pathname === '/' || location.pathname === path || NAV_ITEMS.some(item => item.path === location.pathname)) {
+    if (location.pathname === '/' || location.pathname === path || NAV_ITEMS.some(item => item.path === location.pathname) ||
+        ['/certificates', '/uses', '/education'].includes(location.pathname)) {
       const scrollTarget = target === 'work' ? 'hackathon' : target;
       const element = document.getElementById(scrollTarget);
       if (element) {
@@ -128,7 +212,9 @@ export default function Navigation() {
         scrollLockRef.current = false;
       }, 1200);
 
-      if (location.pathname === '/' || location.pathname === item.path) {
+      // All these routes render <Home />, so we can scroll directly
+      const homeRoutes = ['/', '/about', '/skills', '/work', '/experience', '/contact', '/certificates', '/uses', '/education'];
+      if (homeRoutes.includes(location.pathname)) {
         const element = document.getElementById(item.target);
         if (element) {
           (window as any).lenis?.scrollTo(element, { 
@@ -168,18 +254,9 @@ export default function Navigation() {
             <a 
               href="/" 
               onClick={(e) => { e.preventDefault(); navigate('/'); (window as any).lenis?.scrollTo(0); }} 
-              className="group flex flex-col"
+              className="group inline-block"
             >
-              <span className={`font-bold text-lg tracking-tighter uppercase leading-none transition-colors duration-500 ${
-                isScrolled ? (isDarkTheme ? 'text-white' : 'text-[#0E0F14]') : 'text-white'
-              }`}>
-                Rachit Kakkad
-              </span>
-              <span className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors duration-500 ${
-                isScrolled ? (isDarkTheme ? 'text-white/40' : 'text-[#0E0F14]/40') : 'text-white/30'
-              } group-hover:text-[#B45309]`}>
-                Full Stack Developer
-              </span>
+              <TypewriterLogo isScrolled={isScrolled} isDarkTheme={isDarkTheme} />
             </a>
           </div>
 

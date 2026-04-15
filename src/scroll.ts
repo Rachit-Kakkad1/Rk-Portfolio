@@ -77,11 +77,10 @@ function getAnimatedState(preset: RevealPreset) {
 }
 
 // ─── CORE INITIALIZATION ─────────────────────────────────────────────────────
-let initialized = false;
+// This can be called multiple times (e.g. after lazy sections mount).
+// Each element is only processed once, tracked via a data attribute.
 
 export function initScrollReveal() {
-  if (initialized) return;
-
   // Respect user accessibility preferences
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReducedMotion) {
@@ -92,10 +91,13 @@ export function initScrollReveal() {
     return;
   }
 
-  const elements = document.querySelectorAll<HTMLElement>('[data-scroll-reveal]');
+  const elements = document.querySelectorAll<HTMLElement>('[data-scroll-reveal]:not([data-scroll-processed])');
   if (elements.length === 0) return;
 
   elements.forEach((el) => {
+    // Mark element as processed to prevent double-initialization
+    el.setAttribute('data-scroll-processed', 'true');
+
     const preset = (el.dataset.scrollReveal || 'fade-up') as RevealPreset;
     const delay = parseFloat(el.dataset.scrollDelay || '0');
     const duration = parseFloat(el.dataset.scrollDuration || String(SCROLL_CONFIG.baseDuration));
@@ -163,21 +165,21 @@ export function initScrollReveal() {
       });
     }
   });
-
-  initialized = true;
 }
 
 // ─── CLEANUP ─────────────────────────────────────────────────────────────────
 export function destroyScrollReveal() {
-  // ScrollTrigger.getAll() returns all triggers — kill only the ones we created
-  // Since we can't tag them easily, this is a full cleanup utility
+  // Kill all ScrollTrigger instances we created
   ScrollTrigger.getAll().forEach((st) => {
     const trigger = st.vars.trigger as HTMLElement | undefined;
     if (trigger?.hasAttribute?.('data-scroll-reveal')) {
       st.kill();
     }
   });
-  initialized = false;
+  // Clear processed markers so elements can be re-initialized
+  document.querySelectorAll('[data-scroll-processed]').forEach((el) => {
+    el.removeAttribute('data-scroll-processed');
+  });
 }
 
 export default initScrollReveal;
