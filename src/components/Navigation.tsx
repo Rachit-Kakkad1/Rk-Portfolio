@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Github, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, FileText, Award, Briefcase } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Youtube, Twitter, ChevronDown, Monitor, MessageSquare, BookOpen, FileText, Award, Briefcase } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LeetCode } from './Icons';
 import GuestbookModal from './GuestbookModal';
@@ -17,6 +17,7 @@ const SOCIAL_LINKS = [
   { name: 'Github', url: 'https://github.com/Rachit-Kakkad1', Icon: Github },
   { name: 'LinkedIn', url: 'https://www.linkedin.com/in/rachit-kakkad-r29052007k', Icon: Linkedin },
   { name: 'YouTube', url: 'https://www.youtube.com/@RachitKakkad', Icon: Youtube },
+  { name: 'Twitter', url: 'https://x.com/rachit_kakk2957', Icon: Twitter },
   { name: 'LeetCode', url: 'https://leetcode.com/u/kUyAWXHOC5', Icon: LeetCode },
 ];
 
