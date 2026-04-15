@@ -69,7 +69,7 @@ export default function AboutSection() {
                 I'm Rachit Kakkad — a full-stack developer and AI engineer based in Gandhinagar, India. I've built 25+ applications and shipped 10+ production-ready systems using React, Node.js, and Python — from blockchain certification platforms to AI-powered analytics engines.
               </p>
               <p>
-                Currently pursuing B.Tech in Computer Engineering (CGPA: 9.3) while shipping real products. I focus on building systems that are both technically sound and visually exceptional.
+                Currently pursuing B.Tech in Computer Engineering (CGPA: 9.81) while shipping real products. I focus on building systems that are both technically sound and visually exceptional.
               </p>
             </div>
 
@@ -88,7 +88,7 @@ export default function AboutSection() {
                 <div className="text-xs font-medium text-black/50 mt-1">IIT Hackathons</div>
               </div>
               <div className="bg-white/60 border border-black/5 rounded-xl p-4">
-                <div className="text-2xl font-black text-[#B45309]">9.3</div>
+                <div className="text-2xl font-black text-[#B45309]">9.81</div>
                 <div className="text-xs font-medium text-black/50 mt-1">CGPA (B.Tech)</div>
               </div>
             </div>

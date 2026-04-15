@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Github, Globe, FileText, ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -8,12 +8,16 @@ import SEO from '../components/SEO';
 export default function Work() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const navigate = useNavigate();
+  const hoveredProject = useMemo(
+    () => (hoveredIndex === null ? null : ARCHIVE_PROJECTS[hoveredIndex] ?? null),
+    [hoveredIndex]
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleProjectClick = (project: any) => {
+  const handleProjectClick = useCallback((project: any) => {
     if (project.id) {
       navigate('/project/' + project.id);
     } else if (project.live && project.live !== '#') {
@@ -21,7 +25,7 @@ export default function Work() {
     } else if (project.github && project.github !== '#') {
       window.open(project.github, '_blank');
     }
-  };
+  }, [navigate]);
 
   return (
     <motion.div 
@@ -60,7 +64,7 @@ export default function Work() {
           <div className="flex flex-col border-t border-black/15">
             {ARCHIVE_PROJECTS.map((project, index) => (
               <motion.div
-                key={index}
+                key={project.id ?? project.title}
                 className="group relative flex flex-col md:flex-row md:items-center py-12 md:py-20 border-b border-black/15 cursor-pointer"
                 onMouseEnter={() => setHoveredIndex(index)}
                 onClick={() => handleProjectClick(project)}
@@ -93,27 +97,6 @@ export default function Work() {
                     {project.category}
                   </motion.span>
                 </div>
-
-                {/* Fixed Hover Image - Floating on Top */}
-                <AnimatePresence>
-                  {hoveredIndex === index && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8, x: -40, rotate: -4 }}
-                      animate={{ opacity: 1, scale: 1, x: 20, rotate: 3 }}
-                      exit={{ opacity: 0, scale: 0.9, x: 0, rotate: 0 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                      className="fixed left-[50%] md:left-[60%] top-1/2 -translate-y-1/2 w-[380px] h-[240px] rounded-2xl overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] z-[300] hidden lg:block pointer-events-none border border-white/20"
-                    >
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/5" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
                 {/* Arrow Section */}
                 <div className="hidden md:flex flex-shrink-0 items-center justify-center w-24">
                   <motion.div
@@ -130,6 +113,29 @@ export default function Work() {
               </motion.div>
             ))}
           </div>
+
+          {/* Fixed Hover Image - Single render for smoother interactions */}
+          <AnimatePresence>
+            {hoveredProject && (
+              <motion.div
+                key={hoveredProject.id ?? hoveredProject.title}
+                initial={{ opacity: 0, scale: 0.8, x: -40, rotate: -4 }}
+                animate={{ opacity: 1, scale: 1, x: 20, rotate: 3 }}
+                exit={{ opacity: 0, scale: 0.9, x: 0, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 200, damping: 25 }}
+                className="fixed left-[50%] md:left-[60%] top-1/2 -translate-y-1/2 w-[380px] h-[240px] rounded-2xl overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] z-[300] hidden lg:block pointer-events-none border border-white/20"
+              >
+                <img
+                  src={hoveredProject.image}
+                  alt={hoveredProject.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="absolute inset-0 bg-black/5" />
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           <div className="mt-32 pt-12 border-t border-black/15 flex flex-col md:flex-row justify-between items-center gap-8">
             <p className="text-neutral-500 font-mono text-xs tracking-widest uppercase">

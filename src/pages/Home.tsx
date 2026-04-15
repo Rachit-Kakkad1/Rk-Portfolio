@@ -31,6 +31,12 @@ const LazyAIAssistant = React.lazy(() => import('../components/AIAssistant'));
 import { useScrollReveal } from '../useScrollReveal';
 
 const NAME = 'Rachit Kakkad';
+const HEADLINE_ITEMS = [
+  'Full-Stack Developer',
+  'AI Systems Engineer',
+  'Backend Engineer',
+  'Security Systems Engineer',
+];
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -163,25 +169,12 @@ export default function Home() {
     let ctx: any;
     const initMarquee = () => {
       ctx = gsap.context(() => {
-        // Continuous seamless marquee
-        const marquee = gsap.to(headlineRef.current, {
+        // Continuous one-direction marquee (no reverse, no pause)
+        gsap.to(headlineRef.current, {
           xPercent: -50,
           repeat: -1,
           duration: 25,
           ease: "none",
-        });
-
-        ScrollTrigger.create({
-          onUpdate: (self) => {
-            const velocity = self.getVelocity();
-            const timeScale = 1 + Math.abs(velocity / 300);
-            gsap.to(marquee, {
-              timeScale: timeScale * (self.direction || 1),
-              duration: 0.6,
-              ease: "power2.out",
-              overwrite: true
-            });
-          }
         });
       }, containerRef);
     };
@@ -297,15 +290,21 @@ export default function Home() {
             </div>
 
             {/* Marquee headline — bottom of hero, Snellenberg-style */}
-            <div className="absolute bottom-[4vh] md:bottom-[6vh] left-0 w-full whitespace-nowrap text-[16vw] md:text-[8vw] leading-[0.9] text-white font-black z-[15] pointer-events-none flex items-end overflow-hidden smooth-gpu" style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.03em' }}>
-              <div ref={headlineRef} className="flex items-baseline w-max smooth-gpu">
-                <span className="inline-block">Full-Stack Developer</span>
-                <span className="inline-block px-[2vw] md:px-[1.5vw] text-white/30">—</span>
-                <span className="inline-block">AI Systems Engineer</span>
-                <span className="inline-block px-[2vw] md:px-[1.5vw] text-white/30">—</span>
-                <span className="inline-block">Backend Engineer</span>
-                <span className="inline-block px-[2vw] md:px-[1.5vw] text-white/30">—</span>
-                <span className="inline-block">Security Systems Engineer</span>
+            <div className="absolute bottom-[4vh] md:bottom-[6vh] left-0 w-full whitespace-nowrap text-[12vw] md:text-[7vw] leading-[1] text-white font-black z-[15] pointer-events-none flex items-end overflow-hidden px-2 md:px-4 smooth-gpu" style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.03em' }}>
+              <div ref={headlineRef} className="flex items-baseline w-max pl-[3vw] md:pl-[1.5vw] smooth-gpu">
+                {[0, 1].map((copy) => (
+                  <React.Fragment key={copy}>
+                    {HEADLINE_ITEMS.map((item, index) => (
+                      <React.Fragment key={`${copy}-${item}`}>
+                        <span className="inline-block">{item}</span>
+                        {index < HEADLINE_ITEMS.length - 1 && (
+                          <span className="inline-block px-[2vw] md:px-[1.5vw] text-white/30">—</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                    <span className="inline-block px-[2vw] md:px-[1.5vw] text-white/30">—</span>
+                  </React.Fragment>
+                ))}
               </div>
             </div>
           </div>

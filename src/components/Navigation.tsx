@@ -8,7 +8,7 @@ import GuestbookModal from './GuestbookModal';
 const NAV_ITEMS = [
   { label: 'About', target: 'about', path: '/about' },
   { label: 'Skills', target: 'skills', path: '/skills' },
-  { label: 'Work', target: 'work', path: '/work' },
+  { label: 'Work', target: 'work', path: '/projects' },
   { label: 'Experience', target: 'freelance', path: '/experience' },
   { label: 'Contact', target: 'contact', path: '/contact' },
 ];
@@ -123,19 +123,25 @@ export default function Navigation() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const scrollLockRef = useRef(false);
   const scrollLockTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const isScrolledRef = useRef(false);
 
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > window.innerHeight * 0.8);
+          const nextIsScrolled = window.scrollY > window.innerHeight * 0.8;
+          if (nextIsScrolled !== isScrolledRef.current) {
+            isScrolledRef.current = nextIsScrolled;
+            setIsScrolled(nextIsScrolled);
+          }
           ticking = false;
         });
         ticking = true;
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -213,7 +219,7 @@ export default function Navigation() {
       }, 1200);
 
       // All these routes render <Home />, so we can scroll directly
-      const homeRoutes = ['/', '/about', '/skills', '/work', '/experience', '/contact', '/certificates', '/uses', '/education'];
+      const homeRoutes = ['/', '/about', '/skills', '/work', '/projects', '/experience', '/contact', '/certificates', '/uses', '/education'];
       if (homeRoutes.includes(location.pathname)) {
         const element = document.getElementById(item.target);
         if (element) {

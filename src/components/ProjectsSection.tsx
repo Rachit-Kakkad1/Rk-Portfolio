@@ -154,7 +154,12 @@ export default function ProjectsSection() {
                 </span>
                 <div className="h-[2px] flex-1 bg-[#1A1816]/10" />
               </div>
-              <h2 className="font-serif text-[clamp(48px,10vw,120px)] font-black leading-[0.75] tracking-[-0.05em] uppercase">
+              <h2
+                className="font-serif text-[clamp(48px,10vw,120px)] font-black leading-[0.75] tracking-[-0.05em] uppercase cursor-pointer hover:text-[#B45309] transition-colors duration-300"
+                onClick={() => navigate('/projects')}
+                role="link"
+                aria-label="Open full projects page"
+              >
                 Projects
               </h2>
             </div>
@@ -189,14 +194,14 @@ export default function ProjectsSection() {
             <ProjectCell
               {...PROJECT_DATA[0]}
               isFeatured
-              onClick={() => navigate('/project/' + PROJECT_DATA[0].id)}
+              onClick={() => navigate('/projects')}
             />
           </div>
           <div className="bg-[#FBF9F4]">
             <ProjectCell
               {...PROJECT_DATA[1]}
               isFeatured
-              onClick={() => navigate('/project/' + PROJECT_DATA[1].id)}
+              onClick={() => navigate('/projects')}
             />
           </div>
 
@@ -205,19 +210,19 @@ export default function ProjectsSection() {
             <div className="bg-[#FBF9F4]">
               <ProjectCell
                 {...PROJECT_DATA[2]}
-                onClick={() => navigate('/project/' + PROJECT_DATA[2].id)}
+                onClick={() => navigate('/projects')}
               />
             </div>
             <div className="bg-[#FBF9F4]">
               <ProjectCell
                 {...PROJECT_DATA[3]}
-                onClick={() => navigate('/project/' + PROJECT_DATA[3].id)}
+                onClick={() => navigate('/projects')}
               />
             </div>
             <div className="bg-[#FBF9F4]">
               <ProjectCell
                 {...PROJECT_DATA[4]}
-                onClick={() => navigate('/project/' + PROJECT_DATA[4].id)}
+                onClick={() => navigate('/projects')}
               />
             </div>
           </div>
@@ -231,7 +236,7 @@ export default function ProjectsSection() {
             <div className="w-16 md:w-32 h-px bg-[#1A1816]/20" />
           </div>
           <button
-            onClick={() => navigate('/work')}
+            onClick={() => navigate('/projects')}
             className="group flex flex-col items-center gap-8"
           >
             <div className="relative overflow-hidden">

@@ -22,15 +22,15 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
     // phase 6: FINAL FADE OUT
 
     const timers = [
-      setTimeout(() => setPhase(1), 150),  // A Portfolio BY
-      setTimeout(() => setPhase(2), 400),  // RACHIT KAKKAD
-      setTimeout(() => setPhase(3), 650),  // Subtitle
-      setTimeout(() => setPhase(4), 900),  // Divider + Roles
-      setTimeout(() => setPhase(5), 1150), // Flare
+      setTimeout(() => setPhase(1), 60),   // A Portfolio BY
+      setTimeout(() => setPhase(2), 160),  // RACHIT KAKKAD
+      setTimeout(() => setPhase(3), 280),  // Subtitle
+      setTimeout(() => setPhase(4), 420),  // Divider + Roles
+      setTimeout(() => setPhase(5), 560),  // Flare
       setTimeout(() => {
         setPhase(6);
-        setTimeout(onComplete, 300); // Final transition delay
-      }, 1450),
+        setTimeout(onComplete, 120); // Final transition delay
+      }, 760),
     ];
 
     const handleKey = (e: KeyboardEvent) => {
@@ -71,13 +71,13 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
       <motion.div 
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
-        transition={{ duration: 1.5, ease: "circOut" }}
+        transition={{ duration: 0.5, ease: "circOut" }}
         className="absolute top-0 left-0 w-full h-[12vh] bg-black z-30 origin-top"
       />
       <motion.div 
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
-        transition={{ duration: 1.5, ease: "circOut" }}
+        transition={{ duration: 0.5, ease: "circOut" }}
         className="absolute bottom-0 left-0 w-full h-[12vh] bg-black z-30 origin-bottom"
       />
 
@@ -88,14 +88,14 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.2 }}
             className="relative flex flex-col items-center justify-center px-6 w-full max-w-[90vw]"
           >
             {/* Phase 1: Small Intro Text */}
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 10 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
               className="text-white/40 text-[clamp(10px,1.5vw,16px)] font-bold tracking-[0.4em] uppercase mb-4 md:mb-8"
             >
               A PORTFOLIO BY
@@ -108,7 +108,7 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
                 <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 1, 0, 1, 0] }}
-                  transition={{ duration: 0.4, repeat: 1 }}
+                  transition={{ duration: 0.12, repeat: 1 }}
                   className="absolute inset-0 flex items-center justify-center text-amber-500/40 font-mono text-[clamp(20px,5vw,80px)] tracking-[1em]"
                 >
                   01101011 10010110
@@ -132,10 +132,10 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
                       letterSpacing: phase >= 2 ? '0.05em' : '0.1em'
                     }}
                     transition={{ 
-                      duration: 1.8, 
+                      duration: 0.35,
                       ease: [0.16, 1, 0.3, 1],
-                      delay: i * 0.05,
-                      letterSpacing: { duration: 10, ease: "linear" }
+                      delay: i * 0.015,
+                      letterSpacing: { duration: 1.2, ease: "linear" }
                     }}
                     className="overflow-hidden h-[clamp(15px,3vw,50px)] leading-none text-center"
                     style={{ 
@@ -161,7 +161,7 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
                 <motion.div 
                   initial={{ x: '-150%', skewX: -20, opacity: 0 }}
                   animate={{ x: '150%', skewX: -20, opacity: [0, 0.6, 0] }}
-                  transition={{ duration: 1.5, ease: "easeInOut" }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
                   className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[50%] bg-gradient-to-r from-transparent via-white/30 to-transparent z-20 blur-2xl pointer-events-none"
                 />
               )}
@@ -171,7 +171,7 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: phase >= 3 ? 1 : 0, y: phase >= 3 ? 0 : 20 }}
-              transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.28, delay: 0.04, ease: "easeOut" }}
               className="mt-4 md:mt-8 space-y-4 text-center"
             >
               <p className="text-white/60 text-[clamp(14px,2.5vw,28px)] font-medium tracking-[0.2em] uppercase">
@@ -183,14 +183,14 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: phase >= 4 ? '100%' : 0 }}
-                  transition={{ duration: 1.5, ease: "easeInOut" }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
                   className="h-[1px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent w-full max-w-[400px]"
                 />
                 
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: phase >= 4 ? 0.3 : 0 }}
-                  transition={{ duration: 2 }}
+                  transition={{ duration: 0.3 }}
                   className="text-white text-[clamp(8px,1vw,12px)] tracking-[0.6em] font-medium uppercase"
                 >
                   ENGINEERED BY RACHIT • DESIGNED FOR IMPACT
@@ -216,7 +216,7 @@ export default function CinemaIntro({ onComplete }: CinemaIntroProps) {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
           className="absolute inset-0 bg-[#9a9a9a] z-[1001]"
         />
       )}

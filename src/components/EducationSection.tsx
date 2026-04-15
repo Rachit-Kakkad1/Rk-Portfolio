@@ -10,7 +10,7 @@ const EDUCATION_DATA = [
     status: "1st Year (Pursuing)",
     performance: {
       label: "CGPA",
-      value: "9.3",
+      value: "9.81",
       note: "Top Tier"
     },
     focusAreas: [
