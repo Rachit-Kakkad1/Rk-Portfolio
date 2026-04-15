@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Github, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, FileText, Award } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, FileText, Award, Briefcase } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LeetCode } from './Icons';
 import GuestbookModal from './GuestbookModal';
@@ -21,6 +21,7 @@ const SOCIAL_LINKS = [
 ];
 
 const MORE_ITEMS = [
+  { label: 'Projects', icon: Briefcase, target: 'work', type: 'route', path: '/projects' },
   { label: 'Certificates', icon: Award, target: 'certificates', type: 'scroll', path: '/certificates' },
   { label: 'Uses', icon: Monitor, target: 'uses', type: 'scroll', path: '/uses' },
   { label: 'Guestbook', icon: MessageSquare, target: 'guestbook', type: 'modal' },
@@ -210,7 +211,9 @@ export default function Navigation() {
   };
 
   const handleMoreItemClick = (item: typeof MORE_ITEMS[0]) => {
-    if (item.type === 'scroll' && item.path) {
+    if (item.type === 'route' && item.path) {
+      navigate(item.path);
+    } else if (item.type === 'scroll' && item.path) {
       setActiveSection(item.target);
       scrollLockRef.current = true;
       clearTimeout(scrollLockTimerRef.current);

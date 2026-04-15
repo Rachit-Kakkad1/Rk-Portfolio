@@ -251,8 +251,8 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
               >
                 <a
-                  href="#projects"
-                  onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('trigger-transition', { detail: { name: 'Projects', target: 'projects' } })); }}
+                  href="/projects"
+                  onClick={(e) => { e.preventDefault(); navigate('/projects'); }}
                   className="px-5 py-2.5 md:px-8 md:py-3.5 bg-white text-black font-black text-[10px] md:text-sm tracking-[0.1em] uppercase rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)]"
                 >
                   View Work
