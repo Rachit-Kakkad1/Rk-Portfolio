@@ -194,14 +194,14 @@ export default function ProjectsSection() {
             <ProjectCell
               {...PROJECT_DATA[0]}
               isFeatured
-              onClick={() => navigate('/projects')}
+              onClick={() => window.open('/project/' + PROJECT_DATA[0].id, '_blank')}
             />
           </div>
           <div className="bg-[#FBF9F4]">
             <ProjectCell
               {...PROJECT_DATA[1]}
               isFeatured
-              onClick={() => navigate('/projects')}
+              onClick={() => window.open('/project/' + PROJECT_DATA[1].id, '_blank')}
             />
           </div>
 
@@ -210,19 +210,19 @@ export default function ProjectsSection() {
             <div className="bg-[#FBF9F4]">
               <ProjectCell
                 {...PROJECT_DATA[2]}
-                onClick={() => navigate('/projects')}
+                onClick={() => window.open('/project/' + PROJECT_DATA[2].id, '_blank')}
               />
             </div>
             <div className="bg-[#FBF9F4]">
               <ProjectCell
                 {...PROJECT_DATA[3]}
-                onClick={() => navigate('/projects')}
+                onClick={() => window.open('/project/' + PROJECT_DATA[3].id, '_blank')}
               />
             </div>
             <div className="bg-[#FBF9F4]">
               <ProjectCell
                 {...PROJECT_DATA[4]}
-                onClick={() => navigate('/projects')}
+                onClick={() => window.open('/project/' + PROJECT_DATA[4].id, '_blank')}
               />
             </div>
           </div>

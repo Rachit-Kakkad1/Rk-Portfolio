@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Github, Linkedin, Youtube, Twitter, ChevronDown, Monitor, MessageSquare, BookOpen, FileText, Award, Briefcase } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, Award, Briefcase } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LeetCode } from './Icons';
+import { LeetCode, XIcon } from './Icons';
 import GuestbookModal from './GuestbookModal';
 
 const NAV_ITEMS = [
@@ -17,17 +17,18 @@ const SOCIAL_LINKS = [
   { name: 'Github', url: 'https://github.com/Rachit-Kakkad1', Icon: Github },
   { name: 'LinkedIn', url: 'https://www.linkedin.com/in/rachit-kakkad-r29052007k', Icon: Linkedin },
   { name: 'YouTube', url: 'https://www.youtube.com/@RachitKakkad', Icon: Youtube },
-  { name: 'Twitter', url: 'https://x.com/rachit_kakk2957', Icon: Twitter },
+  { name: 'X', url: 'https://x.com/rachit_kakk2957', Icon: XIcon },
   { name: 'LeetCode', url: 'https://leetcode.com/u/kUyAWXHOC5', Icon: LeetCode },
 ];
 
 const MORE_ITEMS = [
   { label: 'Projects', icon: Briefcase, target: 'work', type: 'route', path: '/projects' },
-  { label: 'Certificates', icon: Award, target: 'certificates', type: 'scroll', path: '/certificates' },
-  { label: 'Uses', icon: Monitor, target: 'uses', type: 'scroll', path: '/uses' },
+  { label: 'Certificates', icon: Award, target: 'certificates', type: 'route', path: '/all-certificates' },
   { label: 'Guestbook', icon: MessageSquare, target: 'guestbook', type: 'modal' },
   { label: 'Education', icon: BookOpen, target: 'education', type: 'scroll', path: '/education' },
-  { label: 'Resume', icon: FileText, target: "/Rachit Kakkad's Resume.pdf", type: 'link' },
+  { label: 'GitHub Stats', icon: Github, target: 'github-stats', type: 'external', path: '/github-stats' },
+  { label: 'LeetCode Stats', icon: LeetCode, target: 'leetcode-stats', type: 'external', path: '/leetcode-stats' },
+  { label: 'YouTube Videos', icon: Youtube, target: 'youtube-videos', type: 'external', path: '/youtube-videos' },
 ];
 
 // ─── TYPEWRITER LOGO ─────────────────────────────────────────────────────────
@@ -120,7 +121,10 @@ export default function Navigation() {
   const [activeSection, setActiveSection] = useState('about');
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
-  const isDarkTheme = activeSection === 'contact';
+  const isDarkTheme = activeSection === 'contact' || 
+                      location.pathname === '/youtube-videos' || 
+                      location.pathname === '/github-stats' || 
+                      location.pathname === '/leetcode-stats';
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const scrollLockRef = useRef(false);
@@ -213,7 +217,15 @@ export default function Navigation() {
 
   const handleMoreItemClick = (item: typeof MORE_ITEMS[0]) => {
     if (item.type === 'route' && item.path) {
-      navigate(item.path);
+      window.dispatchEvent(new CustomEvent('trigger-transition', { 
+        detail: { name: `Accessing ${item.label}...`, target: 'home' } 
+      }));
+      setTimeout(() => navigate(item.path!), 400);
+    } else if (item.type === 'external' && item.path) {
+      window.dispatchEvent(new CustomEvent('trigger-transition', { 
+        detail: { name: `Initializing ${item.label}...`, target: 'home' } 
+      }));
+      setTimeout(() => navigate(item.path!), 400);
     } else if (item.type === 'scroll' && item.path) {
       setActiveSection(item.target);
       scrollLockRef.current = true;

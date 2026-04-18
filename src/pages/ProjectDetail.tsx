@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { PROJECT_DATA } from '../data/projects';
+import { PROJECT_DATA, hackathons } from '../data/projects';
 import SEO from '../components/SEO';
 import AgriCertDetail from '../components/AgriCertDetail';
 import COSDetail from '../components/COSDetail';
@@ -11,6 +11,7 @@ import LifeLensDetail from '../components/LifeLensDetail';
 import CodingGitaDetail from '../components/CodingGitaDetail';
 import AttendifyDetail from '../components/AttendifyDetail';
 import ProjectDetailOverlay from '../components/ProjectDetailOverlay';
+import { HackathonDetailOverlay } from '../components/HackathonExperience';
 
 const DETAIL_COMPONENTS: Record<string, React.ComponentType<{ onClose: () => void }>> = {
   agricert: AgriCertDetail,
@@ -32,8 +33,9 @@ export default function ProjectDetail() {
   }, [id]);
 
   const project = PROJECT_DATA.find(p => p.id === id);
+  const hackathon = id?.startsWith('hackathon-') ? hackathons.find(h => h.id.toString() === id.replace('hackathon-', '')) : null;
 
-  if (!id || (!DETAIL_COMPONENTS[id] && !project)) {
+  if (!id || (!DETAIL_COMPONENTS[id] && !project && !hackathon)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F5F2ED] text-black">
         <div className="text-center">
@@ -50,19 +52,33 @@ export default function ProjectDetail() {
   }
 
   const DetailComponent = DETAIL_COMPONENTS[id];
-  const projectTitle = project?.headline || (id ? `${id.charAt(0).toUpperCase()}${id.slice(1)}` : 'Project');
+  const projectTitle = project?.headline || hackathon?.project || (id ? `${id.charAt(0).toUpperCase()}${id.slice(1)}` : 'Project');
+  const projectDescription = project?.description || hackathon?.outcome || `Learn about ${projectTitle}, a project by Rachit Kakkad.`;
+  const projectTech = project?.tech?.join(', ') || hackathon?.tech?.join(', ') || 'React, Node.js';
+
+  const handleClose = () => {
+    // If the window has an opener (was opened via target="_blank"), close it.
+    if (window.opener) {
+      window.close();
+    } else {
+      // Otherwise fallback to navigating home
+      navigate('/');
+    }
+  };
 
   return (
     <div className="relative">
       <SEO 
         title={projectTitle}
-        description={project?.description || `Learn about ${projectTitle}, a project by Rachit Kakkad featuring ${project?.tech?.join(', ') || 'modern technologies'}.`}
-        keywords={`${projectTitle}, Rachit Kakkad, AI Project, Portfolio, ${project?.tech?.join(', ') || 'React, Node.js'}`}
+        description={projectDescription}
+        keywords={`${projectTitle}, Rachit Kakkad, AI Project, Portfolio, ${projectTech}`}
       />
       {DetailComponent ? (
-        <DetailComponent onClose={() => navigate('/')} />
+        <DetailComponent onClose={handleClose} />
+      ) : hackathon ? (
+        <HackathonDetailOverlay hack={hackathon} onClose={handleClose} />
       ) : project ? (
-        <ProjectDetailOverlay project={project} onClose={() => navigate('/')} />
+        <ProjectDetailOverlay project={project} onClose={handleClose} />
       ) : null}
     </div>
   );

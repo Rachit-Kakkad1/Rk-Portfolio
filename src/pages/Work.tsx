@@ -19,13 +19,13 @@ export default function Work() {
 
   const handleProjectClick = useCallback((project: any) => {
     if (project.id) {
-      navigate('/project/' + project.id);
+      window.open('/project/' + project.id, '_blank');
     } else if (project.live && project.live !== '#') {
       window.open(project.live, '_blank');
     } else if (project.github && project.github !== '#') {
       window.open(project.github, '_blank');
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <motion.div 

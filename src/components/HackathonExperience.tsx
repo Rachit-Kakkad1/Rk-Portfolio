@@ -209,7 +209,7 @@ function KineticFlipCard({ hack, index, isSpan2Type, onClick }: { hack: Hackatho
 // ==========================================
 // HACKATHON DETAIL OVERLAY (Light Theme)
 // ==========================================
-function HackathonDetailOverlay({ hack, onClose }: { hack: HackathonData; onClose: () => void }) {
+export function HackathonDetailOverlay({ hack, onClose }: { hack: HackathonData; onClose: () => void }) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -423,18 +423,15 @@ function HackathonDetailOverlay({ hack, onClose }: { hack: HackathonData; onClos
 // ==========================================
 export default function HackathonExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [selectedHackathon, setSelectedHackathon] = useState<HackathonData | null>(null);
-  const [showAgriCert, setShowAgriCert] = useState(false);
-  const [showCOS, setShowCOS] = useState(false);
-  const [showPLM, setShowPLM] = useState(false);
-  const [showThreatLens, setShowThreatLens] = useState(false);
 
   const handleCardClick = (hack: HackathonData) => {
-    if (hack.id === 6) { setShowAgriCert(true); return; }
-    if (hack.id === 4) { setShowCOS(true); return; }
-    if (hack.id === 3) { setShowPLM(true); return; }
-    if (hack.id === 0) { setShowThreatLens(true); return; }
-    setSelectedHackathon(hack);
+    let path = `hackathon-${hack.id}`;
+    if (hack.id === 6) path = 'agricert';
+    if (hack.id === 4) path = 'cos';
+    if (hack.id === 3) path = 'plmflow';
+    if (hack.id === 0) path = 'threatlens';
+    
+    window.open(`/project/${path}`, '_blank');
   };
 
   return (
@@ -467,20 +464,9 @@ export default function HackathonExperience() {
         {/* Asymmetric Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 auto-rows-auto">
           {hackathons.map((hack, i) => {
-            // Editorial Grid Logic:
-            // 0 (ThreatLens) - Normal (col-span-1)
-            // 1 (SecureID Nexus) - Spans 2 columns to break monotony
-            // 2 (PLM Flow) - Tall card (row-span-2) -- simulated by css logic below
-            // 3 (COS Engine) - Normal
-            // 4 (LifeLens AI) - Normal
-            // 5 (AgriCert) - Spans 2 columns 
             let spanType: 'col-span-1' | 'col-span-2' | 'row-span-2' = 'col-span-1';
-            
-            // Just for visual asymmetry (requires adjusting the grid css or tailwind config for perfect masonry, 
-            // but we can simulate it cleanly with col-span-2 on specific indices)
             if (i === 1 || i === 5) spanType = 'col-span-2';
             
-            // To make sure mobile works correctly and doesn't break, span 2 is only applied down to md breakpoint.
             return (
               <div key={hack.id} className={`w-full h-full ${spanType === 'col-span-2' ? 'lg:col-span-2' : ''}`}>
                  <KineticFlipCard 
@@ -494,17 +480,6 @@ export default function HackathonExperience() {
           })}
         </div>
       </div>
-
-      {/* Detail Overlays */}
-      <AnimatePresence>
-        {showAgriCert && <AgriCertDetail onClose={() => setShowAgriCert(false)} />}
-        {showCOS && <COSDetail onClose={() => setShowCOS(false)} />}
-        {showPLM && <PLMDetail onClose={() => setShowPLM(false)} />}
-        {showThreatLens && <ThreatLensDetail onClose={() => setShowThreatLens(false)} />}
-        {selectedHackathon && (
-          <HackathonDetailOverlay hack={selectedHackathon} onClose={() => setSelectedHackathon(null)} />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

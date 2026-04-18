@@ -10,6 +10,10 @@ import TransitionScreen from './components/TransitionScreen';
 const Home = lazy(() => import('./pages/Home'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
 const Work = lazy(() => import('./pages/Work'));
+const GitHubStats = lazy(() => import('./pages/GitHubStats'));
+const LeetCodeStats = lazy(() => import('./pages/LeetCodeStats'));
+const YouTubeVideos = lazy(() => import('./pages/YouTubeVideos'));
+const AllCertificates = lazy(() => import('./pages/AllCertificates'));
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -30,14 +34,15 @@ export default function App() {
     }
 
     const lenis = new Lenis({
-      duration: isLowPowerDevice ? 1.2 : 1.8,
+      duration: isLowPowerDevice ? 1.2 : 2.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: isLowPowerDevice ? 0.8 : 0.9,
-      touchMultiplier: isLowPowerDevice ? 1.2 : 1.5,
-      lerp: isLowPowerDevice ? 0.08 : 0.03,
+      syncTouch: true,
+      wheelMultiplier: isLowPowerDevice ? 0.8 : 1.05,
+      touchMultiplier: isLowPowerDevice ? 1.2 : 2.0,
+      lerp: isLowPowerDevice ? 0.08 : 0.05,
     });
 
     lenisRef.current = lenis;
@@ -97,6 +102,10 @@ export default function App() {
             <Route path="/certificates" element={<Home />} />
             <Route path="/uses" element={<Home />} />
             <Route path="/education" element={<Home />} />
+            <Route path="/github-stats" element={<GitHubStats />} />
+            <Route path="/leetcode-stats" element={<LeetCodeStats />} />
+            <Route path="/youtube-videos" element={<YouTubeVideos />} />
+            <Route path="/all-certificates" element={<AllCertificates />} />
           </Routes>
         </Suspense>
       </AnimatePresence>

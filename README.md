@@ -90,8 +90,8 @@ Every pixel is intentional. Every animation serves a purpose. Every interaction 
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────────┐  │
-│  │  CinemaIntro │─▶│  Transition  │─▶│     Main Application     │  │
-│  │  (Entry FX)  │  │   Screen     │  │   (React 19 + TS)        │  │
+│  │ Handwritten  │─▶│  Transition  │─▶│     Main Application     │  │
+│  │   Intro      │  │   Screen     │  │   (React 19 + TS)        │  │
 │  └──────────────┘  └──────────────┘  └────────────┬─────────────┘  │
 │                                                    │                │
 │  ┌─────────────────────────────────────────────────┼─────────────┐  │
@@ -163,7 +163,7 @@ Every pixel is intentional. Every animation serves a purpose. Every interaction 
 | **Dynamic Marquee** | Background text reacts to scroll velocity. Scrolls right when `deltaY < 0`, left when `deltaY > 0` |
 | **Rotating Badge** | SVG text-path circular badge with continuous 360° rotation, listing core competencies |
 | **God-Effect Resume Download** | 1.5s cinematic delay sequence simulating document generation with high-frequency shimmer mask on button border |
-| **Cinema Intro** | Full-screen cinematic entry sequence with orchestrated fade transitions |
+| **Handwritten Intro** | Elegant signature-reveal sequence with natural handwriting physics |
 
 ### 2. The About — "The Micro-Film"
 
@@ -400,7 +400,7 @@ Rk-Portfolio/
 │   │   ├── AttendifyDetail.tsx       # Attendify project case study
 │   │   ├── BookingModal.tsx          # Meeting booking modal
 │   │   ├── CertificateSection.tsx    # Certificates with verified stamp animations
-│   │   ├── CinemaIntro.tsx           # Cinematic entry sequence
+│   │   ├── HandwrittenIntro.tsx      # Elegant signature-reveal sequence
 │   │   ├── CodingGitaDetail.tsx      # CodingGita Auction case study
 │   │   ├── ContactSection.tsx        # Contact form with darkening gradient
 │   │   ├── COSDetail.tsx             # COS project case study

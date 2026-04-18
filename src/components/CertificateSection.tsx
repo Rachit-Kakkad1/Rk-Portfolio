@@ -284,8 +284,8 @@ export default function CertificateSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedCert, setSelectedCert] = useState<any | null>(null);
 
-  const hackathons = CERTIFICATES.filter(c => c.category === 'hackathons');
-  const skills = CERTIFICATES.filter(c => c.category === 'skills');
+  const hackathons = CERTIFICATES.filter(c => c.category === 'hackathons').slice(0, 6);
+  const skills = CERTIFICATES.filter(c => c.category === 'skills').slice(0, 6);
 
   return (
     <section
@@ -366,7 +366,7 @@ export default function CertificateSection() {
             <span className="font-serif italic text-[10px] text-black/40 hidden md:block uppercase font-bold tracking-widest shrink-0">Section B — Core Skills</span>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 mb-16">
             {skills.map((cert, index) => (
               <NewsCard
                 key={cert.id}
@@ -375,6 +375,18 @@ export default function CertificateSection() {
                 onClick={() => setSelectedCert(cert)}
               />
             ))}
+          </div>
+
+          <div className="flex justify-center mt-12 mb-12">
+            <a 
+              href="/all-certificates" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="group flex items-center gap-3 px-8 py-4 bg-[#B45309] text-white font-serif uppercase text-xs tracking-[0.2em] font-black hover:bg-black transition-colors duration-500 shadow-xl"
+            >
+              View All Certificates 
+              <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+            </a>
           </div>
         </div>
 

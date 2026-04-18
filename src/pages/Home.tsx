@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Github, Linkedin, Youtube, Twitter } from 'lucide-react';
+import { Github, Linkedin, Youtube, Gamepad2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LeetCode } from '../components/Icons';
+import { LeetCode, XIcon } from '../components/Icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import createGlobe from 'cobe';
 import gsap from 'gsap';
@@ -15,7 +15,8 @@ import FreelanceExperience from '../components/FreelanceExperience';
 import EducationSection from '../components/EducationSection';
 import ContactSection from '../components/ContactSection';
 import AIAssistant from '../components/ContactSection';
-import CinemaIntro from '../components/CinemaIntro';
+import HandwrittenIntro from '../components/HandwrittenIntro';
+import MilestonePopup from '../components/MilestonePopup';
 import LazySection from '../components/LazySection';
 import SEO from '../components/SEO';
 
@@ -111,28 +112,25 @@ export default function Home() {
   const portraitRef = useRef<HTMLImageElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [showIntro, setShowIntro] = useState(() => {
-    // Show intro only once per session
-    if (typeof window !== 'undefined') {
-      return !sessionStorage.getItem('introShown');
-    }
-    return false;
-  });
+  const [introState, setIntroState] = useState<'signature' | 'milestone' | 'done'>('signature');
   const location = useLocation();
   const navigate = useNavigate();
 
   // Initialize scroll reveal only after intro is done to save main thread
-  useScrollReveal([showIntro]);
+  useScrollReveal([introState === 'done']);
 
-  const handleIntroComplete = () => {
-    setShowIntro(false);
-    sessionStorage.setItem('introShown', 'true');
+  const handleSignatureComplete = () => {
+    setIntroState('milestone');
+  };
+
+  const handleMilestonesComplete = () => {
+    setIntroState('done');
   };
 
   // Handle initial scroll based on path — runs ONCE on mount only
   const hasScrolledToPath = useRef(false);
   useEffect(() => {
-    if (!showIntro && !hasScrolledToPath.current) {
+    if (introState === 'done' && !hasScrolledToPath.current) {
       hasScrolledToPath.current = true;
       const path = location.pathname.substring(1); // remove leading slash
       if (path && path !== 'home') {
@@ -146,7 +144,7 @@ export default function Home() {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showIntro]);
+  }, [introState]);
 
   const handleDownloadResume = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -194,8 +192,11 @@ export default function Home() {
         description="Official portfolio of Rachit Kakkad. Building production-grade AI systems, blockchain platforms & cinematic web experiences. Specialist in React, Node.js, and Python."
       />
       <AnimatePresence>
-        {showIntro && (
-          <CinemaIntro onComplete={handleIntroComplete} />
+        {introState === 'signature' && (
+          <HandwrittenIntro onComplete={handleSignatureComplete} />
+        )}
+        {introState === 'milestone' && (
+          <MilestonePopup onComplete={handleMilestonesComplete} />
         )}
       </AnimatePresence>
 
@@ -241,7 +242,7 @@ export default function Home() {
                 <a href="https://github.com/Rachit-Kakkad1" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="GitHub"><Github size={16} /></a>
                 <a href="https://www.linkedin.com/in/rachit-kakkad-r29052007k" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="LinkedIn"><Linkedin size={16} /></a>
                 <a href="https://www.youtube.com/@RachitKakkad" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="YouTube"><Youtube size={16} /></a>
-                <a href="https://x.com/rachit_kakk2957" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="Twitter"><Twitter size={16} /></a>
+                <a href="https://x.com/rachit_kakk2957" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="X (Twitter)"><XIcon size={16} /></a>
                 <a href="https://leetcode.com/u/kUyAWXHOC5" target="_blank" rel="noopener noreferrer" className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#1F1F1F]/80 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#2A2A2A] hover:scale-110 transition-all duration-300" aria-label="LeetCode"><LeetCode size={16} /></a>
               </div>
 
@@ -258,35 +259,14 @@ export default function Home() {
                 >
                   View Work
                 </a>
-                <button
-                  onClick={handleDownloadResume}
-                  disabled={isDownloading}
-                  className={`px-5 py-2.5 md:px-8 md:py-3.5 ${isDownloading ? 'bg-[#B45309]' : 'bg-[#1F1F1F]/80 backdrop-blur-md'} text-white font-black text-[10px] md:text-sm tracking-[0.1em] uppercase rounded-full border border-white/20 hover:bg-[#2A2A2A] hover:scale-105 transition-all duration-500 flex items-center justify-center relative overflow-hidden min-w-[140px] md:min-w-[180px]`}
+                <a
+                  href="/Rachit Kakkad's Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 md:px-8 md:py-3.5 bg-[#1F1F1F]/80 backdrop-blur-md text-white font-black text-[10px] md:text-sm tracking-[0.1em] uppercase rounded-full border border-white/20 hover:bg-[#2A2A2A] hover:scale-105 transition-all duration-500 flex items-center justify-center min-w-[140px] md:min-w-[180px]"
                 >
-                  <AnimatePresence mode="wait">
-                    {isDownloading ? (
-                      <motion.div
-                        key="loading"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>PREPARING...</span>
-                      </motion.div>
-                    ) : (
-                      <motion.span
-                        key="idle"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                      >
-                        Download CV
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </button>
+                  View Resume
+                </a>
               </motion.div>
             </div>
 
@@ -368,6 +348,39 @@ export default function Home() {
           <LazySection id="contact">
             <section aria-label="Contact"><LazyContactSection /></section>
           </LazySection>
+
+          {/* GitHub Game Floating Button */}
+          <motion.button
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('trigger-transition', { 
+                detail: { name: 'Initializing Game...', target: 'github-stats' } 
+              }));
+              setTimeout(() => navigate('/github-stats'), 400);
+            }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="fixed bottom-[104px] right-6 md:bottom-[144px] md:right-12 z-[99] w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center p-0 overflow-visible group"
+            aria-label="Play GitHub Game"
+          >
+            {/* Orbital Ring - Constant Rotation */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-[-8px] border-2 border-dashed border-[#B45309]/30 rounded-full pointer-events-none group-hover:border-[#B45309]/60 transition-colors duration-500"
+            />
+            
+            {/* Secondary Orbital Ring - Faster, Reverse Rotation */}
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-[-4px] border border-[#B45309]/20 rounded-full pointer-events-none opacity-50"
+            />
+
+            {/* The Core Orb */}
+            <div className="relative w-full h-full rounded-full bg-[#1C1C1C] border border-[#B45309]/20 flex items-center justify-center shadow-[0_0_30px_rgba(180,83,9,0.3)] overflow-hidden z-10 transition-transform duration-500 group-hover:scale-105 group-hover:bg-[#1a1a1a]">
+               <Gamepad2 size={28} className="text-[#B45309] animate-pulse group-hover:animate-none" />
+            </div>
+          </motion.button>
 
           <LazyAIAssistant />
         </React.Suspense>
