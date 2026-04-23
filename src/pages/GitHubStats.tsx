@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 
 export default function GitHubStats() {
@@ -15,7 +15,8 @@ export default function GitHubStats() {
     window.dispatchEvent(new CustomEvent('trigger-transition', { 
       detail: { name: 'Returning Home', target: 'home' } 
     }));
-    setTimeout(() => navigate('/'), 400);
+    const scrollTo = (location.state as any)?.fromSection || 'home';
+    setTimeout(() => navigate('/', { state: { skipIntro: true, scrollTo } }), 400);
   };
 
   const gameRef = useRef({
@@ -42,20 +43,20 @@ export default function GitHubStats() {
     ],
     blocks: [
       { type: 'brick', x: 440, yOff: 280, w: 40, h: 40, hit: false, yAnim: 0 },
-      { type: 'stat', id: 'repos', x: 480, yOff: 280, w: 40, h: 40, label: 'Repositories', value: '45+', hit: false, yAnim: 0 },
+      { type: 'stat', id: 'commits', x: 480, yOff: 280, w: 40, h: 40, label: 'Commits', value: '1.6k+', hit: false, yAnim: 0 },
       { type: 'brick', x: 520, yOff: 280, w: 40, h: 40, hit: false, yAnim: 0 },
 
       { type: 'brick', x: 840, yOff: 380, w: 40, h: 40, hit: false, yAnim: 0 },
-      { type: 'stat', id: 'commits', x: 880, yOff: 380, w: 40, h: 40, label: 'Commits', value: '1.2k+', hit: false, yAnim: 0 },
-      { type: 'brick', x: 920, yOff: 380, w: 40, h: 40, hit: false, yAnim: 0 },
+      { type: 'stat', id: 'prs', x: 880, yOff: 380, w: 40, h: 40, label: 'Pull Requests', value: '24', hit: false, yAnim: 0 },
+      { type: 'stat', id: 'merged', x: 920, yOff: 380, w: 40, h: 40, label: 'Merged %', value: '83.33%', hit: false, yAnim: 0 },
 
-      { type: 'stat', id: 'stars', x: 1560, yOff: 300, w: 40, h: 40, label: 'Stars', value: '250+', hit: false, yAnim: 0 },
-      { type: 'brick', x: 1600, yOff: 300, w: 40, h: 40, hit: false, yAnim: 0 },
+      { type: 'stat', id: 'streak', x: 1560, yOff: 300, w: 40, h: 40, label: 'Streak', value: '50 Days', hit: false, yAnim: 0 },
+      { type: 'stat', id: 'followers', x: 1600, yOff: 300, w: 40, h: 40, label: 'Followers', value: '5', hit: false, yAnim: 0 },
 
       { type: 'brick', x: 1940, yOff: 400, w: 40, h: 40, hit: false, yAnim: 0 },
-      { type: 'stat', id: 'prs', x: 1980, yOff: 400, w: 40, h: 40, label: 'Pull Requests', value: '18', hit: false, yAnim: 0 },
+      { type: 'stat', id: 'stars', x: 1980, yOff: 400, w: 40, h: 40, label: 'Stars Earned', value: '4', hit: false, yAnim: 0 },
 
-      { type: 'stat', id: 'rank', x: 2560, yOff: 300, w: 40, h: 40, label: 'Global Rank', value: 'Elite', hit: false, yAnim: 0 },
+      { type: 'stat', id: 'rank', x: 2560, yOff: 300, w: 40, h: 40, label: 'Global Rank', value: 'Top 76.4%', hit: false, yAnim: 0 },
     ],
     floatingTexts: [] as any[],
     frameId: 0

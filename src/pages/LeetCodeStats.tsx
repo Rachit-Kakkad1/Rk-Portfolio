@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Trophy, Code2, Clock, Zap, Star, Target, TrendingUp, Calendar, ChevronRight, Flame, Award, Brain, CheckCircle, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -213,31 +213,32 @@ export default function LeetCodeStats() {
     window.dispatchEvent(new CustomEvent('trigger-transition', { 
       detail: { name: 'Returning Home', target: 'home' } 
     }));
-    setTimeout(() => navigate('/'), 400);
+    const scrollTo = (location.state as any)?.fromSection || 'home';
+    setTimeout(() => navigate('/', { state: { skipIntro: true, scrollTo } }), 400);
   };
 
   useEffect(() => {
     setProfile({
-      username: 'kUyAWXHOC5',
-      totalSolved: 425,
-      easySolved: 180,
-      mediumSolved: 210,
-      hardSolved: 35,
-      ranking: 12000,
-      contributionPoints: 85,
-      reputation: 2450,
+      username: 'Rachit-Kakkad1',
+      totalSolved: 153,
+      easySolved: 94,
+      mediumSolved: 47,
+      hardSolved: 12,
+      ranking: 1025382,
+      contributionPoints: 76.9,
+      reputation: 245,
       submissionCalendar: {},
     });
     setLoading(false);
   }, []);
 
   const solvedProblems: Problem[] = [
-    { id: '1', title: 'Two Sum', difficulty: 'Easy', category: 'Array', date: '2024-01-15', status: 'Solved' },
-    { id: '2', title: 'Add Two Numbers', difficulty: 'Medium', category: 'Linked List', date: '2024-01-14', status: 'Solved' },
-    { id: '3', title: 'Longest Substring Without Repeating Characters', difficulty: 'Medium', category: 'String', date: '2024-01-13', status: 'Solved' },
-    { id: '4', title: 'Median of Two Sorted Arrays', difficulty: 'Hard', category: 'Binary Search', date: '2024-01-12', status: 'Solved' },
-    { id: '5', title: 'Valid Parentheses', difficulty: 'Easy', category: 'Stack', date: '2024-01-11', status: 'Solved' },
-    { id: '6', title: 'Merge Two Sorted Lists', difficulty: 'Easy', category: 'Linked List', date: '2024-01-10', status: 'Solved' },
+    { id: '1', title: 'Longest Palindromic Substring', difficulty: 'Medium', category: 'String', date: '2024-04-18', status: 'Solved' },
+    { id: '2', title: 'N-th Tribonacci Number', difficulty: 'Easy', category: 'Dynamic Programming', date: '2024-04-17', status: 'Solved' },
+    { id: '3', title: 'Day of the Year', difficulty: 'Easy', category: 'Math', date: '2024-04-17', status: 'Solved' },
+    { id: '4', title: 'Find Greatest Common Divisor of Array', difficulty: 'Easy', category: 'Array', date: '2024-04-17', status: 'Solved' },
+    { id: '5', title: 'Add Binary', difficulty: 'Easy', category: 'Math', date: '2024-04-17', status: 'Solved' },
+    { id: '6', title: 'Find Peak Element', difficulty: 'Medium', category: 'Array', date: '2024-04-16', status: 'Solved' },
   ];
 
   return (
@@ -315,10 +316,10 @@ export default function LeetCodeStats() {
           {/* Core Metrics */}
           <section className="max-w-[1600px] mx-auto px-6 md:px-12 py-32">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-              <StatCard icon={Code2} label="Logic Units" value={profile?.totalSolved || 0} delay={1} color="bg-amber-600/30" />
-              <StatCard icon={Target} label="Neural Rank" value={`#${profile?.ranking?.toLocaleString() || 0}`} subValue="Global Position" delay={2} color="bg-orange-600/30" index={1} />
-              <StatCard icon={Zap} label="Efficiency" value={`${profile?.contributionPoints || 0}%`} subValue="Percentile Beats" delay={3} color="bg-emerald-600/30" index={2} />
-              <StatCard icon={TrendingUp} label="Reputation" value={profile?.reputation?.toLocaleString() || 0} delay={4} color="bg-violet-600/30" index={3} />
+              <StatCard icon={Code2} label="Logic Units" value={profile?.totalSolved || 0} subValue="1 Badge: Intro to Pandas" delay={1} color="bg-amber-600/30" />
+              <StatCard icon={Trophy} label="Neural Rating" value="1,415" subValue="Contest Performance" delay={2} color="bg-indigo-600/30" />
+              <StatCard icon={Zap} label="Efficiency" value="Top 76.9%" subValue="Percentile Beats" delay={3} color="bg-emerald-600/30" />
+              <StatCard icon={Target} label="Neural Rank" value="#1,025,382" subValue="Contest: #665,755" delay={4} color="bg-orange-600/30" />
             </div>
           </section>
 

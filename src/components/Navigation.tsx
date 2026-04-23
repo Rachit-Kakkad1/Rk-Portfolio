@@ -225,7 +225,7 @@ export default function Navigation() {
       window.dispatchEvent(new CustomEvent('trigger-transition', { 
         detail: { name: `Initializing ${item.label}...`, target: 'home' } 
       }));
-      setTimeout(() => navigate(item.path!), 400);
+      setTimeout(() => navigate(item.path!, { state: { fromSection: activeSection } }), 400);
     } else if (item.type === 'scroll' && item.path) {
       setActiveSection(item.target);
       scrollLockRef.current = true;
@@ -380,7 +380,7 @@ export default function Navigation() {
       {/* === MOBILE: High-End Hamburger & Overlay === */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed top-6 right-6 z-[100] w-14 h-14 rounded-full bg-[#0E0F14] border border-white/10 text-[#F6F3EE] flex items-center justify-center shadow-2xl md:hidden transition-all duration-500 ${isOpen ? 'scale-100 opacity-100' : 'scale-100 opacity-100'}`}
+        className={`fixed top-6 right-6 z-[120] w-14 h-14 rounded-full bg-[#0E0F14] border border-white/10 text-[#F6F3EE] flex items-center justify-center shadow-2xl md:hidden transition-all duration-500 ${isOpen ? 'scale-100 opacity-100' : 'scale-100 opacity-100'}`}
       >
         <AnimatePresence mode="wait">
           {isOpen ? <X key="x" size={24} /> : <Menu key="m" size={24} />}
@@ -393,29 +393,31 @@ export default function Navigation() {
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
-            className="fixed inset-0 h-full w-full bg-[#F6F3EE] z-[95] flex flex-col md:hidden overflow-y-auto"
+            className="fixed inset-0 h-full w-full bg-[#F6F3EE] z-[110] flex flex-col md:hidden overflow-y-auto"
           >
-            <div className="flex-1 flex flex-col justify-center px-12 pt-32 pb-12 gap-6">
-              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#0E0F14]/30 mb-4">Main Navigation</p>
-              {NAV_ITEMS.map((item, idx) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + idx * 0.05 }}
-                  onClick={(e) => handleNavClick(e as any, item.target, item.path)}
-                  className="group cursor-pointer"
-                >
-                  <span className={`text-5xl font-bold uppercase tracking-tighter transition-colors ${activeSection === item.target ? 'text-[#B45309]' : 'text-[#0E0F14]/40 group-hover:text-[#0E0F14]'}`}>
-                    {item.label}
-                  </span>
-                </motion.div>
-              ))}
+            <div className="flex-1 flex flex-col justify-start px-8 md:px-12 pt-24 pb-12 gap-4 md:gap-6">
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0E0F14]/30 mb-2">Main Navigation</p>
+              <div className="flex flex-col gap-4">
+                {NAV_ITEMS.map((item, idx) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + idx * 0.05 }}
+                    onClick={(e) => handleNavClick(e as any, item.target, item.path)}
+                    className="group cursor-pointer"
+                  >
+                    <span className={`text-4xl md:text-5xl font-black uppercase tracking-tighter transition-colors ${activeSection === item.target ? 'text-[#B45309]' : 'text-[#0E0F14]/40 group-hover:text-[#0E0F14]'}`}>
+                      {item.label}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
               
-              <div className="h-px w-full bg-black/5 my-6" />
+              <div className="h-px w-full bg-black/5 my-4" />
               
-              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#0E0F14]/30 mb-4">Other Links</p>
-              <div className="grid grid-cols-2 gap-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0E0F14]/30 mb-2">Other Links</p>
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 pb-8">
                 {MORE_ITEMS.map((item, idx) => (
                   <motion.div
                     key={item.label}
@@ -425,8 +427,8 @@ export default function Navigation() {
                     onClick={() => handleMoreItemClick(item)}
                     className="flex items-center gap-3 p-4 bg-black/5 rounded-2xl active:bg-black/10 transition-colors"
                   >
-                    <item.icon size={18} className="text-[#0E0F14]/40" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#0E0F14]">{item.label}</span>
+                    <item.icon size={16} className="text-[#0E0F14]/40" />
+                    <span className="text-[11px] font-black uppercase tracking-widest text-[#0E0F14]">{item.label}</span>
                   </motion.div>
                 ))}
               </div>

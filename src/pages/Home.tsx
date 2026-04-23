@@ -16,7 +16,6 @@ import EducationSection from '../components/EducationSection';
 import ContactSection from '../components/ContactSection';
 import AIAssistant from '../components/ContactSection';
 import HandwrittenIntro from '../components/HandwrittenIntro';
-import MilestonePopup from '../components/MilestonePopup';
 import LazySection from '../components/LazySection';
 import SEO from '../components/SEO';
 
@@ -112,18 +111,16 @@ export default function Home() {
   const portraitRef = useRef<HTMLImageElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [introState, setIntroState] = useState<'signature' | 'milestone' | 'done'>('signature');
   const location = useLocation();
   const navigate = useNavigate();
+  const [introState, setIntroState] = useState<'signature' | 'done'>(
+    (location.state as any)?.skipIntro ? 'done' : 'signature'
+  );
 
   // Initialize scroll reveal only after intro is done to save main thread
   useScrollReveal([introState === 'done']);
 
   const handleSignatureComplete = () => {
-    setIntroState('milestone');
-  };
-
-  const handleMilestonesComplete = () => {
     setIntroState('done');
   };
 
@@ -133,14 +130,19 @@ export default function Home() {
     if (introState === 'done' && !hasScrolledToPath.current) {
       hasScrolledToPath.current = true;
       const path = location.pathname.substring(1); // remove leading slash
-      if (path && path !== 'home') {
-        const target = path === 'work' ? 'hackathon' : path;
-        const element = document.getElementById(target);
+      const target = (location.state as any)?.scrollTo || path;
+      
+      if (target && target !== 'home') {
+        const targetId = target === 'work' ? 'hackathon' : target;
+        const element = document.getElementById(targetId);
         if (element) {
           setTimeout(() => {
             (window as any).lenis?.scrollTo(element, { offset: -80, immediate: true });
           }, 100);
         }
+      } else if ((location.state as any)?.skipIntro) {
+        // If returning home and skipping intro, ensure we are at the top if no specific target
+        (window as any).lenis?.scrollTo(0, { immediate: true });
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,9 +196,6 @@ export default function Home() {
       <AnimatePresence>
         {introState === 'signature' && (
           <HandwrittenIntro onComplete={handleSignatureComplete} />
-        )}
-        {introState === 'milestone' && (
-          <MilestonePopup onComplete={handleMilestonesComplete} />
         )}
       </AnimatePresence>
 
@@ -355,7 +354,7 @@ export default function Home() {
               window.dispatchEvent(new CustomEvent('trigger-transition', { 
                 detail: { name: 'Initializing Game...', target: 'github-stats' } 
               }));
-              setTimeout(() => navigate('/github-stats'), 400);
+              setTimeout(() => navigate('/github-stats', { state: { fromSection: 'home' } }), 400);
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

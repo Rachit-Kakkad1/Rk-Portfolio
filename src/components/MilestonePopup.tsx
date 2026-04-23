@@ -2,196 +2,160 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
+const MILESTONE_IMAGES = [
+  "/certificates/hackathons/ElectroSphere_2K26.jpg",
+  "/leetcode_themed.png",
+  "/certificates/hackathons/odoo/odoo-frame.jpg",
+  "/certificates/hackathons/HackCrux X LNMIT.png",
+  "/certificates/hackathons/National_Digital_Identity_&_Innovation_Hackathon_2025.png",
+  "/certificates/hackathons/dev heat/solo-1.jpg",
+  "/certificates/hackathons/odoo/odoo-wristband.png",
+  "/certificates/hackathons/dev heat/solo-2.jpg",
+  "/certificates/hackathons/dev heat/solo-3.jpg"
+];
+
 const MILESTONES = [
   {
     id: 1,
-    title: "Hack The Tank 3.0 Winner",
-    subtitle: "Won at NIT Surat",
-    description: "Built FinIdeas LMS and secured the trophy after multiple offline hackathons.",
-    image: "/popup assets/1.jpg",
-    fallbackImage: "/certificates/hackathons/HackCrux X LNMIT/group-1.jpg"
+    title: "ElectroSphere 2K26",
+    subtitle: "2nd Place Winner — Software Edition",
+    description: "Secured 2nd place for ThreatLens—an ethical, AI-powered cybersecurity platform focused on vulnerability detection and secure coding practices.",
   },
   {
     id: 2,
     title: "LeetCode Knight Badge",
-    subtitle: "Competitive coding milestone",
-    description: "Earned Knight badge by maintaining consistent problem solving and strong ranking performance.",
-    image: "/popup assets/2.jpg",
-    fallbackImage: "/certificates/hackathons/DEV_HEAT_PARTICIPATION.jpg"
+    subtitle: "Competitive Programming — Top 5% Global",
+    description: "Achieved Knight status by maintaining a high contest rating and solving 800+ complex algorithmic challenges with optimized execution.",
   },
   {
     id: 3,
-    title: "9th Rank - Charusat x Ocealab",
-    subtitle: "Recent hackathon achievement",
-    description: "Reached top-10 with a high-speed, execution-first build and strong solution quality.",
-    image: "/popup assets/3.jpg",
-    fallbackImage: "/certificates/hackathons/ElectroSphere_2K26.jpg"
+    title: "HackCrux @ LNMIT",
+    subtitle: "National Finalist — Strategic Problem Solving",
+    description: "Represented the core technical solving team in a national-level innovation sprint focusing on scalable system architectures.",
   },
   {
     id: 4,
-    title: "100K+ Impressions in 10 Months",
-    subtitle: "Personal brand growth milestone",
-    description: "Reached 100K+ impressions through consistent building, sharing, and compounding content-driven visibility.",
-    image: "/popup assets/4.jpg",
-    fallbackImage: "/agricert-main.jpg"
+    title: "National Digital Identity",
+    subtitle: "Rank 4 National — IIT Madras",
+    description: "Led 'API Assassins' to secure Rank 4 at IIT Madras Research Campus for building high-speed digital identity security solutions.",
   }
 ];
 
 export default function MilestonePopup({ onComplete }: { onComplete: () => void }) {
-  const [timeLeft, setTimeLeft] = useState(8);
+  const [timeLeft, setTimeLeft] = useState(10);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (isHovered) return;
-    
     if (timeLeft <= 0) {
       onComplete();
       return;
     }
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
+    const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, isHovered, onComplete]);
+  }, [timeLeft, onComplete, isHovered]);
 
   return (
-    <motion.div
+    <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[10000] h-svh w-screen flex flex-col items-center justify-between bg-[#050505] text-white overflow-hidden transform-gpu"
-      style={{ willChange: 'opacity' }}
+      className="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center font-sans overflow-hidden py-10"
     >
-      {/* Optimized Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-         <div className="absolute top-0 left-1/4 w-[50vw] h-[50vh] bg-[#B45309] rounded-full blur-[120px] opacity-10 transform-gpu" />
-         <div className="absolute bottom-0 right-1/4 w-[50vw] h-[50vh] bg-[#B45309] rounded-full blur-[120px] opacity-10 transform-gpu" />
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-[50vh] bg-gradient-to-b from-[#B45309]/10 to-transparent blur-[120px]" />
       </div>
 
-      {/* Header - More Compact */}
-      <motion.div 
+      {/* Header */}
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-        className="relative z-10 text-center pt-8 md:pt-12 shrink-0 px-6 transform-gpu"
-        style={{ willChange: 'transform, opacity' }}
+        className="relative z-10 text-center mb-8 px-6 shrink-0"
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-4 backdrop-blur-sm">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#B45309]/10 border border-[#B45309]/20 rounded-full mb-4">
           <Sparkles size={12} className="text-[#B45309]" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/50">Milestones</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#B45309]">Portfolio Showreel</span>
         </div>
-        <h1 className="text-2xl md:text-5xl font-black tracking-tighter mb-2 leading-tight text-white">
+        <h1 className="text-2xl md:text-5xl font-black tracking-tight text-white mb-2 leading-none">
           Recent milestones that shaped me
         </h1>
-        <p className="text-[10px] md:text-base text-white/40 font-medium max-w-xl mx-auto tracking-tight">
-          Stronger execution, better systems, and measurable progress.
+        <p className="text-xs md:text-sm text-white/40 font-medium tracking-tight">
+          A kinetic showcase of execution and technical engineering progress.
         </p>
       </motion.div>
 
-      {/* Fanned Cards Section - Responsive Height */}
-      <div 
-        className="relative z-10 flex-1 w-full max-w-[1200px] flex items-center justify-center"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div className="relative w-full h-[45vh] md:h-[50vh] flex items-center justify-center perspective-1000">
-          {MILESTONES.map((item, index) => {
-            const rotation = (index - 1.5) * 8; 
-            const yOffset = Math.abs(index - 1.5) * 20; 
-            const zIndex = 10 - Math.abs(index - 1.5);
-            
-            return (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 150, rotate: 0, x: 0 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: yOffset, 
-                  rotate: rotation,
-                  x: typeof window !== 'undefined' && window.innerWidth < 768 
-                      ? (index - 1.5) * 70 
-                      : (index - 1.5) * 220
-                }}
-                whileHover={{ 
-                  scale: 1.08, 
-                  y: yOffset - 30, 
-                  rotate: rotation * 0.3, 
-                  zIndex: 50,
-                  boxShadow: "0 20px 40px rgba(180,83,9,0.15)"
-                }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: 0.2 + index * 0.08,
-                  type: "spring",
-                  stiffness: 200,
-                  damping: 25
-                }}
-                style={{ zIndex, willChange: 'transform, opacity' }}
-                className="absolute w-[240px] md:w-[300px] aspect-[4/5] rounded-[1.5rem] md:rounded-[2rem] bg-[#0a0a0a] border border-white/10 flex flex-col overflow-hidden cursor-pointer transition-colors duration-300 hover:border-[#B45309]/50 shadow-[0_10px_30px_rgba(0,0,0,0.5)] origin-bottom transform-gpu"
-              >
-                {/* Image Section */}
-                <div className="h-[45%] w-full relative overflow-hidden bg-black/80">
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent z-10" />
-                  <img 
-                    src={item.image}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = item.fallbackImage;
-                    }}
-                    alt={item.title} 
-                    className="w-full h-full object-cover opacity-80 transition-transform duration-700 hover:scale-110"
-                    loading="eager"
-                  />
-                </div>
-
-                {/* Content Section */}
-                <div className="flex-1 p-5 md:p-6 flex flex-col relative z-20">
-                  <div className="text-[#B45309] font-black text-[10px] md:text-sm mb-1 md:mb-2 font-mono">#{item.id}</div>
-                  <h3 className="text-lg md:text-xl font-black leading-[1.1] mb-2 tracking-tight group-hover:text-[#B45309] transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-[#B45309]/80 font-bold text-[9px] md:text-[10px] uppercase tracking-widest mb-3">
-                    {item.subtitle}
-                  </p>
-                  <p className="text-white/50 text-xs md:text-sm leading-relaxed font-medium line-clamp-3">
-                    {item.description}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+      {/* Infinite Image Train (Moving Section) */}
+      <div className="relative z-10 w-full overflow-hidden py-6 shrink-0">
+        <motion.div 
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ 
+            duration: 35, 
+            repeat: Infinity, 
+            ease: "linear",
+            repeatType: "loop"
+          }}
+          className="flex flex-nowrap gap-6 w-max px-6"
+        >
+          {[...MILESTONE_IMAGES, ...MILESTONE_IMAGES].map((img, index) => (
+            <div
+              key={index}
+              className="relative w-[300px] md:w-[450px] aspect-[16/10] rounded-[2.5rem] overflow-hidden border border-[#B45309]/20 shadow-2xl flex-shrink-0"
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/60 to-transparent z-10" />
+              <img 
+                src={img} 
+                className="w-full h-full object-cover grayscale-[30%] hover:grayscale-0 transition-all duration-700" 
+                alt="Hackathon Milestone" 
+              />
+            </div>
+          ))}
+        </motion.div>
       </div>
 
-      {/* Footer / Action - Compact */}
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-        className="relative z-10 pb-6 md:pb-10 shrink-0 flex flex-col items-center gap-4 transform-gpu"
-        style={{ willChange: 'transform, opacity' }}
-      >
+      {/* Static Content Grid (Sticky Section) */}
+      <div className="relative z-10 w-full max-w-[1400px] grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 px-6 mt-10">
+        {MILESTONES.map((item) => (
+          <motion.div
+            key={item.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 + item.id * 0.1 }}
+            className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-[#B45309]/30 rounded-[2.2rem] p-6 md:p-8 shadow-2xl hover:border-[#B45309]/60 transition-all duration-500"
+          >
+            <div className="text-[#B45309] font-black text-[10px] md:text-xs mb-1 font-mono tracking-widest">LOG #{item.id}</div>
+            <h3 className="text-base md:text-xl font-black text-white mb-2 leading-tight">
+              {item.title}
+            </h3>
+            <p className="text-[#B45309]/80 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] mb-4">
+              {item.subtitle}
+            </p>
+            <p className="text-white/40 text-[10px] md:text-sm leading-relaxed font-medium">
+              {item.description}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Footer / Action */}
+      <motion.div className="relative z-10 pt-12 pb-6 flex flex-col items-center gap-6 shrink-0">
         <button
           onClick={onComplete}
-          className="group relative flex items-center justify-center gap-3 px-8 py-3 bg-white/5 hover:bg-white text-white hover:text-black border border-white/10 hover:border-white rounded-full font-black text-[10px] md:text-xs uppercase tracking-[0.2em] transition-all duration-300 transform-gpu hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+          className="group relative flex items-center justify-center gap-4 px-12 py-5 bg-white text-black rounded-full font-black text-xs uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
         >
-          <span>Continue to Portfolio</span>
-          <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform duration-300" />
+          Explore Full Portfolio
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
         </button>
-
-        {/* Timer Bar */}
-        <div className="flex flex-col items-center gap-1.5 md:gap-2">
-          <span className="text-[8px] md:text-[9px] font-black text-white/15 uppercase tracking-[0.3em]">
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
             Auto-continuing in {timeLeft}s
           </span>
-          <div className="w-40 md:w-56 h-1 bg-white/5 rounded-full overflow-hidden border border-white/5 transform-gpu">
+          <div className="w-48 md:w-64 h-1 bg-white/5 rounded-full overflow-hidden">
             <motion.div 
               initial={{ width: "100%" }}
               animate={{ width: "0%" }}
-              transition={{ duration: 8, ease: "linear" }}
-              className="h-full bg-gradient-to-r from-[#B45309] to-[#F59E0B]"
-              style={{ willChange: 'width' }}
+              transition={{ duration: 10, ease: "linear" }}
+              className="h-full bg-[#B45309]"
             />
           </div>
         </div>
