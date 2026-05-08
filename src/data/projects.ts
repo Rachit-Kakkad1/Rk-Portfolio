@@ -194,6 +194,24 @@ export const PROJECT_DATA: ProjectData[] = [
     solution: 'An analytics dashboard with predictive models, bunk calculators, and real-time attendance synchronization via Firebase.',
     results: [{ value: '95%', label: 'Prediction Accuracy' }, { value: 'Real-time', label: 'Sync' }, { value: 'Pilot', label: 'Program' }],
   },
+  {
+    id: 'medclear',
+    headline: 'MedClear',
+    tag: 'HEALTHCARE · AI · AUDIT',
+    description: 'AI-assisted healthcare auditing infrastructure detecting hidden medical overcharges through OCR extraction and fraud heuristics.',
+    longDescription: 'MedClear is an advanced healthcare billing intelligence platform designed to expose hidden hospital overcharges, duplicate procedures, and inflated medical pricing. By leveraging high-speed OCR extraction, government (NPPA) benchmark verification, and intelligent fraud analysis heuristics, it brings transparency to medical billing.',
+    tech: ['React', 'Python', 'FastAPI', 'OCR', 'NLP', 'Framer Motion'],
+    year: '2026',
+    image: '',
+    github: '#',
+    live: '#',
+    docs: '#',
+    demoVideo: '#',
+    challenge: 'Medical billing is notoriously opaque, often containing hidden markups and duplicate charges that are nearly impossible for patients to detect manually.',
+    solution: 'An automated audit pipeline that extracts data from medical invoices using AI-OCR and compares charges against government-regulated price benchmarks.',
+    results: [{ value: '+1788%', label: 'Max Markup' }, { value: '₹85k+', label: 'Detected Fraud' }, { value: '0.8s', label: 'Audit Speed' }],
+    achievement: 'Flagship Investigation',
+  },
 ];
 
 export const CODINGGITA_DATA: ProjectData = {

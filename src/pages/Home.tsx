@@ -1,34 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Github, Linkedin, Youtube, Gamepad2 } from 'lucide-react';
+import { Linkedin, Youtube, Gamepad2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LeetCode, XIcon } from '../components/Icons';
+import { LeetCode, XIcon, Github } from '../components/Icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import createGlobe from 'cobe';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import AboutSection from '../components/AboutSection';
-import KeyboardSection from '../components/KeyboardSection';
-import ProjectsSection from '../components/ProjectsSection';
-import CertificateSection from '../components/CertificateSection';
-import HackathonExperience from '../components/HackathonExperience';
-import FreelanceExperience from '../components/FreelanceExperience';
-import EducationSection from '../components/EducationSection';
-import ContactSection from '../components/ContactSection';
-import AIAssistant from '../components/ContactSection';
+import AIAssistant from '../components/AIAssistant';
 import HandwrittenIntro from '../components/HandwrittenIntro';
 import LazySection from '../components/LazySection';
 import SEO from '../components/SEO';
+import { useScrollReveal } from '../useScrollReveal';
 
 const LazyAboutSection = React.lazy(() => import('../components/AboutSection'));
 const LazyKeyboardSection = React.lazy(() => import('../components/KeyboardSection'));
 const LazyProjectsSection = React.lazy(() => import('../components/ProjectsSection'));
+const LazyMedClearShowcase = React.lazy(() => import('../components/MedClearShowcase'));
 const LazyCertificateSection = React.lazy(() => import('../components/CertificateSection'));
 const LazyHackathonExperience = React.lazy(() => import('../components/HackathonExperience'));
 const LazyFreelanceExperience = React.lazy(() => import('../components/FreelanceExperience'));
 const LazyEducationSection = React.lazy(() => import('../components/EducationSection'));
 const LazyContactSection = React.lazy(() => import('../components/ContactSection'));
-const LazyAIAssistant = React.lazy(() => import('../components/AIAssistant'));
-import { useScrollReveal } from '../useScrollReveal';
 
 const NAME = 'Rachit Kakkad';
 const HEADLINE_ITEMS = [
@@ -44,7 +36,6 @@ function RotatingGlobe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // Disable heavy globe on small screens to save main thread and battery
     if (window.innerWidth < 768) return;
 
     let phi = 0;
@@ -110,26 +101,21 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const portraitRef = useRef<HTMLImageElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
-  const [isDownloading, setIsDownloading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [introState, setIntroState] = useState<'signature' | 'done'>(
     (location.state as any)?.skipIntro ? 'done' : 'signature'
   );
 
-  // Initialize scroll reveal only after intro is done to save main thread
   useScrollReveal([introState === 'done']);
 
   const handleSignatureComplete = () => {
     setIntroState('done');
   };
 
-  // Handle initial scroll based on path — runs ONCE on mount only
-  const hasScrolledToPath = useRef(false);
   useEffect(() => {
-    if (introState === 'done' && !hasScrolledToPath.current) {
-      hasScrolledToPath.current = true;
-      const path = location.pathname.substring(1); // remove leading slash
+    if (introState === 'done') {
+      const path = location.pathname.substring(1);
       const target = (location.state as any)?.scrollTo || path;
       
       if (target && target !== 'home') {
@@ -141,35 +127,15 @@ export default function Home() {
           }, 100);
         }
       } else if ((location.state as any)?.skipIntro) {
-        // If returning home and skipping intro, ensure we are at the top if no specific target
         (window as any).lenis?.scrollTo(0, { immediate: true });
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [introState]);
 
-  const handleDownloadResume = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDownloading(true);
-    setTimeout(() => {
-      const link = document.createElement('a');
-      link.href = "/Rachit Kakkad's Resume.pdf";
-      link.download = "Rachit_Kakkad_Resume.pdf";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => {
-        setIsDownloading(false);
-      }, 1000);
-    }, 1500);
-  };
-
   useEffect(() => {
-    // Delay marquee initialization to save main thread during initial paint
     let ctx: any;
     const initMarquee = () => {
       ctx = gsap.context(() => {
-        // Continuous one-direction marquee (no reverse, no pause)
         gsap.to(headlineRef.current, {
           xPercent: -50,
           repeat: -1,
@@ -269,7 +235,6 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Marquee headline — bottom of hero, Snellenberg-style */}
             <div className="absolute bottom-[4vh] md:bottom-[6vh] left-0 w-full whitespace-nowrap text-[12vw] md:text-[7vw] leading-[1] text-white font-black z-[15] pointer-events-none flex items-end overflow-hidden px-2 md:px-4 smooth-gpu" style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.03em' }}>
               <div ref={headlineRef} className="flex items-baseline w-max pl-[3vw] md:pl-[1.5vw] smooth-gpu">
                 {[0, 1].map((copy) => (
@@ -308,6 +273,12 @@ export default function Home() {
             
             <LazySection id="projects">
               <section aria-label="Projects" data-scroll-reveal="fade-up"><LazyProjectsSection /></section>
+            </LazySection>
+
+            <LazySection id="medclear">
+              <section aria-label="MedClear Flagship Showcase" data-scroll-reveal="fade-up">
+                <LazyMedClearShowcase />
+              </section>
             </LazySection>
           </div>
 
@@ -381,7 +352,7 @@ export default function Home() {
             </div>
           </motion.button>
 
-          <LazyAIAssistant />
+          <AIAssistant />
         </React.Suspense>
       </div>
     </main>

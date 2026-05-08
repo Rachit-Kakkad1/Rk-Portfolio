@@ -10,6 +10,7 @@ import FleetFlowDetail from '../components/FleetFlowDetail';
 import LifeLensDetail from '../components/LifeLensDetail';
 import CodingGitaDetail from '../components/CodingGitaDetail';
 import AttendifyDetail from '../components/AttendifyDetail';
+import MedClearDetail from '../components/MedClearDetail';
 import ProjectDetailOverlay from '../components/ProjectDetailOverlay';
 import { HackathonDetailOverlay } from '../components/HackathonExperience';
 
@@ -22,6 +23,7 @@ const DETAIL_COMPONENTS: Record<string, React.ComponentType<{ onClose: () => voi
   lifelens: LifeLensDetail,
   codinggita: CodingGitaDetail,
   attendify: AttendifyDetail,
+  medclear: MedClearDetail,
 };
 
 export default function ProjectDetail() {
