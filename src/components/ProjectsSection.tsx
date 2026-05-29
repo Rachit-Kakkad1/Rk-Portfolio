@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { ArrowRight, Github, Globe, FileText, ExternalLink } from 'lucide-react';
+import { ArrowRight, Globe, FileText, ExternalLink } from 'lucide-react';
+import { Github } from './Icons';
 import { useNavigate } from 'react-router-dom';
 import { PROJECT_DATA } from '../data/projects';
 
