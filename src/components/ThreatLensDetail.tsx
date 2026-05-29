@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Github, Globe, FileText, ExternalLink, ShieldCheck, Search, Cpu, Database, Network, Eye, Lock, BrainCircuit, Activity } from 'lucide-react';
+import { ArrowLeft, Globe, FileText, ExternalLink, ShieldCheck, Search, Cpu, Database, Network, Eye, Lock, BrainCircuit, Activity } from 'lucide-react';
+import { Github } from './Icons';
 
 interface ThreatLensDetailProps {
   onClose: () => void;
