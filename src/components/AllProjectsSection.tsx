@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, X, Github, Globe, FileText } from 'lucide-react';
+import { ArrowUpRight, X, Globe, FileText } from 'lucide-react';
+import { Github } from './Icons';
 
 import { ARCHIVE_PROJECTS } from '../data/projects';
 
