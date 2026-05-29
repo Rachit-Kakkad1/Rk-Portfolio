@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowLeft, Github, Globe, FileText, ExternalLink, Calculator, Calendar, BarChart3, Zap, ShieldCheck, Clock, CheckCircle2, LayoutDashboard, BrainCircuit, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Globe, FileText, ExternalLink, Calculator, Calendar, BarChart3, Zap, ShieldCheck, Clock, CheckCircle2, LayoutDashboard, BrainCircuit, ShieldAlert } from 'lucide-react';
+import { Github } from './Icons';
 
 interface AttendifyDetailProps {
   onClose: () => void;
