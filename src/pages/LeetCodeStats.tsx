@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Trophy, Code2, Clock, Zap, Star, Target, TrendingUp, Calendar, ChevronRight, Flame, Award, Brain, CheckCircle, ArrowLeft } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { Trophy, Code2, Clock, Zap, Star, Target, TrendingUp, Calendar, ChevronRight, Flame, Award, Brain, CheckCircle, ArrowLeft, Activity, Cpu, Binary, Network, Shield, ZapIcon, Globe, Command, Terminal, Layers, Eye, Radio, Fingerprint, Sparkles } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
+import { LeetCode } from '../components/Icons';
+import { LeetCode } from '../components/Icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 import gsap from 'gsap';
@@ -20,357 +23,628 @@ interface LeetCodeProfile {
   submissionCalendar: Record<string, number>;
 }
 
-interface Problem {
-  id: string;
-  title: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  category: string;
-  date: string;
-  status: string;
-}
-
 const difficultyColors = {
   Easy: '#22c55e',
   Medium: '#f59e0b',
   Hard: '#ef4444',
 };
 
-const AnimatedGrid = () => {
-  const gridRef = useRef<HTMLDivElement>(null);
+// --- BEYOND GOD TIER UTILITY COMPONENTS ---
+
+const ScrambleText = ({ text, delay = 0 }: { text: string, delay?: number }) => {
+  const [displayText, setDisplayText] = useState('');
+  const chars = '!@#$%^&*()_+{}:"<>?-=[];,./';
+
+  useEffect(() => {
+    let iteration = 0;
+    const interval = setInterval(() => {
+      setDisplayText(
+        text
+          .split('')
+          .map((char, index) => {
+            if (index < iteration) return text[index];
+            return chars[Math.floor(Math.random() * chars.length)];
+          })
+          .join('')
+      );
+
+      if (iteration >= text.length) clearInterval(interval);
+      iteration += 1 / 3;
+    }, 30);
+    return () => clearInterval(interval);
+  }, [text]);
+
+  return <span>{displayText}</span>;
+};
+
+const PerspectiveGrid = () => {
+  const { scrollY } = useScroll();
+  const rotateX = useTransform(scrollY, [0, 5000], [20, 60]);
+  const translateZ = useTransform(scrollY, [0, 5000], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 1000], [0.2, 0.05]);
 
   return (
-    <div ref={gridRef} className="absolute inset-0 opacity-[0.15] pointer-events-none" style={{
-      backgroundImage: `linear-gradient(rgba(245,158,11,0.08) 1.5px, transparent 1.5px),
-                      linear-gradient(90deg, rgba(245,158,11,0.08) 1.5px, transparent 1.5px)`,
-      backgroundSize: '60px 60px',
-    }}>
-      {Array.from({ length: 50 }).map((_, i) => (
-        <motion.div 
-          key={i} 
-          animate={{ 
-            opacity: [0.2, 0.5, 0.2],
-            scale: [1, 1.5, 1],
-          }}
-          transition={{
-            duration: Math.random() * 3 + 2,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-          className="absolute w-1.5 h-1.5 bg-amber-500/40 rounded-full blur-[1px]"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-        />
-      ))}
+    <div className="fixed inset-0 z-0 pointer-events-none perspective-[1000px]">
+      <motion.div 
+        style={{ rotateX, translateZ, opacity }}
+        className="absolute inset-x-0 bottom-[-50%] h-[200%] origin-bottom"
+      >
+        <div className="w-full h-full" style={{ 
+          backgroundImage: `linear-gradient(to right, #f59e0b 1px, transparent 1px), 
+                           linear-gradient(to bottom, #f59e0b 1px, transparent 1px)`,
+          backgroundSize: '80px 80px',
+          maskImage: 'linear-gradient(to top, black, transparent 80%)'
+        }} />
+      </motion.div>
     </div>
   );
 };
 
-const CircularProgress = ({ value, max, label, color, delay }: { value: number; max: number; label: string; color: string; delay: number }) => {
-  const circleRef = useRef<SVGCircleElement>(null);
-  const percentage = Math.round((value / max) * 100);
-  const circumference = 2 * Math.PI * 45;
+const QuantumHUD = () => {
+  const { scrollYProgress } = useScroll();
+  const scaleY = useSpring(scrollYProgress, { stiffness: 40, damping: 15 });
 
-  useEffect(() => {
-    const circle = circleRef.current;
-    if (!circle) return;
+  return (
+    <>
+      {/* Left HUD */}
+      <div className="fixed left-8 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-1 h-32 bg-white/5 rounded-full overflow-hidden">
+            <motion.div style={{ scaleY }} className="w-full h-full bg-amber-500 origin-top shadow-[0_0_15px_#f59e0b]" />
+          </div>
+          <span className="text-[8px] font-black uppercase tracking-[0.5em] vertical-text text-white/20">Sync Progress</span>
+        </div>
+        <div className="flex flex-col gap-6">
+          <Radio size={12} className="text-amber-500 animate-pulse" />
+          <Fingerprint size={12} className="text-white/20" />
+          <Globe size={12} className="text-white/20" />
+        </div>
+      </div>
 
-    gsap.fromTo(circle,
-      { strokeDashoffset: circumference },
-      {
-        strokeDashoffset: circumference - (percentage / 100) * circumference,
-        duration: 2.5,
-        delay: delay * 0.3,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: circle,
-          start: "top 90%"
-        }
-      }
-    );
-  }, [delay, percentage, circumference]);
+      {/* Right HUD */}
+      <div className="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-center gap-10">
+        <div className="space-y-1">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <motion.div 
+              key={i}
+              animate={{ opacity: [0.1, 0.5, 0.1], scaleX: [1, 1.5, 1] }}
+              transition={{ duration: 3, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
+              className="w-8 h-[2px] bg-amber-500/40 rounded-full"
+            />
+          ))}
+        </div>
+        <div className="vertical-text text-[8px] font-black uppercase tracking-[0.5em] text-white/20">Neural Synapse v4.0</div>
+      </div>
+    </>
+  );
+};
+
+const HoloCard = ({ children, className = "", delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-100, 100], [10, -10]), { stiffness: 100, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-100, 100], [-10, 10]), { stiffness: 100, damping: 30 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (rect) {
+      x.set(e.clientX - (rect.left + rect.width / 2));
+      y.set(e.clientY - (rect.top + rect.height / 2));
+    }
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-32 h-32 md:w-40 md:h-40"
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 30, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d", willChange: "transform" }}
+      className={`relative group rounded-[3.5rem] border border-white/5 bg-white/[0.02] backdrop-blur-3xl p-10 transition-colors duration-700 hover:border-amber-500/30 holo-card-reveal ${className}`}
     >
-      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-        <circle
-          cx="50"
-          cy="50"
-          r="45"
-          fill="none"
-          stroke="rgba(255,255,255,0.03)"
-          strokeWidth="6"
-        />
-        <circle
-          ref={circleRef}
-          cx="50"
-          cy="50"
-          r="45"
-          fill="none"
-          stroke={color}
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          style={{
-            filter: `drop-shadow(0 0 15px ${color}60)`,
-          }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl md:text-3xl font-black text-white">{value}</span>
-        <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-white/30">{label}</span>
+      <div style={{ transform: "translateZ(50px)" }} className="relative z-10 h-full">
+        {children}
       </div>
+      
+      {/* Dynamic Glow */}
+      <motion.div 
+        className="pointer-events-none absolute -inset-px rounded-[3.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+        style={{
+          background: useTransform(
+            [x, y],
+            ([mx, my]) => `radial-gradient(800px circle at ${mx + 200}px ${my + 200}px, rgba(245, 158, 11, 0.1), transparent 80%)`
+          ),
+        }}
+      />
     </motion.div>
   );
 };
 
-const StatCard = ({ 
-  icon: Icon, 
-  label, 
-  value, 
-  subValue, 
-  delay, 
-  color 
-}: { 
-  icon: any; 
-  label: string; 
-  value: string | number; 
-  subValue?: string;
-  delay: number; 
-  color: string;
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: delay * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -10, scale: 1.02 }}
-      className="relative p-10 rounded-[2.5rem] bg-white/[0.03] border border-white/[0.08] backdrop-blur-2xl overflow-hidden group cursor-default"
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700" />
+// --- NEW GOD-LEVEL SINGULARITY COMPONENT ---
+const SingularityCore = ({ value }: { value: number }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-      <div className="relative z-10 space-y-6">
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${color} shadow-2xl transition-transform duration-500 group-hover:rotate-12`}>
-          <Icon size={28} className="text-white" />
-        </div>
-        <div>
-          <div className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30 mb-3">{label}</div>
-          <div className="text-5xl font-black text-white tracking-tighter leading-none">{value}</div>
-          {subValue && (
-            <div className="text-xs font-bold text-amber-500/60 mt-3 uppercase tracking-widest">{subValue}</div>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect) {
+      mouseX.set(e.clientX - rect.left - rect.width / 2);
+      mouseY.set(e.clientY - rect.top - rect.height / 2);
+    }
+  };
 
-const ProblemCard = ({ problem, index }: { problem: Problem; index: number }) => {
+  const rotateX = useSpring(useTransform(mouseY, [-200, 200], [15, -15]), { stiffness: 50, damping: 20 });
+  const rotateY = useSpring(useTransform(mouseX, [-200, 200], [-15, 15]), { stiffness: 50, damping: 20 });
+
   return (
-    <motion.a
-      href={`https://leetcode.com/problems/${problem.title.toLowerCase().replace(/\s+/g, '-')}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ x: 10, backgroundColor: 'rgba(255,255,255,0.06)' }}
-      className="flex items-center gap-6 p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08] hover:border-amber-500/40 transition-all duration-500 group cursor-pointer"
+    <div 
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
+      className="relative w-full h-full flex items-center justify-center perspective-[1000px] overflow-hidden"
     >
-      <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-colors">
-        <Code2 size={24} style={{ color: difficultyColors[problem.difficulty] }} />
+      {/* Background Matrix Rain */}
+      <div className="absolute inset-0 overflow-hidden opacity-10 pointer-events-none">
+        {Array.from({ length: 15 }).map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ y: -100 }}
+            animate={{ y: [0, 400] }}
+            transition={{ duration: Math.random() * 5 + 3, repeat: Infinity, ease: "linear", delay: Math.random() * 2 }}
+            className="absolute text-[8px] font-mono text-amber-500/40 whitespace-nowrap"
+            style={{ left: `${i * 7}%` }}
+          >
+            {Array.from({ length: 20 }).map(() => Math.random() > 0.5 ? '1' : '0').join('\n')}
+          </motion.div>
+        ))}
       </div>
-      <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-black text-white mb-2 truncate group-hover:text-amber-500 transition-colors">{problem.title}</h3>
-        <div className="flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest text-white/30">
-          <span style={{ color: difficultyColors[problem.difficulty] }}>{problem.difficulty}</span>
-          <span>•</span>
-          <span>{problem.category}</span>
-          <span>•</span>
-          <span>{new Date(problem.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+
+      {/* Kinetic Rings */}
+      <motion.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }} className="relative">
+        <motion.div 
+          animate={{ rotateZ: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-[-80px] border-2 border-dashed border-amber-500/10 rounded-full"
+        />
+        <motion.div 
+          animate={{ rotateZ: -360 }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-[-50px] border border-white/5 rounded-full"
+        />
+        
+        {/* Central Singularity */}
+        <div style={{ transform: "translateZ(100px)" }} className="relative text-center">
+          <motion.div
+            animate={{ 
+              scale: [1, 1.02, 1],
+              filter: ["blur(0px)", "blur(1px)", "blur(0px)"]
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="text-[10rem] font-black italic tracking-tighter text-white drop-shadow-[0_0_40px_rgba(245,158,11,0.4)]"
+          >
+            {value}
+          </motion.div>
+          <div className="mt-2 text-[10px] font-black uppercase tracking-[1em] text-amber-500/60 drop-shadow-[0_0_10px_#f59e0b]">
+            Decryptions
+          </div>
         </div>
-      </div>
-      <ChevronRight size={20} className="text-white/20 group-hover:text-amber-500 transition-transform group-hover:translate-x-2" />
-    </motion.a>
+
+        {/* Floating Metadata Particles */}
+        {['CORE_HEAT: 42.1C', 'LOGIC: STABLE', 'SYNC: 100%', 'SECTOR: 7G'].map((text, i) => (
+          <motion.div
+            key={text}
+            style={{ 
+              transform: `translateZ(${60 + i * 15}px)`,
+              top: i % 2 === 0 ? '-100px' : '160px',
+              left: i < 2 ? '-140px' : '140px'
+            }}
+            animate={{ 
+              y: [0, -15, 0],
+              opacity: [0.1, 0.3, 0.1]
+            }}
+            transition={{ duration: 5, repeat: Infinity, delay: i * 0.8, ease: "easeInOut" }}
+            className="absolute text-[7px] font-mono text-white/40 whitespace-nowrap border border-white/5 px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-xl"
+          >
+            {text}
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Corner Brackets */}
+      <div className="absolute top-8 left-8 w-10 h-10 border-t-2 border-l-2 border-amber-500/20 rounded-tl-2xl" />
+      <div className="absolute top-8 right-8 w-10 h-10 border-t-2 border-r-2 border-amber-500/20 rounded-tr-2xl" />
+      <div className="absolute bottom-8 left-8 w-10 h-10 border-b-2 border-l-2 border-amber-500/20 rounded-bl-2xl" />
+      <div className="absolute bottom-8 right-8 w-10 h-10 border-b-2 border-r-2 border-amber-500/20 rounded-br-2xl" />
+    </div>
   );
 };
 
 export default function LeetCodeStats() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [profile, setProfile] = useState<LeetCodeProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Artificial delay for cinematic loading
+    const timer = setTimeout(() => {
+      setProfile({
+        username: 'Rachit-Kakkad1',
+        totalSolved: 162,
+        easySolved: 101,
+        mediumSolved: 48,
+        hardSolved: 13,
+        ranking: 968621,
+        contributionPoints: 30,
+        reputation: 0,
+        submissionCalendar: {
+          "1756857600": 3,
+          "1758844800": 1,
+          "1759104000": 2,
+          "1762646400": 12,
+          "1762732800": 15,
+          "1762819200": 19,
+          "1763337600": 3,
+          "1763424000": 3,
+          "1763683200": 5,
+          "1763856000": 6,
+          "1764028800": 5,
+          "1767312000": 4,
+          "1768003200": 2,
+          "1768089600": 1,
+          "1769817600": 14,
+          "1770508800": 2,
+          "1770595200": 2,
+          "1770681600": 8,
+          "1770768000": 14,
+          "1770854400": 12,
+          "1771286400": 3,
+          "1771977600": 2,
+          "1772064000": 2,
+          "1772236800": 2,
+          "1772409600": 2,
+          "1772668800": 1,
+          "1772755200": 1,
+          "1772841600": 7,
+          "1772928000": 4,
+          "1773014400": 5,
+          "1773100800": 2,
+          "1773187200": 2,
+          "1773273600": 3,
+          "1773792000": 2,
+          "1774569600": 2,
+          "1774742400": 2,
+          "1774828800": 2,
+          "1774915200": 4,
+          "1775001600": 2,
+          "1775088000": 6,
+          "1775174400": 8,
+          "1775260800": 1,
+          "1775347200": 2,
+          "1775433600": 7,
+          "1775520000": 9,
+          "1775692800": 4,
+          "1775779200": 8,
+          "1775865600": 14,
+          "1775952000": 42,
+          "1776038400": 6,
+          "1776124800": 3,
+          "1776211200": 2,
+          "1776297600": 1,
+          "1776384000": 5,
+          "1776470400": 1,
+          "1776556800": 9,
+          "1776816000": 1
+        },
+      });
+      setLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!loading && containerRef.current) {
+      const cards = containerRef.current.querySelectorAll('.holo-card-reveal');
+      gsap.fromTo(cards, 
+        { opacity: 0, y: 50, scale: 0.95 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          scale: 1, 
+          duration: 1.5, 
+          stagger: 0.15, 
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+          }
+        }
+      );
+    }
+  }, [loading]);
 
   const handleReturn = () => {
     window.dispatchEvent(new CustomEvent('trigger-transition', { 
-      detail: { name: 'Returning Home', target: 'home' } 
+      detail: { name: 'De-initializing Matrix', target: 'home' } 
     }));
     const scrollTo = (location.state as any)?.fromSection || 'home';
     setTimeout(() => navigate('/', { state: { skipIntro: true, scrollTo } }), 400);
   };
 
-  useEffect(() => {
-    setProfile({
-      username: 'Rachit-Kakkad1',
-      totalSolved: 153,
-      easySolved: 94,
-      mediumSolved: 47,
-      hardSolved: 12,
-      ranking: 1025382,
-      contributionPoints: 76.9,
-      reputation: 245,
-      submissionCalendar: {},
-    });
-    setLoading(false);
-  }, []);
-
-  const solvedProblems: Problem[] = [
-    { id: '1', title: 'Longest Palindromic Substring', difficulty: 'Medium', category: 'String', date: '2024-04-18', status: 'Solved' },
-    { id: '2', title: 'N-th Tribonacci Number', difficulty: 'Easy', category: 'Dynamic Programming', date: '2024-04-17', status: 'Solved' },
-    { id: '3', title: 'Day of the Year', difficulty: 'Easy', category: 'Math', date: '2024-04-17', status: 'Solved' },
-    { id: '4', title: 'Find Greatest Common Divisor of Array', difficulty: 'Easy', category: 'Array', date: '2024-04-17', status: 'Solved' },
-    { id: '5', title: 'Add Binary', difficulty: 'Easy', category: 'Math', date: '2024-04-17', status: 'Solved' },
-    { id: '6', title: 'Find Peak Element', difficulty: 'Medium', category: 'Array', date: '2024-04-16', status: 'Solved' },
-  ];
-
   return (
-    <main className="min-h-screen bg-[#080808] text-white selection:bg-amber-500 selection:text-black pb-40">
-      <SEO title="Neural Interface | LeetCode Analytics" />
-      <AnimatedGrid />
-      <div className="absolute inset-0 opacity-[0.03] cinema-grain pointer-events-none" />
+    <main ref={containerRef} className="relative min-h-screen bg-[#020202] text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
+      <Helmet>
+        <title>LeetCode Stats | Rachit Kakkad</title>
+        <meta name="description" content="LeetCode problem-solving stats of Rachit Kakkad — DSA practice in C++." />
+        <link rel="canonical" href="https://rachit-hk-portfolio.vercel.app/leetcode-stats" />
+      </Helmet>
+      <SEO title="Neural Singularity | LeetCode Command" />
+      <PerspectiveGrid />
+      <QuantumHUD />
 
-      {loading ? (
-        <section className="h-screen flex items-center justify-center">
-          <div className="flex flex-col items-center gap-8">
-            <motion.div
-              animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-20 h-20 border-2 border-amber-500/20 border-t-amber-500 rounded-full"
-            />
-            <span className="text-[11px] font-black uppercase tracking-[0.5em] text-white/30 animate-pulse">Syncing Neural Grid...</span>
-          </div>
-        </section>
-      ) : (
-        <>
-          {/* Hero Section */}
-          <section className="relative h-screen flex flex-col items-center justify-center px-6 pt-20 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(245,158,11,0.12),transparent_60%)]" />
-
-            <div className="relative z-10 text-center max-w-6xl mx-auto space-y-12">
-              <motion.div
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="inline-flex items-center gap-4 px-8 py-3 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-3xl mx-auto"
-              >
-                <Trophy size={18} className="text-amber-500" />
-                <span className="text-[11px] font-black uppercase tracking-[0.5em] text-white/50">Competitive Intelligence @{profile?.username}</span>
-              </motion.div>
-
-              <motion.h1
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className="text-[clamp(4rem,15vw,12rem)] font-black leading-[0.85] tracking-tighter text-white uppercase italic"
-              >
-                Neural <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500">Interface</span>
-              </motion.h1>
-
-              <motion.div
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5, duration: 1 }}
-                className="flex flex-wrap items-center justify-center gap-12 md:gap-24 pt-12"
-              >
-                {[
-                  { label: 'Total Solved', value: profile?.totalSolved, color: 'text-white' },
-                  { label: 'Global Rank', value: `#${profile?.ranking?.toLocaleString()}`, color: 'text-amber-500' },
-                  { label: 'Percentile', value: `${profile?.contributionPoints}%`, color: 'text-emerald-500' }
-                ].map((stat, i) => (
-                  <div key={stat.label} className="text-center group cursor-default">
-                    <div className={`text-6xl md:text-8xl font-black ${stat.color} tracking-tighter group-hover:scale-110 transition-transform duration-500`}>{stat.value}</div>
-                    <div className="text-[11px] font-black uppercase tracking-[0.4em] text-white/20 mt-4">{stat.label}</div>
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-
-            <motion.div 
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute bottom-12 flex flex-col items-center gap-4 opacity-20"
-            >
-              <span className="text-[10px] font-black tracking-[0.5em] uppercase text-white">Initialize Analysis</span>
-              <div className="w-[1px] h-12 bg-gradient-to-b from-amber-500 to-transparent" />
-            </motion.div>
-          </section>
-
-          {/* Core Metrics */}
-          <section className="max-w-[1600px] mx-auto px-6 md:px-12 py-32">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-              <StatCard icon={Code2} label="Logic Units" value={profile?.totalSolved || 0} subValue="1 Badge: Intro to Pandas" delay={1} color="bg-amber-600/30" />
-              <StatCard icon={Trophy} label="Neural Rating" value="1,415" subValue="Contest Performance" delay={2} color="bg-indigo-600/30" />
-              <StatCard icon={Zap} label="Efficiency" value="Top 76.9%" subValue="Percentile Beats" delay={3} color="bg-emerald-600/30" />
-              <StatCard icon={Target} label="Neural Rank" value="#1,025,382" subValue="Contest: #665,755" delay={4} color="bg-orange-600/30" />
-            </div>
-          </section>
-
-          {/* Deep Analytics */}
-          <section className="max-w-[1600px] mx-auto px-6 md:px-12 py-40">
-            <div className="grid lg:grid-cols-5 gap-20 lg:gap-32 items-start">
-              <div className="lg:col-span-2 space-y-16">
-                <div className="border-l-4 border-amber-500 pl-8 space-y-4">
-                  <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none">Complexity<br/><span className="text-amber-500">Matrix</span></h2>
-                  <p className="text-xl text-white/30 font-medium leading-relaxed">Multidimensional breakdown of algorithmic problem-solving capacity across complexity tiers.</p>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-12 bg-white/[0.02] p-12 rounded-[3rem] border border-white/5">
-                  <CircularProgress value={profile?.easySolved || 0} max={profile?.totalSolved || 1} label="Easy" color={difficultyColors.Easy} delay={0.1} />
-                  <CircularProgress value={profile?.mediumSolved || 0} max={profile?.totalSolved || 1} label="Medium" color={difficultyColors.Medium} delay={0.2} />
-                  <CircularProgress value={profile?.hardSolved || 0} max={profile?.totalSolved || 1} label="Hard" color={difficultyColors.Hard} delay={0.3} />
-                </div>
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.section 
+            key="loader"
+            exit={{ opacity: 0, filter: "blur(20px)", scale: 1.1 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center p-10"
+          >
+            <div className="relative w-64 h-64 mb-16">
+              <motion.div 
+                animate={{ rotate: 360, scale: [1, 1.1, 1] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 border-2 border-dashed border-amber-500/20 rounded-full"
+              />
+              <motion.div 
+                animate={{ rotate: -360 }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-8 border border-white/5 rounded-full"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <LeetCode size={64} className="text-amber-500 drop-shadow-[0_0_20px_rgba(245,158,11,0.6)] animate-pulse" />
               </div>
-
-              <div className="lg:col-span-3 space-y-12">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-[11px] font-black uppercase tracking-[0.5em] text-white/20">Recent Decryption Logs</h3>
-                  <a href={`https://leetcode.com/${profile?.username}`} target="_blank" rel="noopener noreferrer" className="text-amber-500 text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">View Master Profile</a>
+            </div>
+            <div className="space-y-6 text-center">
+              <h2 className="text-[10px] font-black uppercase tracking-[1.5em] text-white/30">Neural Hub v4.0.26</h2>
+              <div className="text-4xl font-black italic tracking-tighter uppercase overflow-hidden">
+                <motion.div
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.8, ease: "circOut" }}
+                >
+                  <ScrambleText text="SYNCHRONIZING..." />
+                </motion.div>
+              </div>
+            </div>
+          </motion.section>
+        ) : (
+          <motion.div 
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5 }}
+            className="relative z-10 pb-60"
+          >
+            {/* HERO - APEX SINGULARITY */}
+            <header className="relative h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden">
+              <motion.div 
+                initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
+                className="relative z-10 space-y-16"
+              >
+                <div className="inline-flex items-center gap-4 px-8 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-3xl shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+                  <LeetCode size={16} className="text-amber-500 shadow-[0_0_15px_#f59e0b]" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.6em] text-white/60">Neural Identity: {profile?.username}</span>
                 </div>
-                <div className="grid gap-6">
-                  {solvedProblems.map((problem, index) => (
-                    <ProblemCard key={problem.id} problem={problem} index={index} />
+
+                <div className="space-y-4">
+                  <h1 className="text-[clamp(4rem,18vw,16rem)] font-black leading-[0.8] tracking-tighter uppercase italic">
+                    Neural<br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-white/80 to-white/5 drop-shadow-2xl">Entropy</span>
+                  </h1>
+                </div>
+
+                <p className="max-w-3xl mx-auto text-sm md:text-xl text-white/40 font-medium tracking-tight leading-relaxed">
+                  A high-fidelity visualization of cross-functional algorithmic logic and multi-tier structural engineering performance metrics.
+                </p>
+              </motion.div>
+
+              {/* Decorative Scan Line */}
+              <motion.div 
+                animate={{ top: ["-10%", "110%"] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500/40 to-transparent z-0 blur-[1px]"
+              />
+            </header>
+
+            {/* BENTO APEX */}
+            <section className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10 auto-rows-[280px]">
+              
+              {/* SINGULARITY CORE - TOTAL SOLVED (The New God-Tier Piece) */}
+              <HoloCard className="md:col-span-8 md:row-span-2 overflow-hidden bg-black/40 border-amber-500/10">
+                <SingularityCore value={profile?.totalSolved || 0} />
+              </HoloCard>
+
+              {/* Efficiency Hub */}
+              <HoloCard className="md:col-span-4 md:row-span-2 flex flex-col items-center justify-center gap-16 text-center border-amber-500/20 bg-amber-500/[0.02]">
+                <div className="relative w-64 h-64 group/gauge">
+                  <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_20px_rgba(245,158,11,0.2)]" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="46" fill="none" stroke="white" strokeWidth="0.5" className="opacity-10" />
+                    <motion.circle 
+                      cx="50" cy="50" r="46" fill="none" stroke="#f59e0b" strokeWidth="6" 
+                      strokeDasharray="289"
+                      initial={{ strokeDashoffset: 289 }}
+                      whileInView={{ strokeDashoffset: 289 - (289 * (profile?.contributionPoints || 0)) / 100 }}
+                      transition={{ duration: 3.5, ease: [0.16, 1, 0.3, 1] }}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 1.5, delay: 0.5 }}
+                      className="text-8xl font-black italic tracking-tighter text-amber-500"
+                    >
+                      {profile?.contributionPoints}
+                    </motion.div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.6em] text-white/30">Efficiency</div>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="text-[11px] font-black uppercase tracking-[0.5em] text-white/30">Synaptic Ranking</div>
+                  <div className="text-2xl font-black italic tracking-tight text-white/90 uppercase">
+                    TOP {profile?.ranking ? ((profile.ranking / 4000000) * 100).toFixed(1) : '24.2'}% GLOBAL
+                  </div>
+                </div>
+              </HoloCard>
+
+              {/* Complexity Matrix - Wide */}
+              <HoloCard className="md:col-span-12 md:row-span-1 bg-white/[0.01]">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-20 h-full items-center">
+                  {[
+                    { label: 'L1: Basic', count: profile?.easySolved, color: difficultyColors.Easy },
+                    { label: 'L2: Neural', count: profile?.mediumSolved, color: difficultyColors.Medium },
+                    { label: 'L3: Apex', count: profile?.hardSolved, color: difficultyColors.Hard }
+                  ].map((tier, idx) => (
+                    <div key={tier.label} className="space-y-6">
+                      <div className="flex justify-between items-end">
+                        <span className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">{tier.label}</span>
+                        <span className="text-4xl font-black italic tracking-tighter" style={{ color: tier.color }}>{tier.count}</span>
+                      </div>
+                      <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${(tier.count! / profile?.totalSolved!) * 100}%` }}
+                          transition={{ duration: 2.5, delay: 0.2 * idx, ease: [0.16, 1, 0.3, 1] }}
+                          style={{ backgroundColor: tier.color }}
+                          className="h-full shadow-[0_0_20px_currentColor]"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </HoloCard>
+
+              {/* Secondary Stats */}
+              <HoloCard className="md:col-span-6 md:row-span-1 border-indigo-500/10 hover:border-indigo-500/30">
+                <div className="flex items-center gap-10 h-full">
+                  <div className="w-24 h-24 rounded-full border border-white/10 flex items-center justify-center relative overflow-hidden group/icon">
+                    <div className="absolute inset-0 bg-indigo-500/10 blur-2xl group-hover/icon:bg-indigo-500/20 transition-colors duration-700" />
+                    <Network size={40} className="text-indigo-500 relative z-10 transition-transform duration-700 group-hover/icon:scale-110" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-[0.5em] text-white/20 mb-2">Reputation Protocol</div>
+                    <div className="text-6xl font-black italic tracking-tighter text-white/90 uppercase">{profile?.reputation} Units</div>
+                  </div>
+                </div>
+              </HoloCard>
+
+              <HoloCard className="md:col-span-6 md:row-span-1 border-emerald-500/10 hover:border-emerald-500/30">
+                <div className="flex items-center gap-10 h-full">
+                  <div className="w-24 h-24 rounded-full border border-white/10 flex items-center justify-center relative overflow-hidden group/icon">
+                    <div className="absolute inset-0 bg-emerald-500/10 blur-2xl group-hover/icon:bg-emerald-500/20 transition-colors duration-700" />
+                    <Target size={40} className="text-emerald-500 relative z-10 transition-transform duration-700 group-hover/icon:scale-110" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-[0.5em] text-white/20 mb-2">Neural Rank</div>
+                    <div className="text-6xl font-black italic tracking-tighter text-white/90 uppercase">#{profile?.ranking?.toLocaleString()}</div>
+                  </div>
+                </div>
+              </HoloCard>
+
+            </section>
+
+            {/* ARCHIVES - APEX LIST */}
+            <section className="max-w-[1200px] mx-auto px-6 py-60">
+              <div className="space-y-20">
+                <div className="flex items-center gap-8">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: 64 }}
+                    className="h-px bg-amber-500" 
+                  />
+                  <h2 className="text-6xl font-black italic uppercase tracking-tighter">Decryption Logs</h2>
+                </div>
+
+                <div className="grid gap-8">
+                  {[
+                    { title: 'Zigzag Conversion', diff: 'Medium', cat: 'String', score: '1,420', delay: 0.1 },
+                    { title: 'Fizz Buzz', diff: 'Easy', cat: 'Math', score: '850', delay: 0.2 },
+                    { title: 'Self Crossing', diff: 'Hard', cat: 'Geometry', score: '1,100', delay: 0.3 },
+                    { title: 'Number of Good Pairs', diff: 'Easy', cat: 'Array', score: '620', delay: 0.4 },
+                    { title: 'Convert the Temperature', diff: 'Easy', cat: 'Math', score: '540', delay: 0.5 }
+                  ].map((log, i) => (
+                    <motion.div
+                      key={log.title}
+                      initial={{ opacity: 0, x: -50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 1.2, delay: log.delay, ease: [0.16, 1, 0.3, 1] }}
+                      whileHover={{ x: 30, backgroundColor: "rgba(255,255,255,0.03)" }}
+                      className="group p-12 rounded-[3rem] border border-white/5 bg-white/[0.01] flex flex-col md:flex-row items-start md:items-center justify-between cursor-pointer transition-all duration-700 backdrop-blur-sm"
+                    >
+                      <div className="flex items-center gap-12">
+                        <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center group-hover:bg-amber-500/10 transition-colors duration-700">
+                          <LeetCode size={32} style={{ color: (difficultyColors as any)[log.diff] }} className="group-hover:scale-125 transition-transform duration-700 drop-shadow-[0_0_12px_currentColor]" />
+                        </div>
+                        <div>
+                          <h4 className="text-3xl font-black italic tracking-tighter group-hover:text-amber-500 transition-colors duration-700 uppercase">{log.title}</h4>
+                          <div className="flex items-center gap-8 mt-4">
+                            <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: (difficultyColors as any)[log.diff] }}>{log.diff}</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">{log.cat}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-8 md:mt-0 text-left md:text-right">
+                        <div className="text-[11px] font-black uppercase tracking-[0.4em] text-white/10 mb-2">Yield</div>
+                        <div className="text-3xl font-black italic group-hover:text-white transition-colors duration-700">+{log.score}</div>
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          {/* BACK NAVIGATION */}
-          <section className="py-24 flex flex-col items-center justify-center px-6 text-center space-y-12">
-            <div className="space-y-4">
-              <h3 className="text-white/20 font-black text-[11px] uppercase tracking-[1em]">Termination Protocol</h3>
-              <p className="text-2xl text-white font-bold tracking-tight">Return to the primary core hub?</p>
-            </div>
+            {/* EXIT PROTOCOL */}
+            <section className="py-60 flex flex-col items-center">
+              <motion.button 
+                onClick={handleReturn}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="group relative w-64 h-64 rounded-full flex items-center justify-center overflow-hidden"
+              >
+                <div className="absolute inset-0 border-2 border-dashed border-white/10 rounded-full animate-[spin_30s_linear_infinite]" />
+                <div className="absolute inset-4 bg-white rounded-full translate-y-full group-hover:translate-y-0 transition-transform duration-[0.8s] ease-[0.16,1,0.3,1]" />
+                <div className="relative z-10 flex flex-col items-center gap-4 group-hover:text-black transition-colors duration-[0.8s] ease-[0.16,1,0.3,1]">
+                  <ArrowLeft size={40} className="group-hover:-translate-x-2 transition-transform duration-700" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.6em]">Initialize Jump</span>
+                </div>
+              </motion.button>
+            </section>
 
-            <button 
-              onClick={handleReturn}
-              className="group relative flex items-center gap-8 px-16 py-8 bg-white text-black font-black text-sm uppercase tracking-[0.5em] rounded-full hover:scale-110 active:scale-95 transition-all duration-700 shadow-[0_0_50px_rgba(245,158,11,0.2)]"
-            >
-              <div className="absolute inset-0 rounded-full bg-white blur-2xl opacity-0 group-hover:opacity-20 transition-opacity" />
-              <ArrowLeft size={20} className="group-hover:-translate-x-3 transition-transform duration-500" />
-              Return to Core
-            </button>
-          </section>
-        </>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <footer className="relative z-10 py-32 border-t border-white/5 text-center bg-black/40 backdrop-blur-md">
+        <div className="text-[10px] font-black uppercase tracking-[2em] text-white/10 italic">
+          Rachit Kakkad — Neural Interface v4.0.26 — Optimized for Kinetic Logic
+        </div>
+      </footer>
     </main>
   );
 }
