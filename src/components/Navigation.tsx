@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Github, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, Award, Briefcase } from 'lucide-react';
+import { Menu, X, Linkedin, Youtube, ChevronDown, Monitor, MessageSquare, BookOpen, Award, Briefcase } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LeetCode, XIcon } from './Icons';
+import { LeetCode, XIcon, Github } from './Icons';
 import GuestbookModal from './GuestbookModal';
 
 const NAV_ITEMS = [
@@ -164,7 +164,7 @@ export default function Navigation() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const id = entry.target.id;
-          if (id === 'projects' || id === 'hackathon') {
+          if (id === 'projects' || id === 'hackathon' || id === 'opensource') {
             setActiveSection('work');
           } else {
             setActiveSection(id);
@@ -175,7 +175,7 @@ export default function Navigation() {
 
     observerRef.current = new IntersectionObserver(observerCallback, observerOptions);
     
-    const sectionIds = ['home', 'about', 'skills', 'hackathon', 'projects', 'freelance', 'education', 'certificates', 'contact', 'uses'];
+    const sectionIds = ['home', 'about', 'skills', 'hackathon', 'projects', 'opensource', 'freelance', 'education', 'certificates', 'contact', 'uses'];
     sectionIds.forEach((id) => {
       const element = document.getElementById(id);
       if (element) observerRef.current?.observe(element);
