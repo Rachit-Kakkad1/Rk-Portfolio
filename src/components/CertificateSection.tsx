@@ -228,7 +228,7 @@ function NewsCard({ cert, index, onClick }: { cert: typeof CERTIFICATES[0]; inde
       className="group relative cursor-pointer bg-[#fcfaf0] p-4 border border-[#e0ddcf] shadow-[2px_2px_0px_rgba(0,0,0,0.05)] hover:shadow-[8px_8px_0px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col aspect-[4/5] overflow-hidden"
     >
       {/* Newspaper Grain Texture Overlay */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply bg-[url('data:image/svg+xml,%3Csvg_viewBox=%220_0_200_200%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.65%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22/%3E%3C/svg%3E')]" />
 
       {/* Header Info (Classified Style) */}
       <div className="flex justify-between items-center mb-3 border-b border-[#e0ddcf] pb-2">
