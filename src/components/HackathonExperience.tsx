@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, X, ExternalLink, Github, FileText, Globe, ChevronLeft, ChevronRight, MousePointerClick, Eye, EyeOff } from 'lucide-react';
+import { ArrowUpRight, X, ExternalLink, FileText, Globe, ChevronLeft, ChevronRight, MousePointerClick, Eye, EyeOff } from 'lucide-react';
+import { Github } from './Icons';
 import { hackathons, HackathonData } from '../data/projects';
 import AgriCertDetail from './AgriCertDetail';
 import COSDetail from './COSDetail';
