@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Github, Star, GitFork, Activity, ShieldCheck, Zap } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import SEO from '../components/SEO';
 
 const GITHUB_USERNAME = "Rachit-Kakkad1";
@@ -39,6 +40,11 @@ export default function GitHubStats() {
 
   return (
     <main className="min-h-screen bg-[#0E0F14] text-white selection:bg-[#B45309] selection:text-white py-24 md:py-32 overflow-x-hidden">
+      <Helmet>
+        <title>GitHub Stats | Rachit Kakkad</title>
+        <meta name="description" content="GitHub contribution metrics and open source activity of Rachit Kakkad." />
+        <link rel="canonical" href="https://rachit-hk-portfolio.vercel.app/github-stats" />
+      </Helmet>
       <SEO title="System Intelligence | GitHub Analytics" />
       
       {/* Background Decorative Grid */}
