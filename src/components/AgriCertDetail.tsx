@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Github, Globe, FileText, ExternalLink, Shield, Zap, BarChart3, Cpu, Layers, Leaf, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Globe, FileText, ExternalLink, Shield, Zap, BarChart3, Cpu, Layers, Leaf, ChevronRight } from 'lucide-react';
+import { Github } from './Icons';
 
 interface AgriCertDetailProps {
   onClose: () => void;
