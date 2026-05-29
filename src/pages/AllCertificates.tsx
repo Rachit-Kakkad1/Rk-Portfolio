@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ExternalLink, ArrowUpRight } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { CERTIFICATES } from '../data/certificates';
@@ -15,7 +16,7 @@ function CertCard({ cert, index, onClick }: { cert: typeof CERTIFICATES[0]; inde
       onClick={onClick}
       className="group relative cursor-pointer bg-[#fcfaf0] p-5 border border-[#e0ddcf] shadow-[4px_4px_0px_rgba(0,0,0,0.05)] hover:shadow-[12px_12px_0px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col h-[480px] overflow-hidden"
     >
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply bg-[url('data:image/svg+xml,%3Csvg_viewBox=%220_0_200_200%22_xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter_id=%22n%22%3E%3CfeTurbulence_type=%22fractalNoise%22_baseFrequency=%220.65%22_numOctaves=%223%22_stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect_width=%22100%25%22_height=%22100%25%22_filter=%22url(%23n)%22/%3E%3C/svg%3E')]" />
 
       <div className="flex justify-between items-center mb-4 border-b border-[#e0ddcf] pb-2">
         <span className="text-[10px] font-black uppercase tracking-widest text-black/40 font-serif italic">Vol. {cert.year}</span>
@@ -71,6 +72,11 @@ export default function AllCertificates() {
 
   return (
     <main className="min-h-screen bg-[#F6F3EE] text-[#1C1C1C] selection:bg-[#B45309] selection:text-white">
+      <Helmet>
+        <title>Certificates | Rachit Kakkad</title>
+        <meta name="description" content="Certifications and achievements earned by Rachit Kakkad in full stack development, AI, and cloud." />
+        <link rel="canonical" href="https://rachit-hk-portfolio.vercel.app/all-certificates" />
+      </Helmet>
       <SEO title="The Complete Archives | Verified Credentials" />
 
       {/* Sticky Header */}
