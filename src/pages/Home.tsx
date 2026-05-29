@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Linkedin, Youtube, Gamepad2 } from 'lucide-react';
+import { Linkedin, Youtube } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LeetCode, XIcon, Github } from '../components/Icons';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import createGlobe from 'cobe';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -15,7 +16,7 @@ import { useScrollReveal } from '../useScrollReveal';
 const LazyAboutSection = React.lazy(() => import('../components/AboutSection'));
 const LazyKeyboardSection = React.lazy(() => import('../components/KeyboardSection'));
 const LazyProjectsSection = React.lazy(() => import('../components/ProjectsSection'));
-const LazyMedClearShowcase = React.lazy(() => import('../components/MedClearShowcase'));
+const LazyOpenSourceSection = React.lazy(() => import('../components/OpenSourceSection'));
 const LazyCertificateSection = React.lazy(() => import('../components/CertificateSection'));
 const LazyHackathonExperience = React.lazy(() => import('../components/HackathonExperience'));
 const LazyFreelanceExperience = React.lazy(() => import('../components/FreelanceExperience'));
@@ -156,6 +157,11 @@ export default function Home() {
 
   return (
     <main className="bg-[#9a9a9a] relative overflow-x-hidden">
+      <Helmet>
+        <title>Rachit Kakkad | Full Stack & AI Engineer</title>
+        <meta name="description" content="Portfolio of Rachit Kakkad — Full Stack Developer and AI Engineer from Gujarat, India. React, Node.js, Python, FastAPI, LLM integrations." />
+        <link rel="canonical" href="https://rachit-hk-portfolio.vercel.app/" />
+      </Helmet>
       <SEO 
         description="Official portfolio of Rachit Kakkad. Building production-grade AI systems, blockchain platforms & cinematic web experiences. Specialist in React, Node.js, and Python."
       />
@@ -275,9 +281,9 @@ export default function Home() {
               <section aria-label="Projects" data-scroll-reveal="fade-up"><LazyProjectsSection /></section>
             </LazySection>
 
-            <LazySection id="medclear">
-              <section aria-label="MedClear Flagship Showcase" data-scroll-reveal="fade-up">
-                <LazyMedClearShowcase />
+            <LazySection id="opensource">
+              <section aria-label="Open Source Contributions" data-scroll-reveal="fade-up">
+                <LazyOpenSourceSection />
               </section>
             </LazySection>
           </div>
@@ -319,38 +325,7 @@ export default function Home() {
             <section aria-label="Contact"><LazyContactSection /></section>
           </LazySection>
 
-          {/* GitHub Game Floating Button */}
-          <motion.button
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent('trigger-transition', { 
-                detail: { name: 'Initializing Game...', target: 'github-stats' } 
-              }));
-              setTimeout(() => navigate('/github-stats', { state: { fromSection: 'home' } }), 400);
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="fixed bottom-[104px] right-6 md:bottom-[144px] md:right-12 z-[99] w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center p-0 overflow-visible group"
-            aria-label="Play GitHub Game"
-          >
-            {/* Orbital Ring - Constant Rotation */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-[-8px] border-2 border-dashed border-[#B45309]/30 rounded-full pointer-events-none group-hover:border-[#B45309]/60 transition-colors duration-500"
-            />
-            
-            {/* Secondary Orbital Ring - Faster, Reverse Rotation */}
-            <motion.div
-              animate={{ rotate: -360 }}
-              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-[-4px] border border-[#B45309]/20 rounded-full pointer-events-none opacity-50"
-            />
 
-            {/* The Core Orb */}
-            <div className="relative w-full h-full rounded-full bg-[#1C1C1C] border border-[#B45309]/20 flex items-center justify-center shadow-[0_0_30px_rgba(180,83,9,0.3)] overflow-hidden z-10 transition-transform duration-500 group-hover:scale-105 group-hover:bg-[#1a1a1a]">
-               <Gamepad2 size={28} className="text-[#B45309] animate-pulse group-hover:animate-none" />
-            </div>
-          </motion.button>
 
           <AIAssistant />
         </React.Suspense>
