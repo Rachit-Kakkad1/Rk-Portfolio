@@ -58,6 +58,24 @@ export interface HackathonData {
 
 export const PROJECT_DATA: ProjectData[] = [
   {
+    id: 'sanjeevani',
+    headline: 'Sanjeevani',
+    tag: 'HEALTHCARE · AI · TRANSPARENCY',
+    description: 'Healthcare transparency platform that audits hospital bills using OCR, compares against government pricing datasets (CGHS & Jan Aushadhi), and empowers patients to make informed decisions.',
+    longDescription: 'Sanjeevani is a healthcare transparency platform designed to help patients understand hospital bills and medical expenses. It uses OCR-based document processing to extract medicines, procedures, and diagnostic tests from uploaded bills, then compares them against official government healthcare pricing datasets such as CGHS and Jan Aushadhi references — reducing information asymmetry in healthcare.',
+    tech: ['React', 'Node.js', 'MongoDB', 'Python', 'OpenCV', 'EasyOCR'],
+    year: '2026',
+    image: '',
+    github: 'https://github.com/Rachit-Kakkad1/Sanjeevani',
+    live: 'https://sanjeevani-healthcare.vercel.app',
+    docs: '#',
+    demoVideo: '#',
+    challenge: 'Millions of patients pay hospital bills without a reliable way to verify pricing. Medical documents are complex, pricing is fragmented, and awareness of affordable government-backed alternatives like Jan Aushadhi remains limited.',
+    solution: 'A platform combining OCR technology, CGHS and Jan Aushadhi healthcare datasets, and a fuzzy matching engine to provide patients with an easy-to-understand audit of their medical bills and discover affordable alternatives.',
+    results: [{ value: 'CGHS', label: 'Govt. Dataset' }, { value: 'OCR', label: 'Bill Analysis' }, { value: '₹ Saved', label: 'Cost Insights' }],
+    achievement: 'Flagship Investigation',
+  },
+  {
     id: 'agricert',
     headline: 'AgriCert',
     tag: 'BLOCKCHAIN · WEB3 · AGRICULTURE',
@@ -194,24 +212,7 @@ export const PROJECT_DATA: ProjectData[] = [
     solution: 'An analytics dashboard with predictive models, bunk calculators, and real-time attendance synchronization via Firebase.',
     results: [{ value: '95%', label: 'Prediction Accuracy' }, { value: 'Real-time', label: 'Sync' }, { value: 'Pilot', label: 'Program' }],
   },
-  {
-    id: 'medclear',
-    headline: 'MedClear',
-    tag: 'HEALTHCARE · AI · AUDIT',
-    description: 'AI-assisted healthcare auditing infrastructure detecting hidden medical overcharges through OCR extraction and fraud heuristics.',
-    longDescription: 'MedClear is an advanced healthcare billing intelligence platform designed to expose hidden hospital overcharges, duplicate procedures, and inflated medical pricing. By leveraging high-speed OCR extraction, government (NPPA) benchmark verification, and intelligent fraud analysis heuristics, it brings transparency to medical billing.',
-    tech: ['React', 'Python', 'FastAPI', 'OCR', 'NLP', 'Framer Motion'],
-    year: '2026',
-    image: '',
-    github: '#',
-    live: '#',
-    docs: '#',
-    demoVideo: '#',
-    challenge: 'Medical billing is notoriously opaque, often containing hidden markups and duplicate charges that are nearly impossible for patients to detect manually.',
-    solution: 'An automated audit pipeline that extracts data from medical invoices using AI-OCR and compares charges against government-regulated price benchmarks.',
-    results: [{ value: '+1788%', label: 'Max Markup' }, { value: '₹85k+', label: 'Detected Fraud' }, { value: '0.8s', label: 'Audit Speed' }],
-    achievement: 'Flagship Investigation',
-  },
+
 ];
 
 export const CODINGGITA_DATA: ProjectData = {
