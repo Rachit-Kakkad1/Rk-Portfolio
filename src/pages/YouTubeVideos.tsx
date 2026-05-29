@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Youtube, Play, Eye, Clock, ThumbsUp, Monitor, Code, Database, Shield, Cpu, Video, ExternalLink, PlayCircle } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import gsap from 'gsap';
@@ -190,6 +191,11 @@ export default function YouTubeVideos() {
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] selection:bg-[#B45309] selection:text-white pb-32">
+      <Helmet>
+        <title>YouTube Videos | Rachit Kakkad</title>
+        <meta name="description" content="LeetCode explainer videos and coding content by Rachit Kakkad on YouTube." />
+        <link rel="canonical" href="https://rachit-hk-portfolio.vercel.app/youtube-videos" />
+      </Helmet>
       <SEO title="YouTube Videos" />
       
       {/* GOD-TIER HERO */}
