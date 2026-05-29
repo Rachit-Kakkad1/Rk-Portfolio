@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, motionValue } from 'framer-motion';
-import { ArrowLeft, Github, Globe, FileText, ExternalLink, Activity, Database, GitMerge, FileDigit, Cpu, Layers, ShieldCheck, Maximize, ActivitySquare } from 'lucide-react';
+import { ArrowLeft, Globe, FileText, ExternalLink, Activity, Database, GitMerge, FileDigit, Cpu, Layers, ShieldCheck, Maximize, ActivitySquare } from 'lucide-react';
+import { Github } from './Icons';
 
 interface PLMDetailProps {
   onClose: () => void;
