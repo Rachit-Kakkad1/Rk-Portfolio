@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Github, Globe, FileText, ExternalLink, Activity, Map, Radio, ShieldCheck, Truck, Users, Banknote, ShieldAlert, Zap, Layers, Server } from 'lucide-react';
+import { ArrowLeft, Globe, FileText, ExternalLink, Activity, Map, Radio, ShieldCheck, Truck, Users, Banknote, ShieldAlert, Zap, Layers, Server } from 'lucide-react';
+import { Github } from './Icons';
 
 interface FleetFlowDetailProps {
   onClose: () => void;
