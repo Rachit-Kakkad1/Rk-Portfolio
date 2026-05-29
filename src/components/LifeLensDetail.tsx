@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowLeft, Github, Globe, FileText, ExternalLink, Activity, Leaf, Brain, Zap, Moon, Cloud, CheckCircle, Smartphone } from 'lucide-react';
+import { ArrowLeft, Globe, FileText, ExternalLink, Activity, Leaf, Brain, Zap, Moon, Cloud, CheckCircle, Smartphone } from 'lucide-react';
+import { Github } from './Icons';
 
 interface LifeLensDetailProps {
   onClose: () => void;
