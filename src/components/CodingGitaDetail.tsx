@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowLeft, Github, Globe, FileText, ExternalLink, ShieldAlert, Cpu, Database, Volume2, Users, Layers, Zap, CheckCircle2, Server } from 'lucide-react';
+import { ArrowLeft, Globe, FileText, ExternalLink, ShieldAlert, Cpu, Database, Volume2, Users, Layers, Zap, CheckCircle2, Server } from 'lucide-react';
+import { Github } from './Icons';
 
 interface CodingGitaDetailProps {
   onClose: () => void;
