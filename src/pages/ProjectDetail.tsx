@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { PROJECT_DATA, hackathons } from '../data/projects';
 import SEO from '../components/SEO';
 import AgriCertDetail from '../components/AgriCertDetail';
@@ -10,7 +11,7 @@ import FleetFlowDetail from '../components/FleetFlowDetail';
 import LifeLensDetail from '../components/LifeLensDetail';
 import CodingGitaDetail from '../components/CodingGitaDetail';
 import AttendifyDetail from '../components/AttendifyDetail';
-import MedClearDetail from '../components/MedClearDetail';
+import SanjeevaniDetail from '../components/MedClearDetail';
 import ProjectDetailOverlay from '../components/ProjectDetailOverlay';
 import { HackathonDetailOverlay } from '../components/HackathonExperience';
 
@@ -23,7 +24,7 @@ const DETAIL_COMPONENTS: Record<string, React.ComponentType<{ onClose: () => voi
   lifelens: LifeLensDetail,
   codinggita: CodingGitaDetail,
   attendify: AttendifyDetail,
-  medclear: MedClearDetail,
+  sanjeevani: SanjeevaniDetail,
 };
 
 export default function ProjectDetail() {
@@ -70,6 +71,11 @@ export default function ProjectDetail() {
 
   return (
     <div className="relative">
+      <Helmet>
+        <title>{projectTitle} | Rachit Kakkad</title>
+        <meta name="description" content={`Details of ${projectTitle} — a project by Rachit Kakkad, Full Stack and AI Engineer.`} />
+        <link rel="canonical" href={`https://rachit-hk-portfolio.vercel.app/project/${id}`} />
+      </Helmet>
       <SEO 
         title={projectTitle}
         description={projectDescription}
