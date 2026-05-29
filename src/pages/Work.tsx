@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Github, Globe, FileText, ArrowLeft, ArrowUpRight } from 'lucide-react';
+import { X, Globe, FileText, ArrowLeft, ArrowUpRight } from 'lucide-react';
+import { Github } from '../components/Icons';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { ARCHIVE_PROJECTS } from '../data/projects';
 import SEO from '../components/SEO';
@@ -35,6 +37,11 @@ export default function Work() {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-[#F6F3EE] text-[#1C1C1C] overflow-x-hidden pt-20"
     >
+      <Helmet>
+        <title>Projects | Rachit Kakkad</title>
+        <meta name="description" content="Hackathon projects and full-stack apps built by Rachit Kakkad — including COS, Sanjeevani, AgriCert, ThreatLens and more." />
+        <link rel="canonical" href="https://rachit-hk-portfolio.vercel.app/work" />
+      </Helmet>
       <SEO 
         title="Projects"
         description="Explore the complete archive of Rachit Kakkad's projects, including AI systems, blockchain protocols, and high-performance web applications."
