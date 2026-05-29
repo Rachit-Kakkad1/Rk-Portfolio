@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Github, Globe, FileText, ExternalLink, Brain, Mic, Eye, Shield, Zap, Database, Cpu, Network, ChevronRight, Lock, Layers, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Globe, FileText, ExternalLink, Brain, Mic, Eye, Shield, Zap, Database, Cpu, Network, ChevronRight, Lock, Layers, BarChart3 } from 'lucide-react';
+import { Github } from './Icons';
 
 interface COSDetailProps {
   onClose: () => void;
