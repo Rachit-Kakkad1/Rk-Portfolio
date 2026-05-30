@@ -20,17 +20,34 @@ interface Contribution {
 
 const CONTRIBUTIONS: Contribution[] = [
   {
+    repo: 'GSoC-Org-Finder',
+    repoUrl: 'https://github.com/S3DFX-CYBER/GSoC-Org-Finder-',
+    prUrl: 'https://github.com/S3DFX-CYBER/GSoC-Org-Finder-/pull/1565',
+    prNumber: '#1565',
+    title: 'fix: prevent stale recommendation results from async race conditions',
+    status: 'merged',
+    focusAreas: ['Async State Management', 'Frontend Reliability Engineering', 'Request Lifecycle Safety'],
+    highlights: [
+      'Fixed race conditions in recommendation workflow',
+      'Implemented AbortController-based cancellation',
+      'Added request ownership validation',
+      'Prevented stale async responses from overwriting newer results',
+      'Improved UI state synchronization',
+    ],
+    icon: <Layers size={20} />,
+  },
+  {
     repo: 'iloveAgents',
     repoUrl: 'https://github.com/AditthyaSS/iloveAgents',
     prUrl: 'https://github.com/AditthyaSS/iloveAgents/pull/202',
     prNumber: '#202',
     title: 'fix: prevent frontend crashes from malformed AI responses in ScorecardOutput',
     status: 'merged',
-    focusAreas: ['Security & Stability', 'Defensive Frontend', 'AI Response Hardening'],
+    focusAreas: ['Security & Stability Engineering', 'Defensive Frontend Engineering', 'AI Response Hardening'],
     highlights: [
-      'Prevented runtime crashes caused by malformed AI-generated JSON',
-      'Added safer rendering and parsing checks',
-      'Hardened ScorecardOutput rendering pipeline',
+      'Prevented runtime crashes from malformed AI responses',
+      'Added defensive rendering safeguards',
+      'Improved frontend reliability',
     ],
     labels: ['gssoc:approved', 'level:beginner', 'type:security'],
     icon: <Shield size={20} />,
@@ -41,30 +58,14 @@ const CONTRIBUTIONS: Contribution[] = [
     prUrl: 'https://github.com/AditthyaSS/iloveAgents/pull/197',
     prNumber: '#197',
     title: '[GSSoC 2026] Fix navbar logo scroll-to-top behavior',
-    status: 'closed',
-    focusAreas: ['UX Improvement', 'Frontend Navigation'],
+    status: 'merged',
+    focusAreas: ['UX Engineering', 'Frontend Navigation'],
     highlights: [
       'Fixed navbar logo scroll behavior',
       'Improved navigation consistency',
-      'Enhanced frontend interaction experience',
+      'Enhanced user experience',
     ],
     icon: <Code2 size={20} />,
-  },
-  {
-    repo: 'CommitPulse',
-    repoUrl: 'https://github.com/JhaSourav07/commitpulse',
-    prUrl: 'https://github.com/JhaSourav07/commitpulse/pull/186',
-    prNumber: '#186',
-    title: 'refactor(svg): centralize validation and sanitization for dynamic SVG params',
-    status: 'merged',
-    focusAreas: ['Security Engineering', 'Backend Validation', 'SVG Hardening'],
-    highlights: [
-      'Centralized SVG query parameter sanitization',
-      'Built reusable validation infrastructure (hex, font, radius, speed)',
-      'Prevented malformed interpolation/injection vectors',
-      'Added extensive test coverage',
-    ],
-    icon: <Lock size={20} />,
   },
   {
     repo: 'CommitPulse',
@@ -75,12 +76,28 @@ const CONTRIBUTIONS: Contribution[] = [
     status: 'merged',
     focusAreas: ['Infrastructure Engineering', 'API Protection', 'Backend Stability'],
     highlights: [
-      'Added centralized API rate limiting middleware',
-      'Protected GitHub API quota from abuse/exhaustion',
-      'Implemented lightweight in-memory request tracking',
-      'Added proper 429 handling and rate-limit headers',
+      'Centralized rate limiting middleware',
+      'Request throttling and abuse prevention',
+      'Improved backend resilience',
+      'Protected API resources from exhaustion',
     ],
     icon: <Zap size={20} />,
+  },
+  {
+    repo: 'CommitPulse',
+    repoUrl: 'https://github.com/JhaSourav07/commitpulse',
+    prUrl: 'https://github.com/JhaSourav07/commitpulse/pull/186',
+    prNumber: '#186',
+    title: 'refactor(svg): centralize validation and sanitization for dynamic SVG params',
+    status: 'merged',
+    focusAreas: ['Security Engineering', 'Backend Validation Infrastructure', 'SVG Rendering Hardening'],
+    highlights: [
+      'Centralized sanitization architecture',
+      'Added reusable validation framework',
+      'Hardened SVG generation pipeline',
+      'Reduced injection and malformed input risks',
+    ],
+    icon: <Lock size={20} />,
   },
 ];
 
@@ -88,6 +105,8 @@ const CONTRIBUTIONS: Contribution[] = [
 
 export default function OpenSourceSection() {
   const mergedCount = CONTRIBUTIONS.filter(c => c.status === 'merged').length;
+  const totalPRs = CONTRIBUTIONS.length;
+  const uniqueReposCount = new Set(CONTRIBUTIONS.map(c => c.repo)).size;
 
   return (
     <section
@@ -158,8 +177,8 @@ export default function OpenSourceSection() {
           </div>
           <div className="flex items-center gap-8">
             {[
-              { label: 'Repos', value: '2' },
-              { label: 'PRs', value: '4' },
+              { label: 'Repos', value: String(uniqueReposCount) },
+              { label: 'PRs', value: String(totalPRs) },
               { label: 'Merged', value: String(mergedCount) },
             ].map((s, i) => (
               <div key={i} className="text-center">
