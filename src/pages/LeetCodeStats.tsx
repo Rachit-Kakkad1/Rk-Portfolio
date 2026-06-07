@@ -3,7 +3,6 @@ import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionV
 import { Trophy, Code2, Clock, Zap, Star, Target, TrendingUp, Calendar, ChevronRight, Flame, Award, Brain, CheckCircle, ArrowLeft, Activity, Cpu, Binary, Network, Shield, ZapIcon, Globe, Command, Terminal, Layers, Eye, Radio, Fingerprint, Sparkles } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { LeetCode } from '../components/Icons';
-import { LeetCode } from '../components/Icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 import gsap from 'gsap';
@@ -161,7 +160,7 @@ const HoloCard = ({ children, className = "", delay = 0 }: { children: React.Rea
         style={{
           background: useTransform(
             [x, y],
-            ([mx, my]) => `radial-gradient(800px circle at ${mx + 200}px ${my + 200}px, rgba(245, 158, 11, 0.1), transparent 80%)`
+            ([mx, my]: any) => `radial-gradient(800px circle at ${(mx as number) + 200}px ${(my as number) + 200}px, rgba(245, 158, 11, 0.1), transparent 80%)`
           ),
         }}
       />
