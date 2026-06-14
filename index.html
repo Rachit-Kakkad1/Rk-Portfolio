@@ -13,7 +13,10 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="canonical" href="https://rachit-hk-portfolio.vercel.app/" />
-    <link rel="preload" href="/profile2.png" as="image" type="image/png" fetchpriority="high" />
+
+    <!-- Critical hero image preloads (LCP) -->
+    <link rel="preload" href="/hero.png"        as="image" type="image/png" media="(min-width: 768px)" fetchpriority="high" />
+    <link rel="preload" href="/hero-mobile.png" as="image" type="image/png" media="(max-width: 767px)" fetchpriority="high" />
 
     <!-- Open Graph (LinkedIn, WhatsApp, Facebook) -->
     <meta property="og:type" content="website" />

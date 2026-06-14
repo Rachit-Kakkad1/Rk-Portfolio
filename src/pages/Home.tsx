@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Linkedin, Youtube } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LeetCode, XIcon, Github } from '../components/Icons';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import createGlobe from 'cobe';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AIAssistant from '../components/AIAssistant';
+import StampIntro from '../components/StampPreloader';
 import LazySection from '../components/LazySection';
 import SEO from '../components/SEO';
 import { useScrollReveal } from '../useScrollReveal';
@@ -99,30 +100,28 @@ function RotatingGlobe() {
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const portraitRef = useRef<HTMLImageElement>(null);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const portraitRef  = useRef<HTMLImageElement>(null);
+  const location     = useLocation();
+  const navigate     = useNavigate();
+  const [introDone, setIntroDone] = useState(
+    !!(location.state as any)?.skipIntro
+  );
 
-  useScrollReveal([true]);
+  useScrollReveal([introDone]);
+
+  const handleIntroComplete = () => setIntroDone(true);
 
   useEffect(() => {
-    const path = location.pathname.substring(1);
+    if (!introDone) return;
+    const path   = location.pathname.substring(1);
     const target = (location.state as any)?.scrollTo || path;
-
     if (target && target !== 'home') {
-      const targetId = target === 'work' ? 'hackathon' : target;
-      const element = document.getElementById(targetId);
-      if (element) {
-        setTimeout(() => {
-          (window as any).lenis?.scrollTo(element, { offset: -80, immediate: true });
-        }, 100);
-      }
+      const el = document.getElementById(target === 'work' ? 'hackathon' : target);
+      if (el) setTimeout(() => (window as any).lenis?.scrollTo(el, { offset: -80, immediate: true }), 100);
+    } else if ((location.state as any)?.skipIntro) {
+      (window as any).lenis?.scrollTo(0, { immediate: true });
     }
-  }, [location]);
-
-  useEffect(() => {
-    // Other setup if needed
-  }, []);
+  }, [introDone]);
 
   return (
     <main className="bg-[#9a9a9a] relative overflow-x-hidden">
@@ -134,6 +133,11 @@ export default function Home() {
       <SEO
         description="Official portfolio of Rachit Kakkad. Building production-grade AI systems, blockchain platforms & cinematic web experiences. Specialist in React, Node.js, and Python."
       />
+      <AnimatePresence mode="wait">
+        {!introDone && (
+          <StampIntro key="stamp-intro" onComplete={handleIntroComplete} />
+        )}
+      </AnimatePresence>
 
       <div className="relative">
         <div id="home" ref={containerRef} className="relative w-full h-screen bg-[#9a9a9a] font-sans selection:bg-white selection:text-black">
