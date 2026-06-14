@@ -265,7 +265,7 @@ export default function Navigation() {
       <nav 
         className={`fixed top-0 left-0 w-full z-[90] transition-all duration-500 hidden md:block ${
           isScrolled 
-            ? (isDarkTheme ? 'bg-[#0a0a0a]/80 border-b border-white/5 py-4 backdrop-blur-2xl shadow-2xl opacity-100 pointer-events-auto' : 'bg-[#F6F3EE]/80 border-b border-black/5 py-4 backdrop-blur-2xl shadow-2xl opacity-100 pointer-events-auto')
+            ? (isDarkTheme ? 'bg-[#0a0a0a]/30 border-b border-white/5 py-4 backdrop-blur-2xl shadow-2xl opacity-100 pointer-events-auto' : 'bg-[#F6F3EE]/30 border-b border-black/5 py-4 backdrop-blur-2xl shadow-2xl opacity-100 pointer-events-auto')
             : 'bg-transparent py-8 opacity-100 pointer-events-auto'
         }`}
         style={{ willChange: 'padding, background-color, backdrop-filter, border-color' }}

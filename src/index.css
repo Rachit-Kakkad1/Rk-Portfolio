@@ -12,6 +12,7 @@ html, body {
   scroll-behavior: auto !important; /* Critical: prevents conflict with Lenis */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 @keyframes marquee {
@@ -20,8 +21,10 @@ html, body {
 }
 
 .animate-marquee {
-  animation: marquee 25s linear infinite;
+  animation: marquee 40s linear infinite;
   will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 @keyframes tilt-spin {
@@ -115,14 +118,26 @@ input, textarea {
 .smooth-gpu {
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  will-change: transform, opacity;
+  will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  contain: layout style paint;
 }
 
 .gpu-accel {
   transform: translateZ(0);
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Marquee track — dedicated composited layer for jank-free infinite scroll */
+.marquee-track {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  contain: layout style;
 }
 
 /* ─── Scroll Reveal Initial States ─── */

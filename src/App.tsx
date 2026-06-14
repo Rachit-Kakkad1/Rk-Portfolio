@@ -34,15 +34,15 @@ export default function App() {
     }
 
     const lenis = new Lenis({
-      duration: isLowPowerDevice ? 1.2 : 2.5,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: isLowPowerDevice ? 1.4 : 3.0,
+      easing: (t) => 1 - Math.pow(1 - t, 5),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       syncTouch: true,
-      wheelMultiplier: isLowPowerDevice ? 0.8 : 1.05,
-      touchMultiplier: isLowPowerDevice ? 1.2 : 2.0,
-      lerp: isLowPowerDevice ? 0.08 : 0.05,
+      wheelMultiplier: isLowPowerDevice ? 0.8 : 1.0,
+      touchMultiplier: isLowPowerDevice ? 1.2 : 1.8,
+      lerp: isLowPowerDevice ? 0.06 : 0.035,
     });
 
     lenisRef.current = lenis;
@@ -54,7 +54,7 @@ export default function App() {
     }
     
     gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(300, 16);
+    gsap.ticker.lagSmoothing(500, 33);
 
     // Refresh ScrollTrigger on resize with debounce to prevent glitches
     let resizeTimer: ReturnType<typeof setTimeout>;
