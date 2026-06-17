@@ -33,10 +33,20 @@ export default function VideoIntro({ onComplete }: VideoIntroProps) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [isSkipped]);
 
-  /* Fallback: if the video stalls or takes too long, auto-skip after 130s */
+  /* Speed up playback to 1.5× */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const setSpeed = () => { video.playbackRate = 1.5; };
+    // Set immediately if already ready, otherwise wait for loadedmetadata
+    if (video.readyState >= 1) setSpeed();
+    else video.addEventListener('loadedmetadata', setSpeed, { once: true });
+  }, []);
+
+  /* Fallback: if the video stalls or takes too long, auto-skip after 90s */
   useEffect(() => {
     if (isSkipped) return;
-    const fallback = setTimeout(handleSkip, 130000);
+    const fallback = setTimeout(handleSkip, 90000);
     return () => clearTimeout(fallback);
   }, [isSkipped]);
 

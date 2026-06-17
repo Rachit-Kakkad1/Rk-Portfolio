@@ -100,9 +100,9 @@ function RotatingGlobe() {
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const portraitRef  = useRef<HTMLImageElement>(null);
-  const location     = useLocation();
-  const navigate     = useNavigate();
+  const portraitRef = useRef<HTMLImageElement>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [introDone, setIntroDone] = useState(
     !!(location.state as any)?.skipIntro
   );
@@ -113,7 +113,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!introDone) return;
-    const path   = location.pathname.substring(1);
+    const path = location.pathname.substring(1);
     const target = (location.state as any)?.scrollTo || path;
     if (target && target !== 'home') {
       const el = document.getElementById(target === 'work' ? 'hackathon' : target);
